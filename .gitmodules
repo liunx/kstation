@@ -1,3 +1,6 @@
 [submodule "qemu/github/qemu_blog"]
 	path = qemu/github/qemu_blog
 	url = https://github.com/liunx/qemu_blog.git
+[submodule "ros2/github/design"]
+	path = ros2/github/design
+	url = https://github.com/ros2/design.git
