@@ -4,3 +4,12 @@
 [submodule "ros2/github/design"]
 	path = ros2/github/design
 	url = https://github.com/ros2/design.git
+[submodule "linux/virtio/github/virtio-spec"]
+	path = linux/virtio/github/virtio-spec
+	url = https://github.com/oasis-tcs/virtio-spec.git
+[submodule "linux/github/ldd3"]
+	path = linux/github/ldd3
+	url = https://github.com/martinezjavier/ldd3.git
+[submodule "linux/virtio/github/vhost-device"]
+	path = linux/virtio/github/vhost-device
+	url = https://github.com/rust-vmm/vhost-device.git
