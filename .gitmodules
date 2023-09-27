@@ -1,0 +1,3 @@
+[submodule "qemu/github/qemu_blog"]
+	path = qemu/github/qemu_blog
+	url = https://github.com/liunx/qemu_blog.git
