@@ -13,3 +13,6 @@
 [submodule "linux/virtio/github/vhost-device"]
 	path = linux/virtio/github/vhost-device
 	url = https://github.com/rust-vmm/vhost-device.git
+[submodule "linux/virtio/vapp"]
+	path = linux/virtio/vapp
+	url = https://github.com/virtualopensystems/vapp.git
