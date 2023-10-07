@@ -27,4 +27,8 @@ exec qemu-system-aarch64 \
     -object memory-backend-memfd,id=mem,size=${MEM_SIZE},share=on \
     -numa node,memdev=mem \
     -drive file=images/rootfs.ext4,if=none,format=raw,id=hd0 \
-    -device virtio-blk-device,drive=hd0 ${EXTRA_ARGS}
+    -device virtio-blk-device,drive=hd0 \
+    -object can-bus,id=canbus0 \
+    -device kvaser_pci,canbus=canbus0 \
+    -device pci-testdev \
+    $@

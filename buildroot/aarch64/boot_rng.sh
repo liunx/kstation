@@ -1,17 +1,26 @@
-#!/bin/sh
+#!/bin/bash
 
-export PATH="/home/liunx/Work/CloudEdge/Work/build/buildroot/aarch64/host/bin:${PATH}"
+DEBUG=$1
+
+export PATH=${PWD}/host/bin:${PATH}
 SOCK_PATH=/tmp/vhost-fs.sock
 MEM_SIZE=2G
 
 virtiofsd \
     --announce-submounts \
+    --sandbox none \
     --socket-path=${SOCK_PATH} \
     --shared-dir=${PWD} \
     --cache=auto &
 sleep 1
 
-exec qemu-system-aarch64 \
+PARAMS=""
+
+if [ "$DEBUG" == "gdb" ] ; then
+    PARAMS="gdb --args"
+fi
+
+exec $PARAMS qemu-system-aarch64 \
     -M virt \
     -m ${MEM_SIZE} \
     -cpu neoverse-n1 \
@@ -28,4 +37,4 @@ exec qemu-system-aarch64 \
     -device vhost-user-rng-pci,chardev=rng0 \
     -object memory-backend-memfd,id=mem,size=${MEM_SIZE},share=on \
     -numa node,memdev=mem \
-    -device virtio-blk-device,drive=hd0 ${EXTRA_ARGS}
+    -device virtio-blk-device,drive=hd0 $@
