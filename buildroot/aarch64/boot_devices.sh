@@ -8,7 +8,7 @@ virtiofsd \
     --announce-submounts \
     --sandbox none \
     --socket-path=${SOCK_PATH} \
-    --shared-dir=${HOME}/Work \
+    --shared-dir=${PWD} \
     --cache=auto &
 sleep 1
 

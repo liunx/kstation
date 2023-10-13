@@ -2,6 +2,7 @@
 #include <linux/module.h>
 #include <linux/pci.h>
 #include <linux/init.h>
+#include <linux/pci_regs.h>
 
 #define PCI_DEVICE_ID_REDHAT_TEST        0x0005
 
@@ -16,8 +17,22 @@ static unsigned char skel_get_revision(struct pci_dev *dev)
 	u8 revision;
 
 	pci_read_config_byte(dev, PCI_REVISION_ID, &revision);
-	printk(KERN_INFO "revision id: %d\n", revision);
 	return revision;
+}
+
+static inline int check_pci_config(struct pci_dev *dev)
+{
+	u8 pin, line;
+	u16 vendor, device;
+	pci_read_config_byte(dev, PCI_INTERRUPT_PIN, &pin);
+	pci_read_config_byte(dev, PCI_INTERRUPT_LINE, &line);
+	dev_info(&dev->dev, "pin: %d, line: %d\n", pin, line);
+
+	pci_read_config_word(dev, PCI_SUBSYSTEM_VENDOR_ID, &vendor);
+	pci_read_config_word(dev, PCI_SUBSYSTEM_ID, &device);
+	dev_info(&dev->dev, "vendor: 0x%x, device: 0x%x\n", vendor, device);
+
+	return 0;
 }
 
 static int probe(struct pci_dev *dev, const struct pci_device_id *id)
@@ -32,6 +47,9 @@ static int probe(struct pci_dev *dev, const struct pci_device_id *id)
 	
 	if (skel_get_revision(dev) == 0x42)
 		return -ENODEV;
+
+	dev_info(&dev->dev, "class id: 0x%x\n", dev->class);
+	check_pci_config(dev);
 
 	return 0;
 }

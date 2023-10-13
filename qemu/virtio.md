@@ -43,3 +43,14 @@
 3. virtio-pci_modern.c:vp_set_status-->vp_modern_set_status
 
 4. vp_iowrite8 --> iowrite8
+
+### Init VIRTIO PCI Bars
+
+* hw/virtio/virtio-pci.c:virtio_pci_realize
+
+### init pci operations
+
+```c
+memory_region_init_io(&s->io, OBJECT(pci), &serial_io_ops, s, "serial", 8);
+pci_register_bar(&pci->dev, 0, PCI_BASE_ADDRESS_SPACE_IO, &s->io);
+```
