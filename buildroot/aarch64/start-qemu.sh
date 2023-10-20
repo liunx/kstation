@@ -14,11 +14,15 @@ VHOST_RNG="-chardev socket,path=/tmp/rng.sock0,id=rng0 -device vhost-user-rng-pc
 VHOST_OPTS="${VHOST_RNG}"
 
 DEBUG_OPTS=""
-GDB_RUN=""
+DEBUG_RUN=""
+TRACE_OPTS=""
 if [ "$1" == "qdb" ]; then
     DEBUG_OPTS="-gdb tcp::8848"
 elif [ "$1" == "gdb" ]; then
-    GDB_RUN="gdb --args"
+    DEBUG_RUN="gdb --args"
+    CONSOLE="${CONSOLE} -serial telnet::1688,server=on,wait=off"
+elif [ "$1" == "trace" ]; then
+    TRACE_OPTS="-trace events=./trace_events"
     CONSOLE="${CONSOLE} -serial telnet::1688,server=on,wait=off"
 fi
 
@@ -31,5 +35,5 @@ virtiofsd \
     --cache=auto &
 sleep 1
 
-bash -c "${GDB_RUN} ${QEMU} ${CONSOLE} ${BASE_OPTS} ${VHOST_OPTS} ${MISC_OPTS} ${DEBUG_OPTS} ${SERIAL_OPTS}"
+bash -c "${DEBUG_RUN} ${QEMU} ${TRACE_OPTS} ${CONSOLE} ${BASE_OPTS} ${VHOST_OPTS} ${MISC_OPTS} ${DEBUG_OPTS} ${SERIAL_OPTS}"
 
