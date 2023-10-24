@@ -17,7 +17,7 @@ DEBUG_OPTS=""
 DEBUG_RUN=""
 TRACE_OPTS=""
 if [ "$1" == "qdb" ]; then
-    DEBUG_OPTS="-gdb tcp::8848"
+    DEBUG_OPTS="-S -gdb tcp::8848"
 elif [ "$1" == "gdb" ]; then
     DEBUG_RUN="gdb --args"
     CONSOLE="${CONSOLE} -serial telnet::1688,server=on,wait=off"
