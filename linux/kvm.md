@@ -152,3 +152,257 @@ see [CPU Registers x86-64](https://wiki.osdev.org/CPU_Registers_x86-64#IA32_EFER
     #5  kvm_arch_vcpu_ioctl_run (vcpu=vcpu@entry=0xffff888100ec0000) at arch/x86/kvm/x86.c:11229
     #6  0xffffffff81023d9b in kvm_vcpu_ioctl (filp=<optimized out>, ioctl=<optimized out>, arg=0)
     ```
+
+### KVM MMU
+
+* __kvm_mmu_create
+
+    ```c
+    Breakpoint 1, __kvm_mmu_create (vcpu=vcpu@entry=0xffff888100eb8000, mmu=mmu@entry=0xffff888100eb8410)
+        at arch/x86/kvm/mmu/mmu.c:5762
+    5762            mmu->root.hpa = INVALID_PAGE;
+    (gdb) bt
+    #0  __kvm_mmu_create (vcpu=vcpu@entry=0xffff888100eb8000, mmu=mmu@entry=0xffff888100eb8410)
+        at arch/x86/kvm/mmu/mmu.c:5762
+    #1  0xffffffff8106e39f in kvm_mmu_create (vcpu=vcpu@entry=0xffff888100eb8000) at arch/x86/kvm/mmu/mmu.c:5825
+    #2  0xffffffff81041273 in kvm_arch_vcpu_create (vcpu=vcpu@entry=0xffff888100eb8000) at arch/x86/kvm/x86.c:11883
+    #3  0xffffffff81029168 in kvm_vm_ioctl_create_vcpu (id=<optimized out>, kvm=0xffffc900001a9000)
+        at arch/x86/kvm/../../../virt/kvm/kvm_main.c:3932
+    #4  kvm_vm_ioctl (filp=<optimized out>, ioctl=44609, arg=0) at arch/x86/kvm/../../../virt/kvm/kvm_main.c:4676
+    ```
+
+* kvm_init_mmu
+
+    ```c
+    Breakpoint 2, init_kvm_tdp_mmu (cpu_role=..., vcpu=0xffff888100eb8000) at arch/x86/kvm/mmu/mmu.c:5035
+    5035            union kvm_mmu_page_role root_role = kvm_calc_tdp_mmu_root_page_role(vcpu, cpu_role);
+    (gdb) bt
+    #0  init_kvm_tdp_mmu (cpu_role=..., vcpu=0xffff888100eb8000) at arch/x86/kvm/mmu/mmu.c:5035
+    #1  kvm_init_mmu (vcpu=vcpu@entry=0xffff888100eb8000) at arch/x86/kvm/mmu/mmu.c:5248
+    #2  0xffffffff8104148f in kvm_arch_vcpu_create (vcpu=vcpu@entry=0xffff888100eb8000) at arch/x86/kvm/x86.c:11962
+    #3  0xffffffff81029168 in kvm_vm_ioctl_create_vcpu (id=<optimized out>, kvm=0xffffc900001b1000)
+        at arch/x86/kvm/../../../virt/kvm/kvm_main.c:3932
+    #4  kvm_vm_ioctl (filp=<optimized out>, ioctl=44609, arg=0) at arch/x86/kvm/../../../virt/kvm/kvm_main.c:4676
+    ```
+
+* kvm_set_memory_region
+
+    ```c
+    Breakpoint 2, kvm_set_memory_region (mem=0xffffc9000018fdd0, kvm=0xffffc9000025f000)
+        at arch/x86/kvm/../../../virt/kvm/kvm_main.c:2029
+    2029            mutex_lock(&kvm->slots_lock);
+    (gdb) bt
+    #0  kvm_set_memory_region (mem=0xffffc9000018fdd0, kvm=0xffffc9000025f000)
+        at arch/x86/kvm/../../../virt/kvm/kvm_main.c:2029
+    #1  kvm_vm_ioctl_set_memory_region (mem=0xffffc9000018fdd0, kvm=0xffffc9000025f000)
+        at arch/x86/kvm/../../../virt/kvm/kvm_main.c:2042
+    #2  kvm_vm_ioctl (filp=<optimized out>, ioctl=<optimized out>, arg=140720618098200)
+        at arch/x86/kvm/../../../virt/kvm/kvm_main.c:4695
+    ```
+
+* Setup MMU
+
+    ```c
+    Breakpoint 8, construct_eptp (root_level=4, root_hpa=4309368832, vcpu=0xffff888100eb8000)
+        at arch/x86/kvm/vmx/vmx.c:3263
+    3263            eptp |= (root_level == 5) ? VMX_EPTP_PWL_5 : VMX_EPTP_PWL_4;
+    (gdb) bt
+    #0  construct_eptp (root_level=4, root_hpa=4309368832, vcpu=0xffff888100eb8000) at arch/x86/kvm/vmx/vmx.c:3263
+    #1  vmx_load_mmu_pgd (vcpu=0xffff888100eb8000, root_hpa=4309368832, root_level=4) at arch/x86/kvm/vmx/vmx.c:3282
+    #2  0xffffffff8106db04 in kvm_mmu_load_pgd (vcpu=0xffff888100eb8000) at ./arch/x86/kvm/mmu.h:152
+    #3  kvm_mmu_load (vcpu=0xffff888100eb8000) at arch/x86/kvm/mmu/mmu.c:5309
+    #4  kvm_mmu_load (vcpu=vcpu@entry=0xffff888100eb8000) at arch/x86/kvm/mmu/mmu.c:5290
+    #5  0xffffffff8103fb84 in kvm_mmu_reload (vcpu=0xffff888100eb8000) at arch/x86/kvm/mmu.h:128
+    #6  vcpu_enter_guest (vcpu=0xffff888100eb8000) at arch/x86/kvm/x86.c:10720
+    #7  vcpu_run (vcpu=0xffff888100eb8000) at arch/x86/kvm/x86.c:11008
+    #8  kvm_arch_vcpu_ioctl_run (vcpu=vcpu@entry=0xffff888100eb8000) at arch/x86/kvm/x86.c:11229
+    #9  0xffffffff81023d9b in kvm_vcpu_ioctl (filp=<optimized out>, ioctl=<optimized out>, arg=0)
+        at arch/x86/kvm/../../../virt/kvm/kvm_main.c:4087
+    ```
+
+* Handle a TDP Page Fault
+
+    ```c
+    Breakpoint 5, tdp_mmu_map_handle_target_level (iter=0xffffc9000081fab8, fault=0xffffc9000081fc20,
+        vcpu=0xffff888100ec0000) at arch/x86/kvm/mmu/tdp_mmu.c:1066
+    1066            struct kvm_mmu_page *sp = sptep_to_sp(rcu_dereference(iter->sptep));
+    (gdb) bt
+    #0  tdp_mmu_map_handle_target_level (iter=0xffffc9000081fab8, fault=0xffffc9000081fc20, vcpu=0xffff888100ec0000)
+        at arch/x86/kvm/mmu/tdp_mmu.c:1066
+    #1  kvm_tdp_mmu_map (vcpu=vcpu@entry=0xffff888100ec0000, fault=fault@entry=0xffffc9000081fc20)
+        at arch/x86/kvm/mmu/tdp_mmu.c:1224
+    #2  0xffffffff8106aa69 in direct_page_fault (vcpu=vcpu@entry=0xffff888100ec0000, fault=fault@entry=0xffffc9000081fc20)
+        at arch/x86/kvm/mmu/mmu.c:4267
+    #3  0xffffffff8106afa4 in kvm_tdp_page_fault (vcpu=vcpu@entry=0xffff888100ec0000,
+        fault=fault@entry=0xffffc9000081fc20) at arch/x86/kvm/mmu/mmu.c:4351
+    #4  0xffffffff8106b13d in kvm_mmu_do_page_fault (prefetch=false, err=4, cr2_or_gpa=1072188680,
+        vcpu=0xffff888100ec0000) at arch/x86/kvm/mmu/mmu_internal.h:290
+    #5  kvm_mmu_page_fault (vcpu=vcpu@entry=0xffff888100ec0000, cr2_or_gpa=1072188680, error_code=4294967300,
+        insn=insn@entry=0x0 <fixed_percpu_data>, insn_len=insn_len@entry=0) at arch/x86/kvm/mmu/mmu.c:5550
+    #6  0xffffffff8107960a in handle_ept_violation (vcpu=0xffff888100ec0000) at arch/x86/kvm/vmx/vmx.c:5701
+    #7  0xffffffff810845d4 in __vmx_handle_exit (exit_fastpath=EXIT_FASTPATH_NONE, vcpu=0xffff888100ec0000)
+        at arch/x86/kvm/vmx/vmx.c:6480
+    #8  vmx_handle_exit (vcpu=0xffff888100ec0000, exit_fastpath=EXIT_FASTPATH_NONE) at arch/x86/kvm/vmx/vmx.c:6497
+    #9  0xffffffff8103f7a5 in vcpu_enter_guest (vcpu=0xffff888100ec0000) at arch/x86/kvm/x86.c:10905
+    #10 vcpu_run (vcpu=0xffff888100ec0000) at arch/x86/kvm/x86.c:11008
+    #11 kvm_arch_vcpu_ioctl_run (vcpu=vcpu@entry=0xffff888100ec0000) at arch/x86/kvm/x86.c:11229
+    #12 0xffffffff81023d9b in kvm_vcpu_ioctl (filp=<optimized out>, ioctl=<optimized out>, arg=0)
+        at arch/x86/kvm/../../../virt/kvm/kvm_main.c:4087
+    ```
+
+### Interrupt Virtualization
+
+* KVM_CREATE_IRQCHIP
+
+    ```c
+    Breakpoint 1, kvm_arch_vm_ioctl (filp=<optimized out>, ioctl=ioctl@entry=44640, arg=arg@entry=0)
+        at arch/x86/kvm/x86.c:6711
+    6711                    if (kvm->created_vcpus)
+    (gdb) bt
+    #0  kvm_arch_vm_ioctl (filp=<optimized out>, ioctl=ioctl@entry=44640, arg=arg@entry=0) at arch/x86/kvm/x86.c:6711
+    #1  0xffffffff8102934f in kvm_vm_ioctl (filp=<optimized out>, ioctl=44640, arg=0)
+        at arch/x86/kvm/../../../virt/kvm/kvm_main.c:4851
+    #2  0xffffffff811fbde7 in vfs_ioctl (arg=0, cmd=<optimized out>, filp=0xffff888100d28800) at fs/ioctl.c:51
+    #3  __do_sys_ioctl (arg=0, cmd=<optimized out>, fd=<optimized out>) at fs/ioctl.c:870
+    #4  __se_sys_ioctl (arg=0, cmd=<optimized out>, fd=<optimized out>) at fs/ioctl.c:856
+    #5  __x64_sys_ioctl (regs=<optimized out>) at fs/ioctl.c:856
+    #6  0xffffffff8172f590 in do_syscall_x64 (nr=<optimized out>, regs=0xffffc9000017ff58) at arch/x86/entry/common.c:50
+    #7  do_syscall_64 (regs=0xffffc9000017ff58, nr=<optimized out>) at arch/x86/entry/common.c:80
+    #8  0xffffffff8180009b in entry_SYSCALL_64 () at arch/x86/entry/entry_64.S:120
+    #9  0x0000000000000001 in fixed_percpu_data ()
+    #10 0x0000000000000000 in ?? ()
+    (gdb) n
+    6714                    r = kvm_pic_init(kvm);
+    (gdb) n
+    6715                    if (r)
+    (gdb)
+    6718                    r = kvm_ioapic_init(kvm);
+    (gdb)
+    ```
+
+* apic_timer_expired
+
+    ```c
+    Breakpoint 1, apic_timer_expired (apic=apic@entry=0xffff888100f5a200, from_timer_fn=from_timer_fn@entry=true)
+        at arch/x86/kvm/lapic.c:1755
+    1755            if (from_timer_fn)
+    (gdb) bt
+    #0  apic_timer_expired (apic=apic@entry=0xffff888100f5a200, from_timer_fn=from_timer_fn@entry=true)
+        at arch/x86/kvm/lapic.c:1755
+    #1  0xffffffff810544cb in apic_timer_fn (data=0xffff888100f5a210) at arch/x86/kvm/lapic.c:2567
+    #2  0xffffffff8113fa97 in __run_hrtimer (now=<synthetic pointer>, flags=2, timer=0xffff888100f5a210,
+        base=0xffff88813bc1ca00, cpu_base=0xffff88813bc1c9c0) at kernel/time/hrtimer.c:1685
+    #3  __hrtimer_run_queues (cpu_base=cpu_base@entry=0xffff88813bc1c9c0, now=163156241389, flags=flags@entry=2,
+        active_mask=active_mask@entry=15) at kernel/time/hrtimer.c:1749
+    #4  0xffffffff8114058b in hrtimer_interrupt (dev=<optimized out>) at kernel/time/hrtimer.c:1811
+    #5  0xffffffff810b8c93 in local_apic_timer_interrupt () at arch/x86/kernel/apic/apic.c:1096
+    #6  __sysvec_apic_timer_interrupt (regs=<optimized out>) at arch/x86/kernel/apic/apic.c:1113
+    #7  0xffffffff8174921b in sysvec_apic_timer_interrupt (regs=0xffffffff81e03d88) at arch/x86/kernel/apic/apic.c:1107
+    #8  0xffffffff81800d4b in asm_sysvec_apic_timer_interrupt () at ./arch/x86/include/asm/idtentry.h:649
+    ```
+
+* kvm_cpu_has_pending_timer
+
+    ```c
+    Breakpoint 2, kvm_cpu_has_pending_timer (vcpu=vcpu@entry=0xffff888100ec8000) at arch/x86/kvm/irq.c:28
+    28                      r = apic_has_pending_timer(vcpu);
+    (gdb) bt
+    #0  kvm_cpu_has_pending_timer (vcpu=vcpu@entry=0xffff888100ec8000) at arch/x86/kvm/irq.c:28
+    #1  0xffffffff81022be2 in kvm_vcpu_check_block (vcpu=vcpu@entry=0xffff888100ec8000)
+        at arch/x86/kvm/../../../virt/kvm/kvm_main.c:3409
+    #2  0xffffffff8102813b in kvm_vcpu_block (vcpu=vcpu@entry=0xffff888100ec8000)
+        at arch/x86/kvm/../../../virt/kvm/kvm_main.c:3442
+    #3  0xffffffff81028209 in kvm_vcpu_halt (vcpu=0xffff888100ec8000) at arch/x86/kvm/../../../virt/kvm/kvm_main.c:3535
+    #4  0xffffffff8103f566 in vcpu_block (vcpu=<optimized out>) at arch/x86/kvm/x86.c:10937
+    #5  vcpu_run (vcpu=0xffff888100ec8000) at arch/x86/kvm/x86.c:11010
+    #6  kvm_arch_vcpu_ioctl_run (vcpu=vcpu@entry=0xffff888100ec8000) at arch/x86/kvm/x86.c:11229
+    #7  0xffffffff81023d9b in kvm_vcpu_ioctl (filp=<optimized out>, ioctl=<optimized out>, arg=0)
+        at arch/x86/kvm/../../../virt/kvm/kvm_main.c:4087
+    ```
+
+### KVM EPT Memory Virtualization
+
+* arch/x86/kvm/mmu/mmu.c:kvm_mmu_vendor_module_init(...)
+
+    ```c
+    int kvm_mmu_vendor_module_init(void)
+    {
+        ...
+        // a) build pte_list_desc structure
+        pte_list_desc_cache = kmem_cache_create("pte_list_desc",
+                            sizeof(struct pte_list_desc),
+                            0, SLAB_ACCOUNT, NULL);
+        if (!pte_list_desc_cache)
+            goto out;
+
+        // b) build kvm_mmu_page_header for kvm_mmu_page structure
+        mmu_page_header_cache = kmem_cache_create("kvm_mmu_page_header",
+                            sizeof(struct kvm_mmu_page),
+                            0, SLAB_ACCOUNT, NULL);
+        if (!mmu_page_header_cache)
+            goto out;
+
+        if (percpu_counter_init(&kvm_total_used_mmu_pages, 0, GFP_KERNEL))
+            goto out;
+
+        // c) register shrinker hook for memory reclaim
+        ret = register_shrinker(&mmu_shrinker, "x86-mmu");
+        ...
+    }
+
+    ```
+
+* arch/x86/kvm/mmu/mmu.c:kvm_mmu_create(...)
+
+    ```c
+    int kvm_mmu_create(struct kvm_vcpu *vcpu)
+    {
+        int ret;
+
+        vcpu->arch.mmu_pte_list_desc_cache.kmem_cache = pte_list_desc_cache;
+        vcpu->arch.mmu_pte_list_desc_cache.gfp_zero = __GFP_ZERO;
+
+        vcpu->arch.mmu_page_header_cache.kmem_cache = mmu_page_header_cache;
+        vcpu->arch.mmu_page_header_cache.gfp_zero = __GFP_ZERO;
+
+        vcpu->arch.mmu_shadow_page_cache.gfp_zero = __GFP_ZERO;
+
+        vcpu->arch.mmu = &vcpu->arch.root_mmu;
+        vcpu->arch.walk_mmu = &vcpu->arch.root_mmu;
+
+        ret = __kvm_mmu_create(vcpu, &vcpu->arch.guest_mmu);
+        if (ret)
+            return ret;
+
+        ret = __kvm_mmu_create(vcpu, &vcpu->arch.root_mmu);
+        ...
+    }
+    ```
+
+* tdp_mmu_alloc_sp
+
+    ```c
+    Breakpoint 3, tdp_mmu_alloc_sp (vcpu=0xffff888100eb0000) at arch/x86/kvm/mmu/tdp_mmu.c:278
+    278             sp = kvm_mmu_memory_cache_alloc(&vcpu->arch.mmu_page_header_cache);
+    (gdb) bt
+    #0  tdp_mmu_alloc_sp (vcpu=0xffff888100eb0000) at arch/x86/kvm/mmu/tdp_mmu.c:278
+    #1  kvm_tdp_mmu_map (vcpu=vcpu@entry=0xffff888100eb0000, fault=fault@entry=0xffffc900003cbc20)
+        at arch/x86/kvm/mmu/tdp_mmu.c:1205
+    #2  0xffffffff8106aa69 in direct_page_fault (vcpu=vcpu@entry=0xffff888100eb0000, fault=fault@entry=0xffffc900003cbc20)
+        at arch/x86/kvm/mmu/mmu.c:4267
+    #3  0xffffffff8106afa4 in kvm_tdp_page_fault (vcpu=vcpu@entry=0xffff888100eb0000,
+        fault=fault@entry=0xffffc900003cbc20) at arch/x86/kvm/mmu/mmu.c:4351
+    #4  0xffffffff8106b13d in kvm_mmu_do_page_fault (prefetch=false, err=16, cr2_or_gpa=4294967280,
+        vcpu=0xffff888100eb0000) at arch/x86/kvm/mmu/mmu_internal.h:290
+    #5  kvm_mmu_page_fault (vcpu=vcpu@entry=0xffff888100eb0000, cr2_or_gpa=4294967280, error_code=4294967312,
+        insn=insn@entry=0x0 <fixed_percpu_data>, insn_len=insn_len@entry=0) at arch/x86/kvm/mmu/mmu.c:5550
+    #6  0xffffffff8107960a in handle_ept_violation (vcpu=0xffff888100eb0000) at arch/x86/kvm/vmx/vmx.c:5701
+    #7  0xffffffff810845d4 in __vmx_handle_exit (exit_fastpath=EXIT_FASTPATH_NONE, vcpu=0xffff888100eb0000)
+        at arch/x86/kvm/vmx/vmx.c:6480
+    #8  vmx_handle_exit (vcpu=0xffff888100eb0000, exit_fastpath=EXIT_FASTPATH_NONE) at arch/x86/kvm/vmx/vmx.c:6497
+    #9  0xffffffff8103f7a5 in vcpu_enter_guest (vcpu=0xffff888100eb0000) at arch/x86/kvm/x86.c:10905
+    #10 vcpu_run (vcpu=0xffff888100eb0000) at arch/x86/kvm/x86.c:11008
+    #11 kvm_arch_vcpu_ioctl_run (vcpu=vcpu@entry=0xffff888100eb0000) at arch/x86/kvm/x86.c:11229
+    #12 0xffffffff81023d9b in kvm_vcpu_ioctl (filp=<optimized out>, ioctl=<optimized out>, arg=0)
+        at arch/x86/kvm/../../../virt/kvm/kvm_main.c:4087
+    ```
