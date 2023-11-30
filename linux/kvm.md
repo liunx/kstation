@@ -188,19 +188,38 @@ see [CPU Registers x86-64](https://wiki.osdev.org/CPU_Registers_x86-64#IA32_EFER
 * kvm_set_memory_region
 
     ```c
-    Breakpoint 2, kvm_set_memory_region (mem=0xffffc9000018fdd0, kvm=0xffffc9000025f000)
-        at arch/x86/kvm/../../../virt/kvm/kvm_main.c:2029
-    2029            mutex_lock(&kvm->slots_lock);
+    Breakpoint 3, __kvm_set_memory_region (kvm=kvm@entry=0xffffc900003d9000, mem=mem@entry=0xffffc9000018fdd0)
+        at arch/x86/kvm/../../../virt/kvm/kvm_main.c:1535
+    1535            if (mem->flags & ~valid_flags)
     (gdb) bt
-    #0  kvm_set_memory_region (mem=0xffffc9000018fdd0, kvm=0xffffc9000025f000)
-        at arch/x86/kvm/../../../virt/kvm/kvm_main.c:2029
-    #1  kvm_vm_ioctl_set_memory_region (mem=0xffffc9000018fdd0, kvm=0xffffc9000025f000)
+    #0  __kvm_set_memory_region (kvm=kvm@entry=0xffffc900003d9000, mem=mem@entry=0xffffc9000018fdd0)
+        at arch/x86/kvm/../../../virt/kvm/kvm_main.c:1535
+    #1  0xffffffff81028c75 in kvm_set_memory_region (mem=0xffffc9000018fdd0, kvm=0xffffc900003d9000)
+        at arch/x86/kvm/../../../virt/kvm/kvm_main.c:2030
+    #2  kvm_vm_ioctl_set_memory_region (mem=0xffffc9000018fdd0, kvm=0xffffc900003d9000)
         at arch/x86/kvm/../../../virt/kvm/kvm_main.c:2042
-    #2  kvm_vm_ioctl (filp=<optimized out>, ioctl=<optimized out>, arg=140720618098200)
+    #3  kvm_vm_ioctl (filp=<optimized out>, ioctl=<optimized out>, arg=140722315496952)
         at arch/x86/kvm/../../../virt/kvm/kvm_main.c:4695
     ```
 
-* Setup MMU
+    ```c
+    Breakpoint 2, __kvm_set_memory_region (kvm=kvm@entry=0xffffc900003d9000, mem=mem@entry=0xffffc900003f7cd8)
+        at arch/x86/kvm/../../../virt/kvm/kvm_main.c:1535
+    1535            if (mem->flags & ~valid_flags)
+    (gdb) bt
+    #0  __kvm_set_memory_region (kvm=kvm@entry=0xffffc900003d9000, mem=mem@entry=0xffffc900003f7cd8)
+        at arch/x86/kvm/../../../virt/kvm/kvm_main.c:1535
+    #1  0xffffffff81030f61 in __x86_set_memory_region (kvm=kvm@entry=0xffffc900003d9000, id=id@entry=32765,
+        gpa=gpa@entry=4276092928, size=size@entry=4096) at arch/x86/kvm/x86.c:12563
+    #2  0xffffffff8107f7be in alloc_apic_access_page (kvm=0xffffc900003d9000) at arch/x86/kvm/vmx/vmx.c:3815
+    #3  vmx_vcpu_create (vcpu=0xffff888100eb8000) at arch/x86/kvm/vmx/vmx.c:7388
+    #4  0xffffffff81041436 in kvm_arch_vcpu_create (vcpu=vcpu@entry=0xffff888100eb8000) at arch/x86/kvm/x86.c:11951
+    #5  0xffffffff81029168 in kvm_vm_ioctl_create_vcpu (id=<optimized out>, kvm=0xffffc900003d9000)
+        at arch/x86/kvm/../../../virt/kvm/kvm_main.c:3932
+    #6  kvm_vm_ioctl (filp=<optimized out>, ioctl=44609, arg=0) at arch/x86/kvm/../../../virt/kvm/kvm_main.c:4676
+    ```
+
+* Setup MMU (Set CR3)
 
     ```c
     Breakpoint 8, construct_eptp (root_level=4, root_hpa=4309368832, vcpu=0xffff888100eb8000)
@@ -405,4 +424,183 @@ see [CPU Registers x86-64](https://wiki.osdev.org/CPU_Registers_x86-64#IA32_EFER
     #11 kvm_arch_vcpu_ioctl_run (vcpu=vcpu@entry=0xffff888100eb0000) at arch/x86/kvm/x86.c:11229
     #12 0xffffffff81023d9b in kvm_vcpu_ioctl (filp=<optimized out>, ioctl=<optimized out>, arg=0)
         at arch/x86/kvm/../../../virt/kvm/kvm_main.c:4087
+    ```
+
+* __gfn_to_pfn_memslot
+
+    ```c
+    Breakpoint 5, __gfn_to_pfn_memslot (hva=0x0 <fixed_percpu_data>, writable=0x0 <fixed_percpu_data>, write_fault=true,
+        async=0x0 <fixed_percpu_data>, atomic=false, gfn=1043968, slot=0xffff888100ddf800)
+        at arch/x86/kvm/../../../virt/kvm/kvm_main.c:2701
+    2701            unsigned long addr = __gfn_to_hva_many(slot, gfn, NULL, write_fault);
+    (gdb) bt
+    #0  __gfn_to_pfn_memslot (hva=0x0 <fixed_percpu_data>, writable=0x0 <fixed_percpu_data>, write_fault=true,
+        async=0x0 <fixed_percpu_data>, atomic=false, gfn=1043968, slot=0xffff888100ddf800)
+        at arch/x86/kvm/../../../virt/kvm/kvm_main.c:2701
+    #1  gfn_to_pfn_memslot (gfn=1043968, slot=0xffff888100ddf800) at arch/x86/kvm/../../../virt/kvm/kvm_main.c:2739
+    #2  gfn_to_pfn (gfn=gfn@entry=1043968, kvm=kvm@entry=0xffffc900001b1000)
+        at arch/x86/kvm/../../../virt/kvm/kvm_main.c:2757
+    #3  gfn_to_page (kvm=kvm@entry=0xffffc900001b1000, gfn=gfn@entry=1043968)
+        at arch/x86/kvm/../../../virt/kvm/kvm_main.c:2795
+    #4  0xffffffff8107f7d7 in alloc_apic_access_page (kvm=0xffffc900001b1000) at arch/x86/kvm/vmx/vmx.c:3822
+    #5  vmx_vcpu_create (vcpu=0xffff888100ec0000) at arch/x86/kvm/vmx/vmx.c:7388
+    #6  0xffffffff81041436 in kvm_arch_vcpu_create (vcpu=vcpu@entry=0xffff888100ec0000) at arch/x86/kvm/x86.c:11951
+    #7  0xffffffff81029168 in kvm_vm_ioctl_create_vcpu (id=<optimized out>, kvm=0xffffc900001b1000)
+        at arch/x86/kvm/../../../virt/kvm/kvm_main.c:3932
+    #8  kvm_vm_ioctl (filp=<optimized out>, ioctl=44609, arg=0) at arch/x86/kvm/../../../virt/kvm/kvm_main.c:4676
+    ```
+
+    ```c
+    Breakpoint 5, __gfn_to_pfn_memslot (hva=0x0 <fixed_percpu_data>, writable=0x0 <fixed_percpu_data>, write_fault=true,
+        async=0x0 <fixed_percpu_data>, atomic=false, gfn=1043968, slot=0xffff888100ddf800)
+        at arch/x86/kvm/../../../virt/kvm/kvm_main.c:2701
+    2701            unsigned long addr = __gfn_to_hva_many(slot, gfn, NULL, write_fault);
+    (gdb) bt
+    #0  __gfn_to_pfn_memslot (hva=0x0 <fixed_percpu_data>, writable=0x0 <fixed_percpu_data>, write_fault=true,
+        async=0x0 <fixed_percpu_data>, atomic=false, gfn=1043968, slot=0xffff888100ddf800)
+        at arch/x86/kvm/../../../virt/kvm/kvm_main.c:2701
+    #1  gfn_to_pfn_memslot (gfn=1043968, slot=0xffff888100ddf800) at arch/x86/kvm/../../../virt/kvm/kvm_main.c:2739
+    #2  gfn_to_pfn (gfn=gfn@entry=1043968, kvm=<optimized out>) at arch/x86/kvm/../../../virt/kvm/kvm_main.c:2757
+    #3  gfn_to_page (kvm=<optimized out>, gfn=gfn@entry=1043968) at arch/x86/kvm/../../../virt/kvm/kvm_main.c:2795
+    #4  0xffffffff8107baff in vmx_set_apic_access_page_addr (vcpu=0xffff888100ec0000) at arch/x86/kvm/vmx/vmx.c:6667
+    #5  vmx_set_apic_access_page_addr (vcpu=0xffff888100ec0000) at arch/x86/kvm/vmx/vmx.c:6653
+    #6  0xffffffff8103fec7 in kvm_vcpu_reload_apic_access_page (vcpu=0xffff888100ec0000) at arch/x86/kvm/x86.c:10533
+    #7  vcpu_enter_guest (vcpu=0xffff888100ec0000) at arch/x86/kvm/x86.c:10651
+    #8  vcpu_run (vcpu=0xffff888100ec0000) at arch/x86/kvm/x86.c:11008
+    #9  kvm_arch_vcpu_ioctl_run (vcpu=vcpu@entry=0xffff888100ec0000) at arch/x86/kvm/x86.c:11229
+    #10 0xffffffff81023d9b in kvm_vcpu_ioctl (filp=<optimized out>, ioctl=<optimized out>, arg=0)
+        at arch/x86/kvm/../../../virt/kvm/kvm_main.c:4087
+    ```
+
+    ```c
+    Breakpoint 5, __gfn_to_pfn_memslot (slot=slot@entry=0xffff888100e32200, gfn=1048575, atomic=atomic@entry=false,
+        async=async@entry=0xffffc900001cfaff, write_fault=false, writable=writable@entry=0xffffc900001cfc58,
+        hva=0xffffc900001cfc50) at arch/x86/kvm/../../../virt/kvm/kvm_main.c:2701
+    2701            unsigned long addr = __gfn_to_hva_many(slot, gfn, NULL, write_fault);
+    (gdb) bt
+    #0  __gfn_to_pfn_memslot (slot=slot@entry=0xffff888100e32200, gfn=1048575, atomic=atomic@entry=false,
+        async=async@entry=0xffffc900001cfaff, write_fault=false, writable=writable@entry=0xffffc900001cfc58,
+        hva=0xffffc900001cfc50) at arch/x86/kvm/../../../virt/kvm/kvm_main.c:2701
+    #1  0xffffffff81061fa0 in kvm_faultin_pfn (vcpu=vcpu@entry=0xffff888100ec0000, fault=fault@entry=0xffffc900001cfc20)
+        at arch/x86/kvm/mmu/mmu.c:4173
+    #2  0xffffffff8106aa1a in direct_page_fault (vcpu=vcpu@entry=0xffff888100ec0000, fault=fault@entry=0xffffc900001cfc20)
+        at arch/x86/kvm/mmu/mmu.c:4248
+    #3  0xffffffff8106afa4 in kvm_tdp_page_fault (vcpu=vcpu@entry=0xffff888100ec0000,
+        fault=fault@entry=0xffffc900001cfc20) at arch/x86/kvm/mmu/mmu.c:4351
+    #4  0xffffffff8106b13d in kvm_mmu_do_page_fault (prefetch=false, err=16, cr2_or_gpa=4294967280,
+        vcpu=0xffff888100ec0000) at arch/x86/kvm/mmu/mmu_internal.h:290
+    #5  kvm_mmu_page_fault (vcpu=vcpu@entry=0xffff888100ec0000, cr2_or_gpa=4294967280, error_code=4294967312,
+        insn=insn@entry=0x0 <fixed_percpu_data>, insn_len=insn_len@entry=0) at arch/x86/kvm/mmu/mmu.c:5550
+    #6  0xffffffff8107960a in handle_ept_violation (vcpu=0xffff888100ec0000) at arch/x86/kvm/vmx/vmx.c:5701
+    #7  0xffffffff810845d4 in __vmx_handle_exit (exit_fastpath=EXIT_FASTPATH_NONE, vcpu=0xffff888100ec0000)
+        at arch/x86/kvm/vmx/vmx.c:6480
+    #8  vmx_handle_exit (vcpu=0xffff888100ec0000, exit_fastpath=EXIT_FASTPATH_NONE) at arch/x86/kvm/vmx/vmx.c:6497
+    #9  0xffffffff8103f7a5 in vcpu_enter_guest (vcpu=0xffff888100ec0000) at arch/x86/kvm/x86.c:10905
+    #10 vcpu_run (vcpu=0xffff888100ec0000) at arch/x86/kvm/x86.c:11008
+    #11 kvm_arch_vcpu_ioctl_run (vcpu=vcpu@entry=0xffff888100ec0000) at arch/x86/kvm/x86.c:11229
+    #12 0xffffffff81023d9b in kvm_vcpu_ioctl (filp=<optimized out>, ioctl=<optimized out>, arg=0)
+        at arch/x86/kvm/../../../virt/kvm/kvm_main.c:4087
+    ```
+
+* kvm_set_cr3
+
+    ```c
+    Breakpoint 4, kvm_set_cr3 (vcpu=0xffff888100ec0000, cr3=0) at arch/x86/kvm/x86.c:1251
+    1251            if (pcid_enabled) {
+    (gdb) bt
+    #0  kvm_set_cr3 (vcpu=0xffff888100ec0000, cr3=0) at arch/x86/kvm/x86.c:1251
+    #1  0xffffffff81037fd8 in emulator_set_cr (ctxt=<optimized out>, cr=<optimized out>, val=<optimized out>)
+        at arch/x86/kvm/x86.c:7941
+    #2  0xffffffff81045228 in rsm_enter_protected_mode (ctxt=ctxt@entry=0xffff888100ec8000, cr0=cr0@entry=17,
+        cr3=cr3@entry=0, cr4=cr4@entry=0) at arch/x86/kvm/emulate.c:2418
+    #3  0xffffffff81049c0e in rsm_load_state_64 (smstate=<optimized out>, ctxt=<optimized out>)
+        at arch/x86/kvm/emulate.c:2568
+    #4  em_rsm (ctxt=0xffff888100ec8000) at arch/x86/kvm/emulate.c:2649
+    #5  0xffffffff8104e9d4 in x86_emulate_insn (ctxt=0xffff888100ec0000, ctxt@entry=0xffff888100ec8000)
+        at arch/x86/kvm/emulate.c:5634
+    #6  0xffffffff8103dd35 in x86_emulate_instruction (vcpu=vcpu@entry=0xffff888100ec0000, cr2_or_gpa=cr2_or_gpa@entry=0,
+        emulation_type=2, insn=insn@entry=0x0 <fixed_percpu_data>, insn_len=insn_len@entry=0) at arch/x86/kvm/x86.c:8933
+    #7  0xffffffff8103e213 in kvm_emulate_instruction (emulation_type=<optimized out>, vcpu=0xffff888100ec0000)
+        at arch/x86/kvm/x86.c:9012
+    #8  handle_ud (vcpu=vcpu@entry=0xffff888100ec0000) at arch/x86/kvm/x86.c:7400
+    #9  0xffffffff81083c22 in handle_exception_nmi (vcpu=0xffff888100ec0000) at arch/x86/kvm/vmx/vmx.c:5118
+    #10 0xffffffff810845d4 in __vmx_handle_exit (exit_fastpath=EXIT_FASTPATH_NONE, vcpu=0xffff888100ec0000)
+        at arch/x86/kvm/vmx/vmx.c:6480
+    #11 vmx_handle_exit (vcpu=0xffff888100ec0000, exit_fastpath=EXIT_FASTPATH_NONE) at arch/x86/kvm/vmx/vmx.c:6497
+    #12 0xffffffff8103f7a5 in vcpu_enter_guest (vcpu=0xffff888100ec0000) at arch/x86/kvm/x86.c:10905
+    #13 vcpu_run (vcpu=0xffff888100ec0000) at arch/x86/kvm/x86.c:11008
+    #14 kvm_arch_vcpu_ioctl_run (vcpu=vcpu@entry=0xffff888100ec0000) at arch/x86/kvm/x86.c:11229
+    ```
+
+### KVM EPT
+
+* mmu_alloc_direct_roots
+
+    ```c
+    Breakpoint 3, mmu_alloc_direct_roots (vcpu=0xffff8881017e0000) at arch/x86/kvm/mmu/mmu.c:3557
+    3557            r = make_mmu_pages_available(vcpu);
+    (gdb) bt
+    #0  mmu_alloc_direct_roots (vcpu=0xffff8881017e0000) at arch/x86/kvm/mmu/mmu.c:3557
+    #1  kvm_mmu_load (vcpu=vcpu@entry=0xffff8881017e0000) at arch/x86/kvm/mmu/mmu.c:5301
+    #2  0xffffffff8107e0ae in kvm_mmu_reload (vcpu=0xffff8881017e0000) at arch/x86/kvm/mmu.h:128
+    #3  vcpu_enter_guest (vcpu=vcpu@entry=0xffff8881017e0000) at arch/x86/kvm/x86.c:10720
+    #4  0xffffffff81081285 in vcpu_run (vcpu=0xffff8881017e0000) at arch/x86/kvm/x86.c:11008
+    #5  kvm_arch_vcpu_ioctl_run (vcpu=vcpu@entry=0xffff8881017e0000) at arch/x86/kvm/x86.c:11229
+    ```
+
+    ```c
+    root = kvm_tdp_mmu_get_vcpu_root_hpa(vcpu);
+    ///////////////////////////////////////////
+    hpa_t kvm_tdp_mmu_get_vcpu_root_hpa(struct kvm_vcpu *vcpu)
+    {
+        ...
+        /*
+        * Check for an existing root before allocating a new one.  Note, the
+        * role check prevents consuming an invalid root.
+        */
+        for_each_tdp_mmu_root(kvm, root, kvm_mmu_role_as_id(role)) {
+            if (root->role.word == role.word &&
+                kvm_tdp_mmu_get_root(root))
+                goto out;
+        }
+
+        root = tdp_mmu_alloc_sp(vcpu);
+        tdp_mmu_init_sp(root, NULL, 0, role);
+        ...
+    out:
+        return __pa(root->spt);
+    }
+    ```
+
+* kvm_set_cr3
+
+    ```c
+    Breakpoint 4, kvm_set_cr3 (vcpu=0xffff8881017d8000, cr3=0) at arch/x86/kvm/x86.c:1251
+    1251            if (pcid_enabled) {
+    (gdb) bt
+    #0  kvm_set_cr3 (vcpu=0xffff8881017d8000, cr3=0) at arch/x86/kvm/x86.c:1251
+    #1  0xffffffff8107862b in emulator_set_cr (ctxt=<optimized out>, cr=<optimized out>, val=<optimized out>)
+        at arch/x86/kvm/x86.c:7941
+    #2  0xffffffff8108916b in rsm_enter_protected_mode (ctxt=ctxt@entry=0xffff8881017e0000, cr0=cr0@entry=17,
+        cr3=cr3@entry=0, cr4=cr4@entry=0) at arch/x86/kvm/emulate.c:2418
+    #3  0xffffffff81090347 in rsm_load_state_64 (smstate=0xffffc9000044f940 "\020", ctxt=0xffff8881017e0000)
+        at arch/x86/kvm/emulate.c:2568
+    #4  em_rsm (ctxt=0xffff8881017e0000) at arch/x86/kvm/emulate.c:2649
+    #5  0xffffffff81095051 in x86_emulate_insn (ctxt=ctxt@entry=0xffff8881017e0000) at arch/x86/kvm/emulate.c:5634
+    #6  0xffffffff8107bba1 in x86_emulate_instruction (vcpu=vcpu@entry=0xffff8881017d8000,
+        cr2_or_gpa=cr2_or_gpa@entry=0, emulation_type=2, insn=insn@entry=0x0 <fixed_percpu_data>,
+        insn_len=insn_len@entry=0) at arch/x86/kvm/x86.c:8933
+    #7  0xffffffff8107c174 in kvm_emulate_instruction (emulation_type=<optimized out>, vcpu=0xffff8881017d8000)
+        at arch/x86/kvm/x86.c:9012
+    #8  handle_ud (vcpu=vcpu@entry=0xffff8881017d8000) at arch/x86/kvm/x86.c:7400
+    #9  0xffffffff810f1baf in handle_exception_nmi (vcpu=0xffff8881017d8000) at arch/x86/kvm/vmx/vmx.c:5118
+    #10 0xffffffff810f3723 in __vmx_handle_exit (exit_fastpath=<optimized out>, vcpu=0xffff8881017d8000)
+        at arch/x86/kvm/vmx/vmx.c:6480
+    #11 vmx_handle_exit (vcpu=0xffff8881017d8000, exit_fastpath=EXIT_FASTPATH_NONE) at arch/x86/kvm/vmx/vmx.c:6497
+    #12 0xffffffff8107ddb5 in vcpu_enter_guest (vcpu=vcpu@entry=0xffff8881017d8000) at arch/x86/kvm/x86.c:10905
+    #13 0xffffffff81081285 in vcpu_run (vcpu=0xffff8881017d8000) at arch/x86/kvm/x86.c:11008
+    #14 kvm_arch_vcpu_ioctl_run (vcpu=vcpu@entry=0xffff8881017d8000) at arch/x86/kvm/x86.c:11229
+    #15 0xffffffff8104297e in kvm_vcpu_ioctl (filp=<optimized out>, ioctl=<optimized out>, arg=<optimized out>)
+        at arch/x86/kvm/../../../virt/kvm/kvm_main.c:4087
+
     ```
