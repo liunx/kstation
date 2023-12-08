@@ -20,7 +20,7 @@
     #6  0x0000000000000000 in ?? ()
     ```
 
-### MemBlock Memory Management
+### MemBlock
 
 * memblock_add_range
 
@@ -43,11 +43,124 @@
     #7  0xffffffff81000145 in secondary_startup_64 () at arch/x86/kernel/head_64.S:358
     ```
 
+* memblock_dump_all
+
+    ```c
+    Breakpoint 1, memblock_dump_all () at mm/memblock.c:1917
+    1917            pr_info("MEMBLOCK configuration:\n");
+    (gdb) bt
+    #0  memblock_dump_all () at mm/memblock.c:1917
+    #1  0xffffffff82e39639 in e820__memblock_setup () at arch/x86/kernel/e820.c:1349
+    #2  0xffffffff82e364f8 in setup_arch (cmdline_p=cmdline_p@entry=0xffffffff82603ed8) at arch/x86/kernel/setup.c:1133
+    #3  0xffffffff82e2c1b7 in start_kernel () at init/main.c:959
+    #4  0xffffffff82e2b4a1 in x86_64_start_reservations (
+        real_mode_data=real_mode_data@entry=0x13b00 <exception_stacks+31488> <error: Cannot access memory at address 0x13b00>) at arch/x86/kernel/head64.c:556
+    #5  0xffffffff82e2b56c in x86_64_start_kernel (
+        real_mode_data=0x13b00 <exception_stacks+31488> <error: Cannot access memory at address 0x13b00>)
+        at arch/x86/kernel/head64.c:537
+    #6  0xffffffff81000145 in secondary_startup_64 () at arch/x86/kernel/head_64.S:358
+    ```
+
 * memblock debug
 
     boot with command with "memblock=debug"
 
+* BIOS and memblock output
+
+```c
+...
+BIOS-provided physical RAM map:
+BIOS-e820: [mem 0x0000000000000000-0x000000000009fbff] usable
+BIOS-e820: [mem 0x000000000009fc00-0x000000000009ffff] reserved
+BIOS-e820: [mem 0x00000000000f0000-0x00000000000fffff] reserved
+BIOS-e820: [mem 0x0000000000100000-0x0000000003fdcfff] usable
+BIOS-e820: [mem 0x0000000003fdd000-0x0000000003ffffff] reserved
+BIOS-e820: [mem 0x00000000feffc000-0x00000000feffffff] reserved
+BIOS-e820: [mem 0x00000000fffc0000-0x00000000ffffffff] reserved
+...
+MEMBLOCK configuration:
+ memory size = 0x0000000003f7bc00 reserved size = 0x000000000227a000
+ memory.cnt  = 0x2
+ memory[0x0]    [0x0000000000001000-0x000000000009efff], 0x000000000009e000 bytes flags: 0x0
+ memory[0x1]    [0x0000000000100000-0x0000000003fdcfff], 0x0000000003edd000 bytes flags: 0x0
+ reserved.cnt  = 0x3
+ reserved[0x0]  [0x0000000000000000-0x000000000000ffff], 0x0000000000010000 bytes flags: 0x0
+ reserved[0x1]  [0x000000000009f000-0x00000000000fffff], 0x0000000000061000 bytes flags: 0x0
+ reserved[0x2]  [0x0000000001000000-0x0000000003208fff], 0x0000000002209000 bytes flags: 0x0
+...
+```
+
 ### Memory Model
+
+* sparse_init
+
+    ```c
+    Breakpoint 1, memblocks_present () at mm/sparse.c:271
+    271             for_each_mem_pfn_range(i, MAX_NUMNODES, &start, &end, &nid)
+    (gdb) bt
+    #0  memblocks_present () at mm/sparse.c:271
+    #1  sparse_init () at mm/sparse.c:564
+    #2  0xffffffff82e4e836 in paging_init () at arch/x86/mm/init_64.c:816
+    #3  0xffffffff82e36592 in setup_arch (cmdline_p=cmdline_p@entry=0xffffffff82603ed8) at arch/x86/kernel/setup.c:1253
+    #4  0xffffffff82e2c1b7 in start_kernel () at init/main.c:959
+    #5  0xffffffff82e2b4a1 in x86_64_start_reservations (
+        real_mode_data=real_mode_data@entry=0x13b00 <exception_stacks+31488> <error: Cannot access memory at address 0x13b00>) at arch/x86/kernel/head64.c:556
+    #6  0xffffffff82e2b56c in x86_64_start_kernel (
+        real_mode_data=0x13b00 <exception_stacks+31488> <error: Cannot access memory at address 0x13b00>)
+        at arch/x86/kernel/head64.c:537
+    #7  0xffffffff81000145 in secondary_startup_64 () at arch/x86/kernel/head_64.S:358
+    ```
+
+### NUMA Node
+
+* numa_register_memblks
+
+    ```c
+    Breakpoint 1, numa_register_memblks (mi=0xffffffff82f020c0 <numa_meminfo>) at arch/x86/mm/numa.c:552
+    552             node_possible_map = numa_nodes_parsed;
+    (gdb) bt
+    #0  numa_register_memblks (mi=0xffffffff82f020c0 <numa_meminfo>) at arch/x86/mm/numa.c:552
+    #1  numa_init (init_func=<optimized out>) at arch/x86/mm/numa.c:679
+    #2  0xffffffff82e6b887 in x86_numa_init () at arch/x86/mm/numa.c:729
+    #3  0xffffffff82e6b98e in initmem_init () at arch/x86/mm/numa_64.c:12
+    #4  0xffffffff82e51572 in setup_arch (cmdline_p=cmdline_p@entry=0xffffffff82603ed8) at arch/x86/kernel/setup.c:1236
+    #5  0xffffffff82e471b7 in start_kernel () at init/main.c:959
+    #6  0xffffffff82e464a1 in x86_64_start_reservations (
+        real_mode_data=real_mode_data@entry=0x13b00 <exception_stacks+31488> <error: Cannot access memory at address 0x13b00>) at arch/x86/kernel/head64.c:556
+    #7  0xffffffff82e4656c in x86_64_start_kernel (
+        real_mode_data=0x13b00 <exception_stacks+31488> <error: Cannot access memory at address 0x13b00>)
+        at arch/x86/kernel/head64.c:537
+    #8  0xffffffff81000145 in secondary_startup_64 () at arch/x86/kernel/head_64.S:358
+    ```
+
+* alloc_node_data
+
+    ```c
+    Breakpoint 1, alloc_node_data (nid=0) at arch/x86/mm/numa.c:216
+    216             printk(KERN_INFO "NODE_DATA(%d) allocated [mem %#010Lx-%#010Lx]\n", nid,
+    (gdb) bt
+    #0  alloc_node_data (nid=0) at arch/x86/mm/numa.c:216
+    #1  numa_register_memblks (mi=0xffffffff82f020c0 <numa_meminfo>) at arch/x86/mm/numa.c:611
+    #2  numa_init (init_func=<optimized out>) at arch/x86/mm/numa.c:679
+    #3  0xffffffff82e6b887 in x86_numa_init () at arch/x86/mm/numa.c:729
+    #4  0xffffffff82e6b98e in initmem_init () at arch/x86/mm/numa_64.c:12
+    #5  0xffffffff82e51572 in setup_arch (cmdline_p=cmdline_p@entry=0xffffffff82603ed8) at arch/x86/kernel/setup.c:1236
+    #6  0xffffffff82e471b7 in start_kernel () at init/main.c:959
+    ```
+
+* numa_cleanup_meminfo
+
+    ```c
+    Breakpoint 1, numa_cleanup_meminfo (mi=mi@entry=0xffffffff82f020c0 <numa_meminfo>) at arch/x86/mm/numa.c:314
+    314                             printk(KERN_INFO "NUMA: Node %d [mem %#010Lx-%#010Lx] + [mem %#010Lx-%#010Lx] -> [mem %#010Lx-%#010Lx]\n",
+    (gdb) bt
+    #0  numa_cleanup_meminfo (mi=mi@entry=0xffffffff82f020c0 <numa_meminfo>) at arch/x86/mm/numa.c:314
+    #1  0xffffffff82e6b2ad in numa_init (init_func=0xffffffff82e6c0b4 <x86_acpi_numa_init>) at arch/x86/mm/numa.c:673
+    #2  0xffffffff82e6b887 in x86_numa_init () at arch/x86/mm/numa.c:729
+    #3  0xffffffff82e6b98e in initmem_init () at arch/x86/mm/numa_64.c:12
+    #4  0xffffffff82e51572 in setup_arch (cmdline_p=cmdline_p@entry=0xffffffff82603ed8) at arch/x86/kernel/setup.c:1236
+    #5  0xffffffff82e471b7 in start_kernel () at init/main.c:959
+    ```
 
 ### Buddy System
 
@@ -128,6 +241,41 @@
     #21 0xffffffff81e00b77 in asm_exc_page_fault () at ./arch/x86/include/asm/idtentry.h:570
     ```
 
+* compaction_suitable (called from kcompactd)
+
+    ```c
+    Breakpoint 1, compaction_suitable (zone=0xffff888003fd9000, order=-1, alloc_flags=<optimized out>,
+        highest_zoneidx=<optimized out>) at mm/compaction.c:2244
+    2244            if (ret == COMPACT_CONTINUE && (order > PAGE_ALLOC_COSTLY_ORDER)) {
+    (gdb) bt
+    #0  compaction_suitable (zone=0xffff888003fd9000, order=-1, alloc_flags=<optimized out>,
+        highest_zoneidx=<optimized out>) at mm/compaction.c:2244
+    #1  0xffffffff813734ac in compact_zone (cc=cc@entry=0xffffc900000cbdd0, capc=capc@entry=0x0 <fixed_percpu_data>)
+        at mm/compaction.c:2312
+    #2  0xffffffff81374de7 in proactive_compact_node (pgdat=pgdat@entry=0xffff888003fd9000) at mm/compaction.c:2666
+    #3  0xffffffff81375477 in kcompactd (p=p@entry=0xffff888003fd9000) at mm/compaction.c:2976
+    #4  0xffffffff811b7a37 in kthread (_create=<optimized out>) at kernel/kthread.c:376
+    ```
+
+* compaction_suitable (called from kswapd)
+
+    ```c
+    Breakpoint 1, compaction_suitable (zone=zone@entry=0xffff888003fd9000, order=1, alloc_flags=alloc_flags@entry=0,
+        highest_zoneidx=<optimized out>) at mm/compaction.c:2244
+    2244            if (ret == COMPACT_CONTINUE && (order > PAGE_ALLOC_COSTLY_ORDER)) {
+    (gdb) bt
+    #0  compaction_suitable (zone=zone@entry=0xffff888003fd9000, order=1, alloc_flags=alloc_flags@entry=0,
+        highest_zoneidx=<optimized out>) at mm/compaction.c:2244
+    #1  0xffffffff8134d79e in should_continue_reclaim (sc=0xffffc900000e3dc8, nr_reclaimed=<optimized out>,
+        pgdat=0xffff888003fd9000) at mm/vmscan.c:6051
+    #2  shrink_node (pgdat=pgdat@entry=0xffff888003fd9000, sc=sc@entry=0xffffc900000e3dc8) at mm/vmscan.c:6223
+    #3  0xffffffff8134e2c6 in kswapd_shrink_node (sc=0xffffc900000e3dc8, pgdat=0xffff888003fd9000) at mm/vmscan.c:6937
+    #4  balance_pgdat (pgdat=pgdat@entry=0xffff888003fd9000, order=order@entry=1, highest_zoneidx=highest_zoneidx@entry=3)
+        at mm/vmscan.c:7127
+    #5  0xffffffff8134e944 in kswapd (p=p@entry=0xffff888003fd9000) at mm/vmscan.c:7387
+    #6  0xffffffff811b7a37 in kthread (_create=<optimized out>) at kernel/kthread.c:376
+    ```
+
 * balance_pgdat
 
     ```c
@@ -141,6 +289,49 @@
     #2  0xffffffff811b3857 in kthread (_create=<optimized out>) at kernel/kthread.c:376
     #3  0xffffffff81002292 in ret_from_fork () at arch/x86/entry/entry_64.S:306
     ```
+
+#### shrink_node
+
+* kswapd (slow path)
+
+    ```c
+    Breakpoint 1, shrink_node (pgdat=pgdat@entry=0xffff888003fd9000, sc=sc@entry=0xffffc900000e3dc8) at mm/vmscan.c:6132
+    6132    {
+    (gdb) bt
+    #0  shrink_node (pgdat=pgdat@entry=0xffff888003fd9000, sc=sc@entry=0xffffc900000e3dc8) at mm/vmscan.c:6132
+    #1  0xffffffff8134e2c6 in kswapd_shrink_node (sc=0xffffc900000e3dc8, pgdat=0xffff888003fd9000) at mm/vmscan.c:6937
+    #2  balance_pgdat (pgdat=pgdat@entry=0xffff888003fd9000, order=order@entry=3, highest_zoneidx=highest_zoneidx@entry=2)
+        at mm/vmscan.c:7127
+    #3  0xffffffff8134e944 in kswapd (p=p@entry=0xffff888003fd9000) at mm/vmscan.c:7387
+    #4  0xffffffff811b7a37 in kthread (_create=<optimized out>) at kernel/kthread.c:376
+    #5  0xffffffff81002292 in ret_from_fork () at arch/x86/entry/entry_64.S:306
+    ```
+
+* alloc_pages (__alloc_pages_slowpath branch)
+
+    ```c
+    Breakpoint 1, shrink_node (pgdat=pgdat@entry=0xffff888003fd9000, sc=sc@entry=0xffffc900001bfc28) at mm/vmscan.c:6132
+    6132    {
+    (gdb) bt
+    #0  shrink_node (pgdat=pgdat@entry=0xffff888003fd9000, sc=sc@entry=0xffffc900001bfc28) at mm/vmscan.c:6132
+    #1  0xffffffff8134f929 in shrink_zones (sc=0xffffc900001bfc28, zonelist=0xffff888003fda900) at mm/vmscan.c:6386
+    #2  do_try_to_free_pages (sc=0xffffc900001bfc28, zonelist=0xffff888003fda900) at mm/vmscan.c:6448
+    #3  try_to_free_pages (zonelist=0xffff888003fda900, order=order@entry=1, gfp_mask=gfp_mask@entry=4197824,
+        nodemask=<optimized out>) at mm/vmscan.c:6683
+    #4  0xffffffff813cc433 in __perform_reclaim (ac=0xffffc900001bfd30, order=1, gfp_mask=4197824) at mm/page_alloc.c:4759
+    #5  __alloc_pages_direct_reclaim (did_some_progress=<synthetic pointer>, ac=0xffffc900001bfd30, alloc_flags=2112,
+        order=1, gfp_mask=4197824) at mm/page_alloc.c:4781
+    #6  __alloc_pages_slowpath (ac=0xffffc900001bfd30, order=1, gfp_mask=<optimized out>) at mm/page_alloc.c:5187
+    #7  __alloc_pages (gfp=<optimized out>, gfp@entry=4197824, order=order@entry=1, preferred_nid=<optimized out>,
+        nodemask=nodemask@entry=0x0 <fixed_percpu_data>) at mm/page_alloc.c:5572
+    #8  0xffffffff813e8243 in alloc_pages (gfp=gfp@entry=4197824, order=order@entry=1) at mm/mempolicy.c:2287
+    #9  0xffffffff813c1261 in __get_free_pages (gfp_mask=gfp_mask@entry=4197824, order=order@entry=1)
+        at mm/page_alloc.c:5609
+    #10 0xffffffff81169993 in _pgd_alloc () at arch/x86/mm/pgtable.c:414
+    ```
+
+* get_page_from_freelist (fast path)
+
 
 ### Memory Allocator
 
@@ -194,3 +385,69 @@
         at mm/memory.c:5106
     #13 0xffffffff8137c1a8 in handle_mm_fault (vma=vma@entry=0xffff888000a1cb28, address=address@entry=140737488351216,
     ```
+
+### Initialization of Memory Management
+
+    * build_zonelists
+
+    ```c
+    Breakpoint 1, build_zonelists (pgdat=0xffff8881bfff9000) at mm/page_alloc.c:6480
+    6480    {
+    (gdb) bt
+    #0  build_zonelists (pgdat=0xffff8881bfff9000) at mm/page_alloc.c:6480
+    #1  0xffffffff813c0a7b in __build_all_zonelists (data=data@entry=0x0 <fixed_percpu_data>) at mm/page_alloc.c:6637
+    #2  0xffffffff82e7c3dc in build_all_zonelists_init () at mm/page_alloc.c:6664
+    #3  0xffffffff81ca8840 in build_all_zonelists (pgdat=pgdat@entry=0x0 <fixed_percpu_data>) at mm/page_alloc.c:6697
+    #4  0xffffffff82e47295 in start_kernel () at init/main.c:967
+    ```
+
+    ```c
+    Breakpoint 1, build_all_zonelists (pgdat=pgdat@entry=0x0 <fixed_percpu_data>) at mm/page_alloc.c:6721
+    6721            pr_info("Policy zone: %s\n", zone_names[policy_zone]);
+    (gdb) bt
+    #0  build_all_zonelists (pgdat=pgdat@entry=0x0 <fixed_percpu_data>) at mm/page_alloc.c:6721
+    #1  0xffffffff82e49295 in start_kernel () at init/main.c:967
+    ```
+
+### Page Reclaim
+
+* try_to_free_pages
+
+```c
+Breakpoint 1, try_to_free_pages (zonelist=0xffff888003fda900, order=order@entry=0, gfp_mask=gfp_mask@entry=1387594,
+    nodemask=0x0 <fixed_percpu_data>) at mm/vmscan.c:6650
+6650    {
+(gdb) bt
+#0  try_to_free_pages (zonelist=0xffff888003fda900, order=order@entry=0, gfp_mask=gfp_mask@entry=1387594,
+    nodemask=0x0 <fixed_percpu_data>) at mm/vmscan.c:6650
+#1  0xffffffff813cc433 in __perform_reclaim (ac=0xffffc90000123af0, order=0, gfp_mask=1387594) at mm/page_alloc.c:4759
+#2  __alloc_pages_direct_reclaim (did_some_progress=<synthetic pointer>, ac=0xffffc90000123af0, alloc_flags=2240,
+    order=0, gfp_mask=1387594) at mm/page_alloc.c:4781
+#3  __alloc_pages_slowpath (ac=0xffffc90000123af0, order=0, gfp_mask=<optimized out>) at mm/page_alloc.c:5187
+#4  __alloc_pages (gfp=<optimized out>, gfp@entry=1387722, order=order@entry=0, preferred_nid=<optimized out>,
+    nodemask=nodemask@entry=0x0 <fixed_percpu_data>) at mm/page_alloc.c:5572
+#5  0xffffffff813e8243 in alloc_pages (gfp=gfp@entry=1387722, order=order@entry=0) at mm/mempolicy.c:2287
+#6  0xffffffff813e82fb in folio_alloc (gfp=gfp@entry=1125578, order=order@entry=0) at mm/mempolicy.c:2297
+#7  0xffffffff81324866 in filemap_alloc_folio (gfp=gfp@entry=1125578, order=order@entry=0) at mm/filemap.c:971
+#8  0xffffffff8133c05b in page_cache_ra_unbounded (ractl=0xffffc90000123d20, nr_to_read=32,
+    lookahead_size=<optimized out>) at mm/readahead.c:248
+#9  0xffffffff8133c210 in do_page_cache_ra (ractl=ractl@entry=0xffffc90000123d20, nr_to_read=<optimized out>,
+    lookahead_size=<optimized out>) at mm/readahead.c:300
+#10 0xffffffff8133c7c2 in page_cache_ra_order (ractl=ractl@entry=0xffffc90000123d20, ra=0xffff888000a0dc98,
+    new_order=new_order@entry=0) at mm/readahead.c:560
+#11 0xffffffff8132c9c9 in do_sync_mmap_readahead (vmf=0xffffc90000123df0) at mm/filemap.c:3044
+#12 filemap_fault (vmf=0xffffc90000123df0) at mm/filemap.c:3136
+#13 0xffffffff813850f9 in __do_fault (vmf=vmf@entry=0xffffc90000123df0) at mm/memory.c:4212
+#14 0xffffffff81390804 in do_read_fault (vmf=0xffffc90000123df0) at mm/memory.c:4563
+#15 do_fault (vmf=0xffffc90000123df0) at mm/memory.c:4692
+#16 handle_pte_fault (vmf=0xffffc90000123df0) at mm/memory.c:4964
+#17 __handle_mm_fault (vma=vma@entry=0xffff888000a25000, address=address@entry=94422527533530, flags=flags@entry=852)
+    at mm/memory.c:5106
+#18 0xffffffff8139212a in handle_mm_fault (vma=vma@entry=0xffff888000a25000, address=address@entry=94422527533530,
+    flags=flags@entry=852, regs=regs@entry=0xffffc90000123f58) at mm/memory.c:5227
+#19 0xffffffff81cc367f in do_user_addr_fault (address=94422527533530, error_code=20, regs=0xffffc90000123f58)
+    at arch/x86/mm/fault.c:1428
+#20 handle_page_fault (address=94422527533530, error_code=20, regs=0xffffc90000123f58) at arch/x86/mm/fault.c:1519
+#21 exc_page_fault (regs=0xffffc90000123f58, error_code=20) at arch/x86/mm/fault.c:1575
+#22 0xffffffff81e00b77 in asm_exc_page_fault () at ./arch/x86/include/asm/idtentry.h:570
+```
