@@ -1,0 +1,36 @@
+@startuml
+title kmem_cache_init
+
+start
+
+:Initialze the nodemask;
+:create_boot_cache for
+**kmem_cache_node**;
+:register_hotmemory_notifier;
+:slab_state = PARTIAL;
+note left
+SLUB: kmem_cache_node available
+end note
+#pink:create_boot_cache for
+**kmem_cache**;
+partition bootstrap {
+note
+Used for early kmem_cache structures
+that were allocated using the page
+allocator. 
+end note
+:bootstrap(kmem_cache);
+:bootstrap(kmem_cache_node);
+}
+: setup_kmalloc_cache_index_table;
+: create_kmalloc_caches;
+note right
+slab_state = UP
+Kmalloc array is now usable
+end note
+: init_freelist_randomization;
+: cpuhp_setup_state_nocalls;
+
+stop
+
+@enduml

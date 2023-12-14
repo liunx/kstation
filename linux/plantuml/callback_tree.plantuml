@@ -1,0 +1,21 @@
+@startuml
+'skinparam BackgroundColor transparent
+skinparam ArrowColor orange
+skinparam ArrowThickness 1.5
+skinparam PackageStyle rectangle
+skinparam ComponentStyle rectangle
+skinparam linetype ortho
+'left to right direction
+
+[start_kernel]-->[setup_arch]
+[start_kernel]-->[setup_per_cpu_areas]
+[start_kernel]-->[build_all_zone_lists]
+[start_kernel]-->[mm_init]
+[mm_init]-->[mem_init]
+[mm_init]-->[kmem_cache_init]
+
+'[setup_arch]-[hidden]-[setup_per_cpu_areas]
+'[setup_per_cpu_areas]-[hidden]-[build_all_zone_lists]
+'[build_all_zone_lists]-[hidden]-[mm_init]
+
+@endluml

@@ -1,0 +1,24 @@
+@startuml
+title do_slab_free
+start
+if (slab != c->slab) then (Yes)
+note left
+this means current slab not in
+local cpu area.
+end note
+    :__slab_free;
+    note left: slow path
+    end
+endif
+
+if (USE_LOCKLESS_FAST_PATH?) then (Yes)
+:return to freelist;
+else (No)
+:lock;
+:return to freelist;
+:unlock;
+endif
+
+end
+
+@enduml

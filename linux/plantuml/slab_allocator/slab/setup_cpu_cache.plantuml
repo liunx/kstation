@@ -1,0 +1,32 @@
+@startuml
+title setup_cpu_cache-->enable_cpucache
+
+start
+
+:cache_random_seq_create;
+note left
+CONFIG_SLAB_FREELIST_RANDOM
+freelist randomize
+end note
+:adjust limit param;
+note left
+depend on input cachep->size
+end note
+:adjust shared param;
+note left:when num_cpus > 1
+
+rectangle do_tune_cpucache {
+:alloc_kmem_cache_cpus;
+note right
+alloc per_cpu caches into array
+end note
+}
+
+rectangle setup_kmem_cache_nodes {
+    (L)
+
+}
+
+stop
+
+@enduml

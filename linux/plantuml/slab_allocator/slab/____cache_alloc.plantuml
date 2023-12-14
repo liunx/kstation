@@ -1,0 +1,32 @@
+@startuml
+title ____cache_alloc
+
+start
+
+if (array_cache available) then (Yes)
+    :return object;
+    detach
+endif
+
+rectangle cache_alloc_refill {
+if (get from cpus shared array) then (Yes)
+    :return object;
+    detach
+endif
+if (get_first_slab) then (Yes)
+    :return object;
+    detach
+endif
+note right
+alloc slabs from n->slabs_partial
+and n->slabs_free
+end note
+:cache_grow;
+note left
+alloc pages from buddy system
+end note
+}
+
+stop
+
+@enduml

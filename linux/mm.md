@@ -335,6 +335,10 @@ MEMBLOCK configuration:
 
 ### Memory Allocator
 
+* start_kernel
+  * mm_init
+    * kmem_cache_init
+
 #### Slab
 
 * ____cache_alloc
@@ -356,7 +360,7 @@ MEMBLOCK configuration:
 
 #### Slub
 
-* ____slab_alloc
+* ____slab_alloc (init kmem_cache_cpu.slab when required)
 
     ```c
     Breakpoint 2, ___slab_alloc (s=s@entry=0xffff888003443900, gfpflags=gfpflags@entry=3264, node=node@entry=-1,
@@ -385,6 +389,80 @@ MEMBLOCK configuration:
         at mm/memory.c:5106
     #13 0xffffffff8137c1a8 in handle_mm_fault (vma=vma@entry=0xffff888000a1cb28, address=address@entry=140737488351216,
     ```
+
+* init_kmem_cache_cpus (init kmem_cache_cpu.tid)
+
+    ```c
+    Breakpoint 2, init_kmem_cache_cpus (s=<optimized out>) at mm/slub.c:2401
+    2401                    c->tid = init_tid(cpu);
+    (gdb) bt
+    #0  init_kmem_cache_cpus (s=<optimized out>) at mm/slub.c:2401
+    #1  alloc_kmem_cache_cpus (s=0xffffffff82ee1c40 <boot_kmem_cache_node>) at mm/slub.c:4032
+    #2  kmem_cache_open (flags=flags@entry=54788096, s=0xffffffff82ee1c40 <boot_kmem_cache_node>,
+        s@entry=0xffff888003440000) at mm/slub.c:4351
+    #3  __kmem_cache_create (s=s@entry=0xffffffff82ee1c40 <boot_kmem_cache_node>, flags=flags@entry=8192)
+        at mm/slub.c:4907
+    #4  0xffffffff82e5e43a in create_boot_cache (s=0xffffffff82ee1c40 <boot_kmem_cache_node>,
+        name=name@entry=0xffffffff824ce259 "kmem_cache_node", size=size@entry=64, flags=flags@entry=8192,
+        useroffset=useroffset@entry=0, usersize=usersize@entry=0) at mm/slab_common.c:646
+    #5  0xffffffff82e62cd3 in kmem_cache_init () at mm/slub.c:4841
+    #6  0xffffffff82e2d554 in mm_init () at init/main.c:845
+    #7  start_kernel () at init/main.c:997
+    ```
+
+* __alloc_percpu (init kmem_cache.cpu_slab)
+
+    ```c
+    Breakpoint 4, alloc_kmem_cache_cpus (s=0xffffffff82ee1c40 <boot_kmem_cache_node>) at mm/slub.c:4026
+    4026            s->cpu_slab = __alloc_percpu(sizeof(struct kmem_cache_cpu),
+    (gdb) bt
+    #0  alloc_kmem_cache_cpus (s=0xffffffff82ee1c40 <boot_kmem_cache_node>) at mm/slub.c:4026
+    #1  kmem_cache_open (flags=flags@entry=54788096, s=0xffffffff82ee1c40 <boot_kmem_cache_node>,
+        s@entry=0xffff888003440000) at mm/slub.c:4351
+    #2  __kmem_cache_create (s=s@entry=0xffffffff82ee1c40 <boot_kmem_cache_node>, flags=flags@entry=8192)
+        at mm/slub.c:4907
+    #3  0xffffffff82e5e43a in create_boot_cache (s=0xffffffff82ee1c40 <boot_kmem_cache_node>,
+        name=name@entry=0xffffffff824ce259 "kmem_cache_node", size=size@entry=64, flags=flags@entry=8192,
+        useroffset=useroffset@entry=0, usersize=usersize@entry=0) at mm/slab_common.c:646
+    #4  0xffffffff82e62cd3 in kmem_cache_init () at mm/slub.c:4841
+    #5  0xffffffff82e2d554 in mm_init () at init/main.c:845
+    #6  start_kernel () at init/main.c:997
+    ```
+
+* kmem_cache_open --> init_kmem_cache_nodes (init kmem_cache.node)
+
+* slab_state = FULL
+
+    ```c
+    Breakpoint 1, slab_sysfs_init () at mm/slub.c:6034
+    6034            slab_state = FULL;
+    (gdb) bt
+    #0  slab_sysfs_init () at mm/slub.c:6034
+    #1  0xffffffff810011fc in do_one_initcall (fn=0xffffffff82e62614 <slab_sysfs_init>) at init/main.c:1303
+    #2  0xffffffff82e2db49 in do_initcall_level (command_line=0xffff888003474780 "rootwait", level=6) at init/main.c:1376
+    #3  do_initcalls () at init/main.c:1392
+    #4  do_basic_setup () at init/main.c:1411
+    #5  kernel_init_freeable () at init/main.c:1631
+    #6  0xffffffff81c9495a in kernel_init (unused=<optimized out>) at init/main.c:1519
+    #7  0xffffffff81002292 in ret_from_fork () at arch/x86/entry/entry_64.S:306
+    ```
+
+* do_slab_free
+
+    ```c
+    Breakpoint 1, do_slab_free (addr=18446744071580593291, cnt=1, tail=0x0 <fixed_percpu_data>, head=0xffff888003448160,
+        slab=0xffffea00000d1200, s=0xffff888003441400) at mm/slub.c:3596
+    3596            void *tail_obj = tail ? : head;
+    (gdb) bt
+    #0  do_slab_free (addr=18446744071580593291, cnt=1, tail=0x0 <fixed_percpu_data>, head=0xffff888003448160,
+        slab=0xffffea00000d1200, s=0xffff888003441400) at mm/slub.c:3596
+    #1  slab_free (addr=18446744071580593291, cnt=1, p=<synthetic pointer>, tail=<optimized out>, head=<optimized out>,
+        slab=0xffffea00000d1200, s=0xffff888003441400) at mm/slub.c:3662
+    #2  __kmem_cache_free (s=0xffff888003441400, x=x@entry=0xffff888003448160, caller=18446744071580593291)
+        at mm/slub.c:3674
+    #3  0xffffffff8135f9ac in kfree (object=object@entry=0xffff888003448160) at mm/slab_common.c:1007
+    ```
+
 
 ### Initialization of Memory Management
 
@@ -451,3 +529,5 @@ Breakpoint 1, try_to_free_pages (zonelist=0xffff888003fda900, order=order@entry=
 #21 exc_page_fault (regs=0xffffc90000123f58, error_code=20) at arch/x86/mm/fault.c:1575
 #22 0xffffffff81e00b77 in asm_exc_page_fault () at ./arch/x86/include/asm/idtentry.h:570
 ```
+
+### Virtual Process Memory

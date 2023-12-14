@@ -1,0 +1,93 @@
+@startuml
+title ___slab_alloc (slow path)
+
+start
+(L)
+note left:reread
+:slab = READ_ONCE(c->slab);
+if (!slab) then (Yes)
+    #LightYellow:new_slab;
+    -[hidden]->
+    detach
+    goto new_slab
+endif
+
+(L)
+note left:redo
+if (node mismatch) then (Yes)
+    #LightYellow:deactivate_slab;
+    -[hidden]->
+    detach
+    goto deactivate_slab
+endif
+
+if (pfmemalloc_match?) then (No)
+note right
+slab & PF_MEMALLOC
+This flags the process as a memory
+allocator. kswapd sets this flag
+and it is set for any process that
+is about to be killed by the Out Of
+Memory (OOM) killer which is discussed
+in Chapter 13. It tells the buddy
+allocator to ignore zone watermarks
+and assign the pages if at all possible
+end note
+    #LightYellow:deactivate_slab;
+    -[hidden]->
+    detach
+    goto deactivate_slab
+endif
+
+if (slab == c->slab?) then (No)
+    #LightYellow:deactivate_slab;
+    -[hidden]->
+    detach
+    goto deactivate_slab
+endif
+
+:freelist = get_freelist(s, slab);
+if (!freelist) then (Yes)
+    #LightYellow:new_slab;
+    -[hidden]->
+    detach
+    goto new_slab
+endif
+
+(L)
+note left:load_freelist
+:get slab from freelist;
+:return freelist;
+end
+
+(L)
+note left:deactivate_slab
+:deactivate current slab;
+note right
+c->slabe = NULL;
+c->freelist = NULL;
+end note
+
+(L)
+note left:new_slab
+if (slub_percpu_partial(c)) then (Yes)
+    #LightYellow:reread_slab;
+    -[hidden]->
+    detach
+    goto reread_slab
+endif
+
+(L)
+note left:new_objects
+:slab = new_slab;
+note right
+alloc slab from buddy system
+end note
+
+:fill the freelist;
+:return freelist;
+end
+
+stop
+
+@enduml

@@ -1,0 +1,27 @@
+@startuml
+title __kmem_cache_create
+
+start
+
+:size = ALIGN(size, BYTES_PER_WORD);
+note left
+Check that size is in terms of words. This
+is needed to avoid unaligned accesses for
+some archs when redzoning is used, and
+makes sure any on-slab bufctl's are also
+correctly aligned.
+end note
+note left:colour & colour_off
+split
+:set_objfreelist_slab_cache;
+split again
+:set_off_slab_cache;
+split again
+:set_on_slab_cache;
+end split
+:update alloc flags;
+:setup_cpu_cache;
+
+stop
+
+@enduml

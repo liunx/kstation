@@ -1,0 +1,10 @@
+@startuml
+title __slab_free
+
+start
+while (cmpxchg_double_slab?) is (true)
+
+end while (false)
+stop
+
+@enduml

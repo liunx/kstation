@@ -1,0 +1,27 @@
+@startuml
+title slab_alloc_node
+
+start
+:slab_pre_alloc_hook;
+:kfence_alloc;
+:object = c->freelist
+slab = c->slab;
+if (slow_path) then (Yes)
+:__slab_alloc;
+else (No)
+:get next_object;
+:this_cpu_cmpxchg_double;
+note right
+freelist <= next_freelist
+tid <= next_tid
+end note
+:prefetch_freepointer;
+note right:fetch next object to L1 cache
+endif
+:maybe_wipe_obj_freeptr;
+:slab_want_init_on_alloc;
+:slab_post_alloc_hook;
+:return object;
+stop
+
+@enduml
