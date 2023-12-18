@@ -1,0 +1,47 @@
+@startuml
+title shrink_lruvec
+
+start
+
+if (lru_gen_enabled()) then (Yes)
+    :lru_gen_shrink_lruvec();
+    :return;
+    detach
+endif
+:get_scan_count();
+note left
+    Determine how aggressively the anon
+    and file LRU lists should be scanned.
+end note
+while (inactive anon || active file || inactive file)
+
+    while (for_each_evictable_lru())
+        :scan number pages;
+        :shrink_list();
+        note left:reclaim number pages
+    endwhile
+
+    :cond_resched();
+    if (!nr_file || !nr_anon) then (Yes)
+        break
+    endif
+    if (scanned nr_file > nr_anon) then (Yes)
+        :scan anon pages;
+    else (No)
+        :scan file pages;
+    endif
+    :Recalculate the other LRU scan count;
+    endwhile
+
+:account sc->nr_reclaimed;
+if (can_age_anon_pages() && inactive_is_low()) then
+    :shrink_active_list();
+endif
+note left
+Even if we did not try to evict anon pages at all,
+we want to rebalance the anon lru active/inactive
+ratio.
+end note
+
+    stop
+    @enduml

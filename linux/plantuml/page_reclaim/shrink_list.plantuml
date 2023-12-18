@@ -1,0 +1,14 @@
+@startuml
+title shrink_list
+
+start
+
+if (is_active_lru()) then (Yes)
+    :shrink_active_list();
+else (No)
+    :shrink_deactive_list();
+endif
+
+stop
+
+@enduml

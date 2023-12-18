@@ -1,0 +1,13 @@
+@startuml
+title shrink_folio_list
+
+start
+
+while (!list_empty(folio_list))
+:remove folio from lru list;
+
+endwhile
+
+stop
+
+@enduml
