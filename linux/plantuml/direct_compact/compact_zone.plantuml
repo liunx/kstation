@@ -1,0 +1,17 @@
+@startuml
+title compact_zone
+
+:compaction_suitable();
+:adjust migrate and free scanners;
+:lru_add_drain();
+note left:pagevecs --> lru
+while (compact_finished() == CONTINUE)
+    :compact_finished();
+    :isolate_migratepages();
+    :migrate_pages();
+endwhile
+
+:release_freepages();
+note left:return pages to buddy system
+
+@enduml

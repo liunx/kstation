@@ -1,0 +1,88 @@
+@startuml
+skinparam ComponentStyle rectangle
+skinparam NoteBorderColor white
+skinparam NoteBackgroundColor pink
+skinparam NoteShadowing true
+skinparam Linetype ortho
+skinparam rectangle {
+    BorderColor white 
+}
+
+title Performing Compaction
+
+rectangle {
+    component compact_priority [
+    **compact_priority**
+    ----
+    <color:blue>compact_sync_full(0)
+    ----
+    <color:blue>compact_sync_light(1)
+    ----
+    <color:blue>compact_async(2)
+    ]
+
+    component migrate_mode [
+    **migrate_mode**
+    ----
+    <color:red>migrate_async(0)
+    ----
+    <color:red>migrate_sync_light(1)
+    ----
+    <color:red>migrate_sync(2)
+    ----
+    <color:red>migrate_sync_no_copy(3)
+    ]
+}
+
+rectangle {
+    ' declare components
+    [__alloc_pages_slowpath()]
+    [kcompactd_do_work()]
+    [sysctl_compaction_handler()]
+    [sysfs_compact_node()]
+
+    ' layout
+    [__alloc_pages_slowpath()]-down[hidden]-[kcompactd_do_work()]
+    [kcompactd_do_work()]-down[hidden]-[sysctl_compaction_handler()]
+    [sysctl_compaction_handler()]-down[hidden]-[sysfs_compact_node()]
+
+    ' add notes for components
+    note left of [__alloc_pages_slowpath()]
+    1) direct compaction
+    end note
+
+    note left of [kcompactd_do_work()]
+    2) background compacion
+    end note
+
+    note left of [sysfs_compact_node()]
+    3) manual compaction
+    echo 1 > /sys/devices/system/node/node0/compact
+    end note
+
+    note left of [sysctl_compaction_handler()]
+    3) manual compaction
+    echo 1 > /proc/sys/vm/compact_memory
+    end note
+}
+
+rectangle {
+    [__alloc_pages_direct_compact()]
+    [try_to_compact_pages()]
+    [compact_zone_order()]
+
+    [__alloc_pages_direct_compact()]-->[try_to_compact_pages()]
+    [try_to_compact_pages()]-->[compact_zone_order()] :<color:red>migrate_async(0)\n<color:red>migrate_light(1)
+}
+
+' do the links
+[__alloc_pages_slowpath()]-->[__alloc_pages_direct_compact()] :<color:blue>compact_async(2)\n<color:blue>compact_light(1)\n<color:blue>compact_full(0)
+[kcompactd_do_work()]-->[compact_zone()] :<color:red>migrate_sync_light(1)
+[sysctl_compaction_handler()]-->[compact_nodes()]
+[sysfs_compact_node()]-->[compact_node()]
+[compact_nodes()]-->[compact_node()] :<color:red>migrate_sync(2)
+[compact_node()]-->[compact_zone()]
+[compact_zone_order()]-->[compact_zone()]
+
+
+@enduml

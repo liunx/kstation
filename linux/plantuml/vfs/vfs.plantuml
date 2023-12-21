@@ -1,0 +1,8 @@
+@startuml
+title the Virtual Filesystem
+
+[VFS]-->[Disk-based filesystems]
+[VFS]-->[Network filesystems]
+[VFS]-->[Special filesystems]
+
+@enduml

@@ -1,0 +1,35 @@
+@startuml
+skinparam ComponentStyle rectangle
+skinparam linetype ortho
+
+title page_cache
+
+package "User Mode" {
+    component "Process" as process
+    component "read()" as read
+    component "write()" as write
+    component "mmap()" as mmap
+
+    process-->read
+    process-->write
+    process-->mmap
+}
+
+package "Kernel Mode" {
+    component "Page Caches" as page_cache {
+        [Regular Files]
+        [Directories]
+        [Block Device Files]
+        [Swapped User Processes]
+        [Special FS]
+    }
+
+    [VFS]-->page_cache : **Buffered I/O**
+    [VFS]-->[Block I/O] : **Directed I/O**
+    page_cache-->[Block I/O]
+}
+read-->[VFS]
+write-->[VFS]
+mmap-->page_cache
+
+@enduml

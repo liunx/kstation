@@ -1,0 +1,19 @@
+@startuml
+title try_to_compact_pages
+
+|try_to_compact_pages()|
+while (for each node list)
+    :compact_zone_order();
+    |#LightYellow|compact zone|
+    :compact_zone();
+    |try_to_compact_pages()|
+    if (result?) then (Yes)
+        :compaction_defer_reset();
+        break
+    endif
+    :defer_compaction();
+endwhile
+
+:return rc;
+
+@enduml
