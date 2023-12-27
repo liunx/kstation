@@ -1,0 +1,12 @@
+@startuml
+title wakeup_kswapd()
+
+note left
+ A zone is low on free memory or too fragmented for high-order memory.  If
+ kswapd should reclaim (direct reclaim is deferred), wake it up for the zone's
+ pgdat.  It will wake up kcompactd after reclaiming memory.  If kswapd reclaim
+ has failed or is not needed, still wake up kcompactd if only compaction is
+ needed.
+end note
+
+@enduml

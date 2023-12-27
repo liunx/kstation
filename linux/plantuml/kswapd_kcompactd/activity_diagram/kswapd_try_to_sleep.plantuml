@@ -1,0 +1,29 @@
+@startuml
+
+title kswapd_try_to_sleep()
+
+start
+:prepare_to_wait();
+if (prepare_kswapd_sleep()) then (Yes)
+    :reset_isolation_suitable();
+    :wakeup_kcompactd();
+    :schedule_timeout(HZ/10);
+    if (woken prematurely) then (Yes)
+        :reset kswapd_highest_zoneidx and order;
+    endif
+    :finish_wait();
+    :prepare_to_wait();
+endif
+
+if (!remaining &&\nprepare_kswapd_sleep()) then (Yes)
+    :set_pgdat_percpu_threshold();
+ 	if (!kthread_should_stop()) then (Yes)
+        :schedule();
+        note left:long time sleep
+    endif
+endif
+:finish_wait();
+
+stop
+
+@enduml

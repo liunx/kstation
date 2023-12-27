@@ -3,6 +3,7 @@ title try_to_compact_pages
 
 |try_to_compact_pages()|
 while (for each node list)
+    :Check compaction priority;
     :compact_zone_order();
     |#LightYellow|compact zone|
     :compact_zone();
@@ -11,7 +12,9 @@ while (for each node list)
         :compaction_defer_reset();
         break
     endif
+if (prio != COMPACT_PRIO_ASYNC \n&& (status == (COMPACT_COMPLETE || COMPACT_PARTIAL_SKIPPED))) then (Yes)
     :defer_compaction();
+endif
 endwhile
 
 :return rc;

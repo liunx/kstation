@@ -1,0 +1,39 @@
+@startuml
+
+title kcompactd_do_work()
+
+start
+:init struct of scan_control;
+note left:.mode = MIGRATE_SYNC_LIGHT
+:count_compact_event(KCOMPACTD_WAKE);
+while (zoneid = 0; zoneid <= cc.highest_zoneidx; zoneid++)
+    if ()
+        split
+            :!populated_zone();
+        split again
+            :compaction_deferred();
+        split again
+            :compaction_suitable() != COMPACT_CONTINUE;
+        end split
+        :continue;
+        detach
+    endif
+    if (kthread_should_stop()) then (Yes)
+		:return;
+        detach
+    endif
+    :status = compact_zone(&cc, NULL);
+    if (status == COMPACT_SUCCESS) then (Yes)
+        :compaction_defer_reset();
+    elseif (status == (COMPACT_PARTIAL_SKIPPED\n|| COMPACT_COMPLETE)) then (Yes)
+        :drain_all_pages();
+        :defer_compaction();
+    endif
+    :count_compact_events(KCOMPACTD_MIGRATE_SCANNED);
+	:count_compact_events(KCOMPACTD_FREE_SCANNED);
+endwhile
+:Update order/highest_zoneidx;
+
+stop
+
+@enduml
