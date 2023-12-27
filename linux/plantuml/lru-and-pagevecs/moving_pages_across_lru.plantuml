@@ -1,0 +1,21 @@
+@startuml
+
+title Moving pages across the LRU lists
+
+state a: PG_active == 0\nPG_referenced == 0
+state b: PG_active == 0\nPG_referenced == 1
+state c: PG_active == 1\nPG_referenced == 0
+state d: PG_active == 1\nPG_referenced == 1
+
+a-down->b
+b-up->a
+c-left->a
+c-down->d
+d-up->c
+d-left->b
+d-left->a
+b-up->c
+d-->d
+
+
+@enduml

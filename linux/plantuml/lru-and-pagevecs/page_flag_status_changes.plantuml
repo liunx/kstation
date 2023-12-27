@@ -1,0 +1,95 @@
+@startuml
+skinparam ComponentStyle rectangle
+skinparam Linetype ortho
+skinparam Card {
+    BorderColor transparent
+    FontSize 0
+}
+
+title Page flag status changes
+
+card c1 {
+    rectangle "lru.lists[LRU_INACTIVE_FILE]" as iact_anon #LightGray {
+        component "P\nA\nG\nE" as ia_p1 #OrangeRed
+        component "P\nA\nG\nE" as ia_p2 #OrangeRed
+        component "P\nA\nG\nE" as ia_p3 #GreenYellow
+        component "P\nA\nG\nE" as ia_p4 #GreenYellow
+        component "P\nA\nG\nE" as ia_p5 #GreenYellow
+        component "P\nA\nG\nE" as ia_p6 #GreenYellow
+        component "P\nA\nG\nE" as ia_p7 #Silver
+        component "P\nA\nG\nE" as ia_p8 #Silver
+
+        ia_p1-right.>ia_p2
+        ia_p2-left.>ia_p1
+        ia_p2-right.>ia_p3
+        ia_p3-left.>ia_p2
+        ia_p3-right.>ia_p4
+        ia_p4-left.>ia_p3
+        ia_p4-right.>ia_p5
+        ia_p5-left.>ia_p4
+        ia_p5-right.>ia_p6
+        ia_p6-left.>ia_p5
+        ia_p6-right.>ia_p7
+        ia_p7-left.>ia_p6
+        ia_p7-right.>ia_p8
+        ia_p8-left.>ia_p7
+    }
+
+    card rcenter {
+        component "demote/deactive\n<color:red>PG_reference=0\nPTE.AF=0" as demote
+    }
+
+    rectangle "lru.lists[LRU_ACTIVE_FILE]" as act_anon #LightPink {
+        component "P\nA\nG\nE" as aa_p1 #OrangeRed
+        component "P\nA\nG\nE" as aa_p2 #OrangeRed
+        component "P\nA\nG\nE" as aa_p3 #GreenYellow
+        component "P\nA\nG\nE" as aa_p4 #GreenYellow
+        component "P\nA\nG\nE" as aa_p5 #GreenYellow
+        component "P\nA\nG\nE" as aa_p6 #GreenYellow
+        component "P\nA\nG\nE" as aa_p7 #Silver
+        component "P\nA\nG\nE" as aa_p8 #Silver
+
+        aa_p1-right.>aa_p2
+        aa_p2-left.>aa_p1
+        aa_p2-right.>aa_p3
+        aa_p3-left.>aa_p2
+        aa_p3-right.>aa_p4
+        aa_p4-left.>aa_p3
+        aa_p4-right.>aa_p5
+        aa_p5-left.>aa_p4
+        aa_p5-right.>aa_p6
+        aa_p6-left.>aa_p5
+        aa_p6-right.>aa_p7
+        aa_p7-left.>aa_p6
+        aa_p7-right.>aa_p8
+        aa_p8-left.>aa_p7
+    }
+
+    component "rotate" as rotate1
+    component "rotate" as rotate2
+
+    ' layout
+
+    ' links
+    ia_p8-->[rotate1] : PG_reference=0\nPTE.AF=1
+    [rotate1]-->ia_p1 : PG_reference=1\nPTE.AF=0
+
+    aa_p8-->[rotate2] : PG_reference=?\nPTE.AF>0
+    [rotate2]-->aa_p1 : PG_reference=1\nPTE.AF=0
+
+    aa_p8-right->[demote]
+    [demote]-right->ia_p1
+}
+
+component "promote\nactive" as promote
+
+promote-down[hidden]-demote
+
+ia_p8-left->[promote] : PG_reference=0, PTE.AF=1 \nor PG_reference=?, PTE.AF>1
+[promote]-right->aa_p1 : PG_reference=1, PTE.AF=0
+
+aa_p1<-left-[refault\nactive]
+
+ia_p8-right->[evict] : PG_reference=?\nPTE.AF=0
+
+@enduml

@@ -1,0 +1,38 @@
+@startuml
+skinparam ComponentStyle rectangle
+'left to right direction
+
+title isolate_migratepages_block()
+
+rectangle pageblock {
+    component "free page           " as fp1
+    component "compound page       " as cp1
+    component "kernel page         " as kp1
+    component "non-lru movable page" as nlmp1
+    component "non-lru page        " as nlp1
+    component "anon(pinned) page   " as app1
+    component "anon(swapped) page  " as asp1
+    component "anon page           " as ap1
+    component "file page           " as flp1
+    component "anon page           " as ap2
+    component "unevictable page    " as uvp1
+
+    ' fp1-down[hidden]-cp1
+    ' cp1-down[hidden]-kp1
+    ' kp1-down[hidden]-nlmp1
+    ' nlmp1-down[hidden]-nlp1
+    ' nlp1-down[hidden]-app1
+    ' app1-down[hidden]-asp1
+    ' asp1-down[hidden]-ap1
+    ' ap1-down[hidden]-flp1
+    ' flp1-down[hidden]-ap2
+    ' ap2-down[hidden]-uvp1
+}
+
+component xxx [
+    <color:red>pageblock
+    ----
+    <color:red>pageblock
+]
+
+@enduml

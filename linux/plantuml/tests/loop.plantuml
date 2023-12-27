@@ -1,0 +1,11 @@
+@startuml
+
+title loop tests
+state C <<choice>>
+state "for each nodelist" as loop
+[*] --> loop : Start
+loop --> A : Yes
+loop --> B : No
+B --> C
+C --> loop : continue
+@enduml

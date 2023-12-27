@@ -1,0 +1,54 @@
+@startuml
+skinparam ActivityFontSize 16
+
+title get_scan_count()
+
+start
+:scan_balance = SCAN_FRACT;
+split
+    if (no swap area ?) then (Yes)
+        :scan_balance = SCAN_FILE;
+    endif
+split again
+    if (cgroup_reclaim(sc)\n&& !swappiness) then (Yes)
+        :scan_balance = SCAN_FILE;
+    endif
+split again
+    if (!sc->priority\n&& swappiness) then (Yes)
+        :scan_balance = SCAN_EQUAL
+        <color:red>the highest priority is (OOM is near);
+    endif
+split again
+    if (sc->file_is_tiny) then (Yes)
+        :scan_balance = SCAN_ANON;
+    endif
+split again
+    if (sc->cache_trim_mode)
+        :scan_balance = SCAN_FILE
+        (enough inactive page cache);
+    endif
+end split
+:Calculate the pressure balance
+between anon and file pages;
+
+while (for_each_evictable_lru(lru))
+    :get lruvec size;
+    :mem_cgroup_protection();
+    note left
+        <code>
+        *min = READ_ONCE(memcg->memory.emin);
+        *low = READ_ONCE(memcg->memory.elow);
+        </code>
+    end note
+    if (min || low) then (Yes)
+        :Scale a cgroup's reclaim pressure;
+    endif
+    if (without cgroup) then (Yes)
+        :scan = min(lruvec_size, SWAP_CLUSTER_MAX);
+    endif
+    :determine scan count via scan_type;
+    :nr[lru] = scan;
+endwhile
+stop
+
+@enduml

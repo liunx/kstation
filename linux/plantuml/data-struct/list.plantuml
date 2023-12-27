@@ -1,0 +1,48 @@
+@startuml
+skinparam ComponentStyle rectangle
+
+skinparam Rectangle {
+    BorderColor transparent
+    FontColor transparent
+    FontSize 0
+}
+skinparam Component {
+    BorderColor transparent
+    BackgroundColor SkyBlue
+}
+
+title List
+rectangle xxx {
+rectangle h1 {
+    component "data" as d1
+    component "next" as n1
+
+    d1-right[#SkyBlue,plain,thickness=30]-n1
+    'n1-left-d1
+}
+
+rectangle h3 {
+    component "data" as d3
+    component "next" as n3
+
+    d3-right-n3
+    n3-left-d3
+}
+
+rectangle h2 {
+    component "data" as d2
+    component "next" as n2
+
+    d2-right-n2
+    n2-left-d2
+}
+
+}
+
+xxx-down[hidden]-h2
+
+n1-->d2
+n2-->d3
+n3-->[NULL]
+
+@enduml

@@ -1,0 +1,58 @@
+@startuml
+skinparam ComponentStyle rectangle
+skinparam Rectangle {
+    BorderColor transparent
+    FontSize 0
+}
+
+title Drirect reclaim
+
+rectangle {
+    component "__perform_reclaim()\t\t" as __perform_reclaim
+    [get_page_from_freelist()]
+
+    [__perform_reclaim]-down.......[get_page_from_freelist()]
+}
+
+[__alloc_pages_direct_reclaim()]-->[__perform_reclaim]
+[__perform_reclaim]-right->[try_to_free_pages()]
+
+rectangle {
+    [throttle_direct_reclaim()]
+    [do_try_to_free_pages()]
+    [blank] $tag
+
+    [throttle_direct_reclaim()]-down.[do_try_to_free_pages()]
+    [do_try_to_free_pages()]-down[hidden].....[blank]
+    hide $tag
+}
+
+[try_to_free_pages()]-->[throttle_direct_reclaim()]
+
+rectangle {
+    [vmpressure_prio()]
+    [shrink_zones()]
+    [blank2] $tag2
+
+    [vmpressure_prio()]-down.[shrink_zones()]
+    [shrink_zones()]-down.....[blank2]
+    hide $tag2
+}
+
+[do_try_to_free_pages()]-right->[vmpressure_prio()]
+[shrink_zones()]-->[shrink_node()]
+
+rectangle {
+    [shrink_node_memcgs()]
+    [shrink_slab()]
+    [empty] $tag1
+
+    [shrink_node_memcgs()]-down.[shrink_slab()]
+    [shrink_slab()]-down.[empty]
+
+    hide $tag1
+}
+
+[shrink_node()]-->[shrink_node_memcgs()]
+
+@enduml

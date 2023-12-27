@@ -1,0 +1,69 @@
+@startuml
+title shrink_folio_list
+
+start
+:init list heads;
+note left
+<code>
+LIST_HEAD(ret_folios);
+LIST_HEAD(free_folios);
+LIST_HEAD(demote_folios);
+</code>
+end note
+:cond_resched();
+:do_demote_pass = can_demote();
+
+while (!list_empty(folio_list))
+    :cond_resched();
+    :remove folio from lru list;
+    :try lock;
+    :account number of pages;
+    :skip unevictable pages;
+    :skip mapped pages
+    (!sc->may_unmap);
+    :folio_update_gen();
+    :folio_check_dirty_writeback();
+
+    if (write back ?) then (Yes)
+        if (kswapped is reclaiming ?) then (Yes)
+            :increase the nr_immediate;
+            :skip shrink page;
+            :goto active_locked;
+        elseif (writeback via memcg\nor page is not yet being \nreclaimed or fs is not available) then (Yes)
+            :set reclaim flag;
+            :increase the nr_immediate; 
+            :skip shrink page;
+            :goto active_locked;
+        else
+            :wait writeback complete;
+            :add page to tail of page_list;
+            :continue;
+        endif
+    endif
+    :folio_check_references();
+	if (do_demote_pass &&\n(thp_migration_supported()\n|| !folio_test_large(folio))) then (Yes)
+    :add page to demote_list;
+    :continue;
+    endif
+    :handle swap area anon pages;
+    :split pages;
+    :try to unmmap pages when mapped;
+
+    if (page is drity) then (Yes)
+        if (file page not in kswapd) then (Yes)
+            :set reclaim flag;
+            :goto active_locked;
+        endif
+        :try_to_unmap_flush_dirty();
+        :page_out();
+        :handle page_out result;
+    endif
+    :try to free page buffers;
+    :clean anon page which not in swap area;
+    :add page to free_folios;
+endwhile
+:free free_folios to buddy system;
+
+stop
+
+@enduml

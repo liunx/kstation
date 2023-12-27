@@ -1,0 +1,46 @@
+@startuml
+skinparam ComponentStyle rectangle
+
+title isolate migrate pages
+
+rectangle ZONE {
+    component "pageblock" as pb1
+    component "pageblock" as pb2 #GreenYellow
+    component "pageblock" as pb3
+    component "pageblock" as pb4
+
+    pb1-down[hidden]-pb2
+    pb2-down[hidden]-pb3
+    pb3-down[hidden]-pb4
+}
+
+note left of pb2
+    z->migrate_pfn
+end note
+
+rectangle pageblock {
+    component "page" as p1 #Aqua
+    component "page" as p2
+    component "page" as p3 #Aqua
+    component "page" as p4
+
+    p1-right[hidden]-p2
+    p2-right[hidden]-p3
+    p3-right[hidden]-p4
+}
+
+rectangle cc->migratepages {
+    component "page" as mp1 #Aqua
+    component "page" as mp2 #Aqua
+
+    mp1-right.>mp2
+    mp2-right.>mp1
+}
+
+pb2-.>pageblock : **isolate_migratepages_block()**
+
+p1-down.>mp1 : movable LRU page
+p3-down.>mp2
+
+
+@enduml

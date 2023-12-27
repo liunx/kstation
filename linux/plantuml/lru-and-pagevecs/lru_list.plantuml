@@ -1,0 +1,137 @@
+@startuml
+skinparam ComponentStyle rectangle
+skinparam Card {
+    BorderColor transparent
+    FontSize 0
+}
+skinparam RectangleBorderColor transparent
+
+title LRU lists for reclaiming pages
+
+card {
+
+card r1 {
+rectangle "lru.lists[LRU_INACTIVE_ANON]" as iact_anon #LightGray {
+    component "P\nA\nG\nE" as ia_p1 #OrangeRed
+    component "P\nA\nG\nE" as ia_p2 #OrangeRed
+    component "P\nA\nG\nE" as ia_p3 #GreenYellow
+    component "P\nA\nG\nE" as ia_p4 #GreenYellow
+    component "P\nA\nG\nE" as ia_p5 #GreenYellow
+    component "P\nA\nG\nE" as ia_p6 #GreenYellow
+    component "P\nA\nG\nE" as ia_p7 #Silver
+    component "P\nA\nG\nE" as ia_p8 #Silver
+
+    ia_p1-right.>ia_p2
+    ia_p2-right.>ia_p3
+    ia_p3-right.>ia_p4
+    ia_p4-right.>ia_p5
+    ia_p5-right.>ia_p6
+    ia_p6-right.>ia_p7
+    ia_p7-right.>ia_p8
+
+    ia_p1<-right.ia_p8 : **rotate**
+}
+
+rectangle "lru.lists[LRU_ACTIVE_ANON]" as act_anon #LightPink {
+    component "P\nA\nG\nE" as aa_p1 #OrangeRed
+    component "P\nA\nG\nE" as aa_p2 #OrangeRed
+    component "P\nA\nG\nE" as aa_p3 #GreenYellow
+    component "P\nA\nG\nE" as aa_p4 #GreenYellow
+    component "P\nA\nG\nE" as aa_p5 #GreenYellow
+    component "P\nA\nG\nE" as aa_p6 #GreenYellow
+    component "P\nA\nG\nE" as aa_p7 #Silver
+    component "P\nA\nG\nE" as aa_p8 #Silver
+
+    aa_p1-right.>aa_p2
+    aa_p2-right.>aa_p3
+    aa_p3-right.>aa_p4
+    aa_p4-right.>aa_p5
+    aa_p5-right.>aa_p6
+    aa_p6-right.>aa_p7
+    aa_p7-right.>aa_p8
+
+    aa_p1<-right.aa_p8 : **rotate**
+}
+
+' layout
+'act_anon-up-iact_anon
+
+' links
+aa_p8-right.>ia_p1 : **demote / deactive**
+ia_p8-right.>aa_p1 : **promote / active**
+
+aa_p1<-down-[refault\nactive]
+ia_p1<-down-[add\nanon]
+
+ia_p7-down->[swap]
+ia_p7-down->[buddy free]
+ia_p8-down->[swap]
+ia_p8-down->[buddy free]
+}
+
+card r2 {
+rectangle "lru.lists[LRU_INACTIVE_FILE]" as ifct_file #LightGray {
+    component "P\nA\nG\nE" as if_p1 #OrangeRed
+    component "P\nA\nG\nE" as if_p2 #OrangeRed
+    component "P\nA\nG\nE" as if_p3 #GreenYellow
+    component "P\nA\nG\nE" as if_p4 #GreenYellow
+    component "P\nA\nG\nE" as if_p5 #GreenYellow
+    component "P\nA\nG\nE" as if_p6 #GreenYellow
+    component "P\nA\nG\nE" as if_p7 #Silver
+    component "P\nA\nG\nE" as if_p8 #Silver
+
+    if_p1-right.>if_p2
+    if_p2-right.>if_p3
+    if_p3-right.>if_p4
+    if_p4-right.>if_p5
+    if_p5-right.>if_p6
+    if_p6-right.>if_p7
+    if_p7-right.>if_p8
+
+    if_p1<-right.if_p8 : **rotate**
+}
+
+rectangle "lru.lists[LRU_ACTIVE_FILE]" as act_file #LightPink {
+    component "P\nA\nG\nE" as af_p1 #OrangeRed
+    component "P\nA\nG\nE" as af_p2 #OrangeRed
+    component "P\nA\nG\nE" as af_p3 #GreenYellow
+    component "P\nA\nG\nE" as af_p4 #GreenYellow
+    component "P\nA\nG\nE" as af_p5 #GreenYellow
+    component "P\nA\nG\nE" as af_p6 #GreenYellow
+    component "P\nA\nG\nE" as af_p7 #Silver
+    component "P\nA\nG\nE" as af_p8 #Silver
+
+    af_p1-right.>af_p2
+    af_p2-right.>af_p3
+    af_p3-right.>af_p4
+    af_p4-right.>af_p5
+    af_p5-right.>af_p6
+    af_p6-right.>af_p7
+    af_p7-right.>af_p8
+
+    af_p1<-right.af_p8 : **rotate**
+}
+
+component "refault\nactive" as refault
+component "buddy free" as bfree
+
+' layout
+'act_file-up-ifct_file
+
+' links
+af_p8-right.>if_p1 : **demote / deactive**
+if_p8-right.>af_p1 : **promote / active**
+
+af_p1<-down-refault
+if_p1<-down-[add\nfile]
+
+if_p7-down->[write back]
+if_p7-down->bfree
+if_p8-down->[write back]
+if_p8-down->bfree
+}
+
+r2-up[hidden]--r1
+}
+
+@enduml

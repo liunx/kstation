@@ -1,0 +1,22 @@
+@startuml
+skinparam ActivityFontSize 16
+title isolate_lru_folios
+
+start
+:src = &lruvec->lists[lru];
+:LIST_HEAD(folios_skipped);
+
+while (scan < nr_to_scan \n&& !list_empty(src))
+    :fetch folios;
+    if (folio_zonenum(folio) > sc->reclaim_idx ?) then (Yes)
+        :list_move(&folio->lru, &folios_skipped);
+    endif
+    :checking folios; 
+endwhile
+
+:Splice any skipped folios
+to the start of the LRU list;
+
+stop
+
+@enduml
