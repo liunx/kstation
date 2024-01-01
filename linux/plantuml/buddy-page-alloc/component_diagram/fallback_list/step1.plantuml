@@ -1,0 +1,34 @@
+@startuml
+!$font_size = 200
+!$border_thick = 5
+
+scale 1/5
+skinparam ComponentStyle rectangle
+skinparam Component {
+    FontSize $font_size
+    BorderThickness $border_thick
+    BorderColor black
+}
+skinparam Rectangle {
+    FontSize $font_size
+    BorderColor black
+    BorderThickness 20
+    BackgroundColor transparent
+}
+
+skinparam Package {
+    FontSize $font_size
+    BorderThickness 0
+    BorderColor transparent
+}
+
+package "rmqueue_buddy()" {
+    rectangle "step 1: take care of ALLOC_HARDER first" as step1 {
+        component "\tfree_list[MIGATE_HIGHATOMIC]\t" as fl #Grey
+        [tag0] $tag0
+        fl-down-[tag0]
+        hide $tag0
+    }
+}
+
+@enduml

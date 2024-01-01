@@ -1,0 +1,31 @@
+@startuml
+
+skinparam ComponentStyle rectangle
+skinparam Component {
+    FontSize 200
+    BackgroundColor Yellow
+    BorderThickness 10
+    BorderColor black
+}
+
+skinparam Rectangle {
+    BackgroundColor transparent
+    BorderColor transparent
+}
+
+rectangle {
+    component "free_list[MIGRATE_ISOLATE]\t\t" as fl1
+    component "free_list[MIGRATE_CMA]\t\t\t" as fl2
+    component "free_list[MIGRATE_HIGHATOMIC]\t" as fl3
+    component "free_list[MIGRATE_RECLAIMABLE]\t" as fl4
+    component "free_list[MIGRATE_MOVABLE]\t\t" as fl5
+    component "free_list[MIGRATE_UNMOVABLE]\t" as fl6
+
+    fl1-down[hidden]-fl2
+    fl2-down[hidden]-fl3
+    fl3-down[hidden]-fl4
+    fl4-down[hidden]-fl5
+    fl5-down[hidden]-fl6
+}
+
+@enduml

@@ -1,0 +1,30 @@
+@startuml
+
+skinparam ComponentStyle rectangle
+skinparam Component {
+    FontSize 200
+    BackgroundColor transparent
+    BorderColor black
+    BorderThickness 10
+}
+
+skinparam Rectangle {
+    FontSize 200
+    BackgroundColor transparent
+    BorderColor transparent
+}
+
+rectangle {
+    component "free_area[0]" as free_area0 #Yellow
+    component "free_area[1]" as free_area1 #Grey
+    component "free_area[2]" as free_area2 #Yellow
+    Rectangle "o\no\no" as free_area_omit
+    component "free_area[N]" as free_areaN #Grey
+
+    free_area0-up[hidden].>free_area1
+    free_area1-up[hidden].>free_area2
+    free_area2-up[hidden].>free_area_omit
+    free_area_omit-up[hidden].>free_areaN
+}
+
+@enduml

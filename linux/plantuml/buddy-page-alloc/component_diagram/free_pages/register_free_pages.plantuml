@@ -1,0 +1,101 @@
+@startuml
+skinparam ComponentStyle rectangle
+skinparam Component {
+    BackgroundColor transparent
+    BorderThickness 1.5
+}
+
+rectangle r1 {
+    component p1 #LightGreen [
+    page@0x1020000\t
+    ----
+    ._mapcount = -128
+    ----
+    .private = 2
+    ----
+    .index = 1
+    ----
+    .count = 0
+    ]
+
+    component p2 #LightGreen [
+    page@0x1021000\t
+    ]
+
+    component p3 #LightGreen [
+    page@0x1022000\t
+    ]
+
+    component p4 #LightGreen [
+    page@0x1023000\t
+    ]
+
+    p1-down.>p2
+    p2-down.>p3
+    p3-down.>p4
+}
+
+rectangle r2 {
+    component p5 #LightBlue [
+    page@0x1024000\t
+    ----
+    ._mapcount = -128
+    ----
+    .private = 2
+    ----
+    .index = 1
+    ----
+    .count = 0
+    ]
+
+    component p6 #LightBlue [
+    page@0x1025000\t
+    ]
+
+    component p7 #LightBlue [
+    page@0x1026000\t
+    ]
+
+    component p8 #LightBlue [
+    page@0x1027000\t
+    ]
+
+    p5-down.>p6
+    p6-down.>p7
+    p7-down.>p8
+}
+
+rectangle r3 {
+    component p9 #LightGreen [
+    page@0x102c000\t
+    ----
+    ._mapcount = -128
+    ----
+    .private = 2
+    ----
+    .index = 1
+    ----
+    .count = 0
+    ]
+
+    component p10 #LightGreen [
+    page@0x102d000\t
+    ]
+
+    component p11 #LightGreen [
+    page@0x102e000\t
+    ]
+
+    component p12 #LightGreen [
+    page@0x102f000\t
+    ]
+
+    p9-down.>p10
+    p10-down.>p11
+    p11-down.>p12
+}
+
+p1<-right->p5 : Buddy
+p5-right-p9
+
+@enduml

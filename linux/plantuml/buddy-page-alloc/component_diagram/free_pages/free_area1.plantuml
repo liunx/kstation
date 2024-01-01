@@ -1,0 +1,19 @@
+@startuml
+scale 4096x4096
+skinparam ComponentStyle rectangle
+skinparam Component {
+    FontSize 200
+    BackgroundColor LightGreen
+    BorderThickness 10
+    BorderColor black
+}
+
+component "free_area[1]\t" as fa
+component "2 pages\t\t\t" as p4 #transparent
+component "free_list[MIGRATE_UNMOVABLE]\t" as fl
+component "nr_free=1\t\t\t\t\t\t\t" as nf
+fa-right[hidden]-fl
+fa-down[hidden]-p4
+fl-down[hidden]-nf
+
+@enduml

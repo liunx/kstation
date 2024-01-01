@@ -1,0 +1,10 @@
+@startuml
+left to right direction
+skinparam ComponentStyle rectangle
+
+[rmqueue()]-->[rmqueue_pcplist()]
+[rmqueue()]-->[__rmqueue_smallest()]
+[__rmqueue_smallest()]-.[__rmqueue()]
+[__rmqueue()]-->[__rmqueue_smallest2()]
+[__rmqueue_smallest2()]-->[__rmqueue_cma_fallback()]
+@enduml

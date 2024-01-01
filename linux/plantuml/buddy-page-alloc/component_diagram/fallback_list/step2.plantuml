@@ -1,0 +1,45 @@
+@startuml
+!$font_size = 200
+!$border_thick = 5
+
+scale 1/5
+skinparam ComponentStyle rectangle
+skinparam Component {
+    FontSize $font_size
+    BorderThickness $border_thick
+    BorderColor black
+}
+skinparam Rectangle {
+    FontSize $font_size
+    BorderThickness 0
+    BackgroundColor transparent
+}
+
+skinparam Package {
+    FontSize $font_size
+    BorderThickness 0
+    BackgroundColor transparent
+}
+
+package "__rmqueue()" as pack1 {
+    rectangle "step 2: normal process\t\t\t\t\t" as step2 {
+        component "\tfree_list[MIGRATE_ISOLATE]\t\t" as fl1 #White
+        component "\tfree_list[MIGRATE_CMA]\t\t\t" as fl2 #Yellow
+        component "\tfree_list[MIGRATE_HIGHATOMIC]\t" as fl3 #Grey
+        component "\tfree_list[MIGRATE_RECLAIMABLE]\t" as fl4 #Magenta
+        component "\tfree_list[MIGRATE_MOVABLE]\t\t" as fl5 #LightGreen
+        component "\tfree_list[MIGRATE_UNMOVABLE]\t" as fl6 #LightBlue
+        [tag1] $tag1
+
+        fl1-down[hidden]-fl2
+        fl2-down[hidden]-fl3
+        fl3-down[hidden]-fl4
+        fl4-down[hidden]-fl5
+        fl5-down[hidden]-fl6
+        fl6-down-[tag1]
+        hide $tag1
+    }
+}
+
+
+@enduml

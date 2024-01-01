@@ -1,0 +1,44 @@
+@startuml
+!$font_size = 200
+!$border_thick = 2
+
+scale 1/5
+skinparam ComponentStyle rectangle
+skinparam Component {
+    FontSize $font_size
+    BorderThickness $border_thick
+    BorderColor black
+}
+skinparam Rectangle {
+    FontSize $font_size
+    BorderThickness 0
+    BackgroundColor transparent
+}
+
+skinparam Package {
+    FontSize $font_size
+    BorderThickness 0
+    BackgroundColor transparent
+}
+
+package "__rmqueue_fallback()" as pack3 {
+    rectangle "step 4: fallback migrate type\t\t\t\t" as step4 {
+        component "\tfree_list[MIGRATE_ISOLATE]\t\t" as flm1 #White
+        component "\tfree_list[MIGRATE_CMA]\t\t\t" as flm2 #Yellow
+        component "\tfree_list[MIGRATE_HIGHATOMIC]\t" as flm3 #Grey
+        component "\tfree_list[MIGRATE_RECLAIMABLE]\t" as flm4 #Magenta
+        component "\tfree_list[MIGRATE_MOVABLE]\t\t" as flm5 #LightGreen
+        component "\tfree_list[MIGRATE_UNMOVABLE]\t" as flm6 #LightBlue
+        [tag3] $tag3
+
+        flm1-down[hidden]-flm2
+        flm2-down[hidden]-flm3
+        flm3-down[hidden]-flm4
+        flm4-down[hidden]-flm5
+        flm5-down[hidden]-flm6
+        flm6-down---[tag3]
+        hide $tag3
+    }
+}
+
+@enduml

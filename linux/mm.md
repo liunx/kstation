@@ -531,3 +531,11 @@ Breakpoint 1, try_to_free_pages (zonelist=0xffff888003fda900, order=order@entry=
 ```
 
 ### Virtual Process Memory
+
+```ditaa {cmd=true args=["-E"]}
+        +-------+
+        |       |
+        |       |
+        |       | 
+        +-------+
+```

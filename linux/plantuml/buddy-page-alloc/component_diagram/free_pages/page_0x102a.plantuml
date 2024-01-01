@@ -1,0 +1,35 @@
+@startuml
+skinparam ComponentStyle rectangle
+skinparam Component {
+    FontSize 200
+    BackgroundColor LightGreen
+    BorderThickness 10
+    BorderColor black
+}
+
+skinparam Rectangle {
+    BackgroundColor transparent
+    BorderColor transparent
+}
+
+rectangle {
+    component p1 [
+    page@0x102a000\t
+    ====
+    ._mapcount = -128
+    ====
+    .private = 2
+    ====
+    .index = 1
+    ====
+    .count = 0
+    ]
+
+    component p2 [
+    page@0x102b000\t
+    ]
+
+    p1-down[hidden]-p2
+}
+
+@enduml

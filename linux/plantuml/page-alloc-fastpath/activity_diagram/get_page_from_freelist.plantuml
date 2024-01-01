@@ -1,0 +1,62 @@
+@startuml
+title get_page_from_freelist()
+
+start
+#Orange:retry;<<input>>
+:no_fallback = alloc_flags & ALLOC_NOFRAGMENT;
+while (travel the nodelist)
+    if (zone with cpu_set cgroup mismatch) then (Yes)
+        :continue;
+        detach
+    endif
+    if (node exceed dirty limit) then (Yes)
+        :continue;
+        detach
+    endif
+ 	if (zone_to_nid(zone) != local_nid) then (Yes)
+	    :alloc_flags &= ~ALLOC_NOFRAGMENT;
+        note left
+        	If moving to a remote node,
+            retry but allow fragmenting
+            fallbacks.
+        end note
+	    #Orange:goto retry;<<output>>
+        detach
+    endif
+    :mark = wmark_pages();
+    if (!zone_watermark_fast()) then (Yes)
+    	if (_deferred_grow_zone()) then (Yes)
+			#Orange:goto try_this_zone;<<output>>
+            detach
+        endif
+        note left
+            deferred_grow_zone() is __init, but it is called
+            from get_page_from_freelist() during early boot
+            until deferred_pages permanently disables this call.
+        end note
+        if (alloc_flags & ALLOC_NO_WATERMARKS)
+            #Orange:goto try_this_zone;<<output>>
+            detach
+        endif
+        if (!node_reclaim_enabled()\n|| !zone_allows_reclaim()) then (Yes)
+			:continue;
+        endif
+        :node_reclaim();
+    endif
+    #Orange:try_this_zone;<<input>>
+    :page = rmqueue();
+    if (page) then (Yes)
+        :prep_new_page();
+        :Try again if zone has deferred pages;
+    endif
+endwhile
+if (no_fallback) then (Yes)
+	:alloc_flags &= ~ALLOC_NOFRAGMENT;
+	#Orange:goto retry;<<input>>
+    detach
+endif
+:return NULL;
+
+stop
+
+@enduml

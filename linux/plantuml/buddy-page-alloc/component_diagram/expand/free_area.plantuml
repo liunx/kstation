@@ -1,0 +1,52 @@
+@startuml
+!$font_size = 200
+!$border_thick = 5
+
+'scale max 4096x4096
+scale 1
+skinparam ComponentStyle rectangle
+skinparam Component {
+    FontSize $font_size
+    BorderThickness $border_thick
+    BorderColor black
+    BackgroundColor LightYellow
+}
+
+skinparam Rectangle {
+    BorderThickness 0
+    BackgroundColor transparent
+}
+
+rectangle r0 {
+    component "free_area[8]" as fa8
+    component "free_list[MIGRATE_UNMOVABLE]" as fl8
+
+    fa8-right-fl8
+}
+
+rectangle r1 {
+    component "free_area[7]" as fa7
+    component "free_list[MIGRATE_UNMOVABLE]" as fl7
+
+    fa7-right-fl7
+}
+
+rectangle r2 {
+    component "free_area[6]" as fa6
+    component "free_list[MIGRATE_UNMOVABLE]" as fl6
+
+    fa6-right-fl6
+}
+
+rectangle r3 {
+    component "free_area[5]" as fa5
+    component "free_list[MIGRATE_UNMOVABLE]" as fl5
+
+    fa5-right-fl5
+}
+
+r0-down[hidden]---r1
+r1-down[hidden]---r2
+r2-down[hidden]---r3
+
+@enduml

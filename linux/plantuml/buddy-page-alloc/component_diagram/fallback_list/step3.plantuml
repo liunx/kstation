@@ -1,0 +1,33 @@
+@startuml
+!$font_size = 200
+!$border_thick = 2
+
+scale 1/5
+skinparam ComponentStyle rectangle
+skinparam Component {
+    FontSize $font_size
+    BorderThickness $border_thick
+    BorderColor black
+}
+skinparam Rectangle {
+    FontSize $font_size
+    BorderThickness 0
+    BackgroundColor transparent
+}
+
+skinparam Package {
+    FontSize $font_size
+    BorderThickness 0
+    BackgroundColor transparent
+}
+
+package "__rmqueue_cma_fallback()" as pack2 {
+    rectangle "step 3: When free memory run out\t\t" as step3 {
+        component "\tfree_list[MIGRATE_CMA]\t\t\t" as cma #Yellow
+        [tag2] $tag2
+        cma-down-[tag2]
+        hide $tag2
+    }
+}
+
+@enduml

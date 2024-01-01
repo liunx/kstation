@@ -1,0 +1,19 @@
+@startuml
+title rmqueue()
+
+start
+if (pcp_allowed_order(order)) then (Yes)
+    if (page = rmqueue_pcplist()) then (Yes)
+        :goto out;
+        detach
+    endif
+endif
+:page = rmqueue_buddy();
+#Orange:out;<<input>>
+if (ZONE_BOOSTED_WATERMARK) then (Yes)
+    :wakeup_kswpd();
+endif
+:return page;
+stop
+
+@enduml
