@@ -1,0 +1,30 @@
+@startuml
+
+scale 1/5
+skinparam ComponentStyle rectangle
+skinparam Component {
+    FontSize 200
+    BackgroundColor SkyBlue
+    BorderThickness 10
+    BorderColor black
+}
+
+skinparam Rectangle {
+    BackgroundColor transparent
+    BorderColor transparent
+}
+
+rectangle {
+    component "  lists[LRU_UNEVICTABLE]\t\t" as l1
+    component "  lists[LRU_ACTIVE_FILE]\t\t" as l2
+    component "  lists[LRU_INACTIVE_FILE]\t\t" as l3
+    component "  lists[LRU_ACTIVE_ANON]\t\t" as l4
+    component "  lists[LRU_INACTIVE_ANON]\t" as l5
+
+    l1-down[hidden]-l2
+    l2-down[hidden]-l3
+    l3-down[hidden]-l4
+    l4-down[hidden]-l5
+}
+
+@enduml

@@ -1,0 +1,27 @@
+@startuml
+scale 1/5
+
+skinparam Component {
+    Style rectangle
+    FontSize 200
+    BorderThickness 10
+    BackgroundColor transparent
+}
+
+skinparam Rectangle {
+    FontSize 200
+    BorderThickness 10
+    BackgroundColor transparent
+    BorderThickness 0
+}
+
+component "\n  NODE #0  \n" as n0 #LightGreen
+component "\n  NODE #1  \n" as n1
+component "\n  NODE #N  \n" as nn
+rectangle "\n O\n O \n O \n" as omit
+
+n0-down[hidden]----------n1
+n1-down[hidden]-omit
+omit-down[hidden]-nn
+
+@enduml

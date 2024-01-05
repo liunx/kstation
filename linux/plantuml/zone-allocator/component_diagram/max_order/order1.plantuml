@@ -1,0 +1,21 @@
+@startuml
+scale 1/5
+
+skinparam Component {
+    Style rectangle
+    FontSize 200
+    BorderThickness 10
+    BackgroundColor transparent
+}
+
+skinparam Rectangle {
+    BackgroundColor transparent
+    BorderThickness 0
+}
+
+component "  struct page  " as p1 #LightGreen
+component "  struct page  " as p2 #SkyBlue
+
+p1-down[hidden]-p2
+
+@enduml

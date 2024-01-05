@@ -1,0 +1,33 @@
+@startuml
+
+scale 1/10
+skinparam ComponentStyle rectangle
+skinparam Component {
+    FontSize 200
+    BorderThickness 10
+}
+
+skinparam Package {
+    FontSize 0
+    BorderThickness 0
+}
+
+package {
+    rectangle r1 #LightYellow {
+        component "\t\tPAGE\t\t" as pg1 #LightGreen
+        component "\n\t\tVMA #1\t\t\n" as vma1 #LightYellow
+        component "\t\tPAGE\t\t" as pg2 #LightGrey
+        hide $tag1
+
+        pg1-down[hidden]-vma1
+        vma1-down[hidden]-pg2
+    }
+
+    rectangle r2 #LightYellow {
+        component "\n\n\t\tVMA #2\t\t\n\n" as vma2 #LightYellow
+    }
+}
+
+r1-down[hidden]-----------------r2
+
+@enduml

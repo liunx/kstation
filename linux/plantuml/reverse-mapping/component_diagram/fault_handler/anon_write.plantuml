@@ -1,0 +1,51 @@
+@startuml
+left to right direction
+skinparam ComponentStyle rectangle
+skinparam Component {
+    FontSize 20
+    BorderThickness 1
+}
+
+skinparam Package {
+    FontSize 20
+    BorderThickness 1
+}
+
+skinparam Card {
+    FontSize 20
+    BorderThickness 0
+}
+
+skinparam Note {
+    FontSize 16
+}
+
+skinparam ArrowFontSize 16
+
+package "3) write the first anon page" as p1 {
+    card c1 #transparent [
+    * do_page_fault()
+    ** __do_page_fault()
+    *** handle_mm_fault()
+    **** __handle_mm_fault()
+    ***** handle_pte_fault()
+    ****** **do_anonymous_page()**
+    ******* anon_vma_prepare()
+    ******* alloc_zeroed_user_highpage_movable()
+    ******* page_add_new_anon_rmap()
+    ******* lru_cache_add_inactive_or_unevictable()
+    ]
+
+    component "\t\tAV\t\t" as av #LightGreen
+    component "\t\tAVC\t\t" as avc #LightGreen
+    component "\t\tVMA\t\t" as vma #LightGreen
+    c1-down[hidden]-av
+    av<-down-avc
+    avc-down->vma
+    vma-down->[page]
+    [page]-down->[page table]
+    [page table]-down->[new page]
+    [page]...>[av]
+}
+
+@enduml

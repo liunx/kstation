@@ -1,0 +1,35 @@
+@startuml
+skinparam ActivityFontSize 16
+skinparam ActivityBackgroundColor transparent
+scale 2/1
+start
+while (from zonelist to high_zoneidx)
+    :get_page_from_freelist();
+    if (check cpuset) then (not allowed)
+        #transparent:(.)
+    endif
+    if (check dirty rate) then (exceeded limit)
+        #transparent:(.)
+    endif
+    if (zone_watermark_fast()) then (lack of memory)
+        :node_reclaim();
+        if (zone_watermark_ok()) then (No)
+            #transparent:(.)
+        endif
+    else
+    endif
+    :rmqueue();
+    note left
+        allocate frombuddy
+        system
+    end note
+    if (SUCCESS?) then (Yes)
+        :prep_new_page();
+        :reserve_highatomic_pageblock();
+    else (No)
+        #transparent:(.)
+    endif
+endwhile
+:return page;
+
+@enduml

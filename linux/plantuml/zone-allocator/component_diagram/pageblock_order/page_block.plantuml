@@ -1,0 +1,72 @@
+@startuml
+scale 1/5
+
+skinparam Component {
+    Style rectangle
+    FontSize 200
+    BorderThickness 10
+    BackgroundColor transparent
+}
+
+skinparam Rectangle {
+    BackgroundColor transparent
+    BorderThickness 0
+}
+
+rectangle r1 #LightGreen {
+    component "\n\n  order=8  \n\n" as ord1
+    component "\n\n  MIGRATE_MOVABLE\t\t\n\n" as mig1
+
+    ord1-right[hidden]-mig1
+}
+
+rectangle r2 #LightGrey {
+    component "\n  order=7  \n" as ord2
+    component "\n  MIGRATE_UNMOVABLE\t\n" as mig2
+
+    ord2-right[hidden]-mig2
+}
+
+rectangle r3 #LightGreen {
+    component "\n  order=7  \n" as ord3
+    component "\n  MIGRATE_MOVABLE\t\t\n" as mig3
+
+    ord3-right[hidden]-mig3
+}
+
+rectangle r4 #LightGreen {
+    component "  order=6  " as ord4
+    component "  MIGRATE_MOVABLE\t\t" as mig4
+
+    ord4-right[hidden]-mig4
+}
+
+rectangle r5 #LightGrey {
+    component "  order=6  " as ord5
+    component "  MIGRATE_MOVABLE\t\t" as mig5
+
+    ord5-right[hidden]-mig5
+}
+
+rectangle r6 #LightGreen {
+    component "\n  order=7  \n" as ord6
+    component "\n  MIGRATE_MOVABLE\t\t\n" as mig6
+
+    ord6-right[hidden]-mig6
+}
+
+rectangle r7 #LightGreen {
+    component "\n\n  order=8  \n\n" as ord7
+    component "\n\n  MIGRATE_MOVABLE\t\t\n\n" as mig7
+
+    ord7-right[hidden]-mig7
+}
+
+r1-down[hidden]-r2
+r2-down[hidden]-r3
+r3-down[hidden]-r4
+r4-down[hidden]-r5
+r5-down[hidden]-r6
+r6-down[hidden]-r7
+
+@enduml

@@ -1,0 +1,37 @@
+@startuml
+!$font_size = 200
+!$border_thick = 10
+
+scale 1/5
+skinparam ComponentStyle rectangle
+skinparam Component {
+    FontSize $font_size
+    BorderThickness $border_thick
+    BorderColor black
+    BackgroundColor transparent
+}
+skinparam Rectangle {
+    FontSize $font_size
+    BorderColor black
+    BorderThickness 0
+    BackgroundColor transparent
+}
+
+skinparam Card {
+    FontSize $font_size
+    BorderThickness 0
+    BorderColor transparent
+}
+
+
+card "N = MAX_ORDER - 1" as c1 {
+    component "\tfree_area[0]\t" as free_area0 #LightGreen
+    component "\tfree_area[1]\t" as free_area1
+    Rectangle "\n\no\no\no\n\n" as free_area_omit
+    component "\tfree_area[N]\t" as free_areaN
+
+    free_area0-up[hidden].>free_area1
+    free_area1-up[hidden].>free_area_omit
+    free_area_omit-up[hidden].>free_areaN
+}
+@enduml

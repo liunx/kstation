@@ -1,0 +1,22 @@
+@startuml
+scale 1/5
+
+skinparam Component {
+    Style rectangle
+    FontSize 200
+    BorderThickness 10
+    BackgroundColor transparent
+}
+
+skinparam Rectangle {
+    BackgroundColor transparent
+    BorderThickness 0
+}
+
+rectangle {
+    component "  4K  \n  4K  \n  4K  \n  4K" as 4k
+    component "\n\n\torder=2\t\n" as order
+    [4k]-right[hidden]-[order]
+}
+
+@enduml

@@ -1,0 +1,59 @@
+@startuml
+left to right direction
+skinparam ComponentStyle rectangle
+skinparam Component {
+    FontSize 20
+    BorderThickness 1
+}
+
+skinparam Package {
+    FontSize 20
+    BorderThickness 1
+}
+
+skinparam Card {
+    FontSize 20
+    BorderThickness 0
+}
+
+skinparam Note {
+    FontSize 16
+}
+
+skinparam ArrowFontSize 16
+
+package "1) malloc() allocate memory" as p1 {
+    card c1 #transparent [
+    * sys_mmap()
+    ** ksys_mmap_pgoff()
+    *** vm_mmap_pgoff()
+    **** do_mmap()
+    ***** mmap_region()
+    ****** **vm_area_alloc()**
+    ******* vma_link()
+    ]
+
+    component mm_struct {
+        [mm_rb]
+    }
+
+    component vma #LightGreen [
+        \t\tVMA
+        ----
+        * anon_vma = NULL
+        * vm_ops = NULL
+    ]
+
+    note right of vma
+        Only create the vma
+        area at first time
+        vm_flags:
+        rd wr mr mw me ac
+    end note
+
+    c1-down[hidden]-[mm_struct]
+    [mm_rb]<---[vma] : add to rb tree
+
+}
+
+@enduml

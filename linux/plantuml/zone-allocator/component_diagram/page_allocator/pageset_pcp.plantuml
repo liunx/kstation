@@ -1,0 +1,19 @@
+@startuml
+
+scale 1/5
+skinparam ComponentStyle rectangle
+skinparam Component {
+    FontSize 200
+    BackgroundColor LightGreen
+    BorderThickness 10
+    BorderColor black
+}
+
+skinparam Rectangle {
+    BackgroundColor transparent
+    BorderColor transparent
+}
+
+component "  pageset->pcp  " as fl1
+
+@enduml

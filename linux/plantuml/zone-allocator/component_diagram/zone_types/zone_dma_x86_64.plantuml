@@ -1,0 +1,24 @@
+@startuml
+scale 1/5
+
+skinparam Component {
+    Style rectangle
+    FontSize 200
+    BorderThickness 10
+}
+
+skinparam Rectangle {
+    BackgroundColor transparent
+    BorderThickness 0
+}
+
+rectangle {
+    component "\n\n\n\tZONE_NORMAL\t\n\n\n" as zh #LightGreen
+    component "\n\tZONE_DMA32\t\t\n" as zd32 #LightGrey
+    component "\tZONE_DMA\t\t\t" as zd #LightGrey
+
+    zh-down[hidden]-zd32
+    zd32-down[hidden]-zd
+}
+
+@enduml

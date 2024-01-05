@@ -1,0 +1,56 @@
+@startuml
+
+title  cma_declare_contiguous_nid()
+
+start
+:memblock_end = memblock_end_of_DRAM();
+:highmem_start = __pa(high_memory - 1) + 1;
+if (cma_area_count == ARRAY_SIZE(cma_areas)) then (Yes)
+    :return -ENOSPC;
+    note left:cma_areas is full
+    detach
+endif
+
+if (check size or alignment is valid?) then (No)
+    :return -EINVAL;
+    detach
+endif
+:sanity check input arguments;
+note left
+    * alignment
+    * base
+    * size
+    * limit
+end note
+if (request region of fixed base cross\nthe low/high memory boundary) then (Yes)
+    :goto err;<<output>>
+    detach
+endif
+if (limit == 0 || limit > memblock_end) then (Yes)
+    :limit = memblock_end;
+endif
+if (base + size > limit) then (Yes)
+    :goto err;<<output>>
+    detach
+endif
+if (fixed) then (Yes)
+    :check and reseved static memblock region;
+else (No)
+    if (request region cross the \nlow/high memory boundary) then (Yes)
+        :allocate from high memory;
+    endif
+    if (enough memory (64bit)) then (Yes)
+        :try a bottom-up allocation;
+    endif
+    if (!addr) then (Yes)
+        :addr = memblock_alloc_range_nid();
+    endif
+    :kmemleak check;
+endif
+:ret = cma_init_reserved_mem();
+#Red:err;<<input>>
+:return ret;
+
+stop
+
+@enduml

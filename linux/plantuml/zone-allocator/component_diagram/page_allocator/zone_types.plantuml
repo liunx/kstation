@@ -1,0 +1,31 @@
+@startuml
+scale 1/5
+
+skinparam Component {
+    Style rectangle
+    FontSize 200
+    BorderThickness 10
+    BackgroundColor transparent
+}
+
+skinparam Rectangle {
+    FontSize 200
+    BorderThickness 10
+    BackgroundColor transparent
+    BorderThickness 0
+}
+
+component "  ZONE_DMA\t\t" as z1
+component "  ZONE_DMA32\t\t" as z2
+component "  ZONE_NORMAL\t" as z3 #LightGreen
+component "  ZONE_HIGHMEM\t" as z4
+component "  ZONE_MOVABLE\t" as z5
+component "  ZONE_DEVICE\t\t" as z6
+
+z1-down[hidden]-z2
+z2-down[hidden]-z3
+z3-down[hidden]-z4
+z4-down[hidden]-z5
+z5-down[hidden]-z6
+
+@enduml

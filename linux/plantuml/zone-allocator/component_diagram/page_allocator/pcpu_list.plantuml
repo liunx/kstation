@@ -1,0 +1,26 @@
+@startuml
+
+scale 1/5
+skinparam ComponentStyle rectangle
+skinparam Component {
+    FontSize 200
+    BackgroundColor LightGreen
+    BorderThickness 10
+    BorderColor black
+}
+
+skinparam Rectangle {
+    BackgroundColor transparent
+    BorderColor transparent
+}
+
+rectangle {
+    component "lists[MIGRATE_RECLAIMABLE]\t" as fl1
+    component "lists[MIGRATE_MOVABLE]\t\t" as fl2
+    component "lists[MIGRATE_UNMOVABLE]\t" as fl3
+
+    fl1-down[hidden]-fl2
+    fl2-down[hidden]-fl3
+}
+
+@enduml

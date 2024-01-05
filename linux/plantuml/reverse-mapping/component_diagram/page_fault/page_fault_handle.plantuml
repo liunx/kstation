@@ -1,0 +1,30 @@
+@startuml
+scale 1/1
+left to right direction
+skinparam Component {
+    FontSize 20
+    BorderThickness 1
+}
+skinparam ComponentStyle rectangle
+skinparam Package {
+    FontSize 20
+    BorderThickness 0
+}
+
+'skinparam ArrowFontSize 20
+
+package "Page Fault" #LightBlue {
+    component "User Task" as ut1 #GreenYellow
+    component "VMA" as v1 #LightYellow
+    component "rmap\t\t" as rmap1
+    [page]
+    component "page table" as pt1
+
+    [ut1]-->[v1] : page fault when access memory
+    [v1]--->[pt1]
+    [pt1]------>[page] : mapping
+    [v1]<---[rmap1]
+    [rmap1]<------[page] : reverse mapping
+}
+
+@enduml
