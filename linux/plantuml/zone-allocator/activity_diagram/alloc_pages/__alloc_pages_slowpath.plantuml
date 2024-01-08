@@ -1,0 +1,35 @@
+@startuml
+skinparam ActivityFontSize 16
+skinparam ActivityBackgroundColor transparent
+skinparam Note{
+    BorderThickness 0
+    BackgroundColor transparent
+}
+scale 2/1
+
+:__alloc_pages_slowpath();
+:convert gfp_mask to alloc flags;
+:get_page_from_freelist();
+note left:**1**
+:wake_all_kswapds();
+:__alloc_pages_direct_compact();
+note left:**2**
+:wake_all_kswapds();
+:__gfp_pfmemalloc_flags();
+:get_page_from_freelist();
+note left:**3**
+:direct reclaim ?;<<output>>
+:__alloc_pages_direct_reclaim();
+note left:**4**
+:__alloc_pages_direct_compact();
+note left:**5**
+:should_reclaim_retry();
+:should_compact_retry();
+:__alloc_pages_may_oom();
+note left:**6**
+:__alloc_pages_cpuset_fallback();
+note left:**7**
+(.)
+
+
+@enduml

@@ -1,0 +1,39 @@
+@startuml
+!$font_size = 200
+!$border_thick = 10
+
+scale 1/5
+skinparam ComponentStyle rectangle
+skinparam Component {
+    FontSize $font_size
+    BorderThickness $border_thick
+    BorderColor black
+}
+skinparam Rectangle {
+    FontSize $font_size
+    BorderColor black
+    BorderThickness 20
+    BackgroundColor transparent
+}
+
+skinparam Package {
+    FontSize $font_size
+    BorderThickness 0
+    BorderColor transparent
+}
+
+skinparam Note {
+    FontSize $font_size
+    BorderThickness 0
+    BackgroundColor transparent
+    BorderColor transparent
+}
+
+package p1 {
+    component " 1 " as c1
+    component " 1 " as c2
+
+    c1-right-c2
+}
+
+@enduml

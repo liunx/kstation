@@ -1,0 +1,42 @@
+@startuml
+scale 1/5
+skinparam ComponentStyle rectangle
+skinparam Component {
+    FontSize 200
+    BackgroundColor LightGrey
+    BorderThickness 10
+    BorderColor black
+}
+
+skinparam Note {
+    FontSize 200
+    BackgroundColor transparent
+    BorderColor transparent
+}
+
+skinparam Card {
+    FontSize 200
+    BackgroundColor transparent
+    BorderColor transparent
+}
+
+card "Node #3" {
+    component "  <color:transparent>dirty pages  " as c1
+    component "  <color:transparent>dirty pages  " as c2
+    component "  <color:transparent>dirty pages  " as c3
+    component "  <color:transparent>dirty pages  " as c4
+    component "  <color:transparent>dirty pages  " as c5
+    component "  <color:transparent>dirty pages  " as c6 #LightGreen
+    component "  <color:transparent>dirty pages  " as c7 #LightGreen
+    component "  <color:transparent>dirty pages  " as c8 #LightGreen
+
+    c1-down[hidden]-c2
+    c2-down[hidden]-c3
+    c3-down[hidden]-c4
+    c4-down[hidden]-c5
+    c5-down[hidden]-c6
+    c6-down[hidden]-c7
+    c7-down[hidden]-c8
+}
+
+@enduml

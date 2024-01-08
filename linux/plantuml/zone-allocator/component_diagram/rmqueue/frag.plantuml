@@ -1,0 +1,36 @@
+@startuml
+!$font_size = 40
+skinparam Component {
+    FontSize $font_size
+    BorderThickness 1.2
+    Style rectangle
+}
+
+skinparam Card {
+    FontSize $font_size
+    BorderThickness 0
+}
+
+skinparam Rectangle {
+    BorderThickness 0
+}
+
+skinparam Note {
+    FontSize $font_size
+    BorderThickness 0
+    BackgroundColor transparent
+}
+
+scale 2/1
+rectangle {
+    card "loop (max_order ~ min_order)\t" as card1 #SkyBlue {
+        component "find_suitable_fallback()" as c1
+    }
+
+    card "loop (order ~ -min_order)\t\t\t" as card2 #SkyBlue {
+        component "find_suitable_fallback()" as c2
+    }
+    c1-down[hidden]---c2
+}
+
+@enduml

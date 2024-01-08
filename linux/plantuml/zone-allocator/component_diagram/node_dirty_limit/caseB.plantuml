@@ -1,0 +1,29 @@
+@startuml
+scale 2/1
+skinparam ComponentStyle rectangle
+skinparam Component {
+    FontSize 20
+    BackgroundColor tansparent
+    BorderThickness 0
+    BorderColor black
+}
+
+component c1 [
+    **case B) dirty ratio**
+    /proc/sys/vm/dirty_bytes=0
+    /proc/sys/vm/dirty_ratio=20 (%)
+]
+
+component "xxx\t\t\t\t\t\t\t\t" as tag0 $tag0
+
+component c2 [
+
+    **node_dirty_limit(n0)** = 4G * 20% = 210,944 pages (0.8G)
+    **node_dirty_limit(n1)** = 6G * 20% = 313,344 pages (1.2G)
+]
+
+c1-right-[tag0]
+[tag0]-right-[c2]
+hide $tag0
+
+@enduml

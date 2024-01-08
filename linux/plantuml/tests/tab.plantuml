@@ -1,0 +1,12 @@
+@startuml
+skinparam Component {
+    FontSize 200
+    Style rectangle
+}
+
+component "  hellooo\t" as c1
+component "  hello\t\t" as c2
+
+c1-down-c2
+
+@enduml

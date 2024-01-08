@@ -1,0 +1,44 @@
+@startuml
+
+scale 1/5
+skinparam Component {
+    FontSize 200
+    BackgroundColor LightGreen
+    BorderThickness 10
+    Style rectangle
+}
+
+skinparam Rectangle {
+    BackgroundColor transparent
+    BorderSize 0
+}
+
+rectangle {
+    component "\tpage 0\t\t" as c1
+    component "\tpage 1\t\t" as c2 #LightGrey
+    component "\tpage 2\t\t" as c3
+    component "\tpage 3\t\t" as c4
+    component "\tpage 4\t\t" as c5
+    component "\tpage 5\t\t" as c6 #LightGrey
+    component "\tpage 6\t\t" as c7
+    component "\tpage 7\t\t" as c8
+    component "\tpage 8\t\t" as c9
+    component "\tpage 9\t\t" as c10 #LightGrey
+    [tag0] $tag0
+    component "\tpage N\t\t" as cN
+
+    c1-up[hidden]-c2
+    c2-up[hidden]-c3
+    c3-up[hidden]-c4
+    c4-up[hidden]-c5
+    c5-up[hidden]-c6
+    c6-up[hidden]-c7
+    c7-up[hidden]-c8
+    c8-up[hidden]-c9
+    c9-up[hidden]-c10
+    c10-up[hidden]-[tag0]
+    tag0-up[hidden]-cN
+    hide $tag0
+}
+
+@enduml

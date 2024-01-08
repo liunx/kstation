@@ -1,0 +1,24 @@
+@startuml
+
+scale 1/5
+skinparam Component {
+    FontSize 200
+    BackgroundColor transparent
+    Style rectangle
+}
+
+skinparam Rectangle {
+    BackgroundColor transparent
+    BorderSize 0
+}
+
+rectangle {
+    component "\n\t\t\t\t<color:white>0000000000</color>\t\t\t\n" as c1
+    component "\n\n\n\n\t\t\tasynchronous\t\n\t\t(background-reclaim)\t\t\t\n\n" as c2 #LightYellow
+    component "\n\n\t\t\t   synchronous\t\n\t\t\t(direct-reclaim)\t\t\t\n" as c3 #LightGrey
+
+    c1-down[hidden]-c2
+    c2-down[hidden]-c3
+}
+
+@enduml

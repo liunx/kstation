@@ -1,0 +1,35 @@
+@startuml
+!$font_size = 20
+!$border_thick = 0
+
+scale 2/1
+skinparam ComponentStyle rectangle
+skinparam Component {
+    FontSize $font_size
+    BorderThickness $border_thick
+    BorderColor black
+    BackgroundColor transparent
+}
+
+skinparam Rectangle {
+    BorderThickness 0
+    BackgroundColor transparent
+}
+
+component c1 [
+        static int fallbacks[MIGRATE_TYPES][4] = {
+        [<back:SkyBlue>MIGRATE_UNMOVABLE</back>]   = { <back:SkyBlue>MIGRATE_RECLAIMABLE, MIGRATE_MOVABLE,</back>   MIGRATE_TYPES },
+        [<back:LightGreen>MIGRATE_MOVABLE</back>]     = { <back:LightGreen>MIGRATE_RECLAIMABLE, MIGRATE_UNMOVABLE,</back> MIGRATE_TYPES },
+        [<back:Plum>MIGRATE_RECLAIMABLE</back>] = { <back:Plum>MIGRATE_UNMOVABLE,   MIGRATE_MOVABLE,</back>   MIGRATE_TYPES },
+<code>
+    #ifdef CONFIG_CMA
+        [MIGRATE_CMA]         = { MIGRATE_TYPES }, /* Never used */
+    #endif
+    #ifdef CONFIG_MEMORY_ISOLATION
+        [MIGRATE_ISOLATE]     = { MIGRATE_TYPES }, /* Never used */
+    #endif
+</code>
+    };
+]
+
+@enduml

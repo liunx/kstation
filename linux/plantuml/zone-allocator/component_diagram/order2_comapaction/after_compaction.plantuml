@@ -1,0 +1,79 @@
+@startuml
+
+scale 2/1
+left to right direction
+skinparam ComponentStyle rectangle
+skinparam Component {
+    FontSize 20
+    BackgroundColor LightBlue
+    BorderThickness 1.5
+    BorderColor black
+}
+
+skinparam Rectangle {
+    FontSize 0
+    BackgroundColor transparent
+    BorderThickness 0
+}
+
+rectangle r0 {
+    component "  free_area[2]->free_list[MIGRATE_UNMOVABLE]  " as r0_c1 #LightYellow
+    component r0_c2 [
+    \t0\t
+    ----
+    \t1\t
+    ----
+    \t2\t
+    ----
+    \t3\t
+    ]
+    rectangle tag0
+
+    [r0_c1]-down..[r0_c2]
+    [r0_c2]-down..[tag0]
+}
+
+rectangle r1 {
+    component "  free_area[1]->free_list[MIGRATE_UNMOVABLE]  " as r1_c1 #LightYellow
+    component r1_c2 #LightGrey [
+    \t0\t
+    ----
+    \t1\t
+    ]
+
+    component r1_c3 #LightGrey [
+    \t2\t
+    ----
+    \t3\t
+    ]
+
+    component r1_c4 [
+    \t6\t
+    ----
+    \t7\t
+    ]
+
+    rectangle tag1
+
+    [r1_c1]-down.[r1_c2]
+    [r1_c2]-down.[r1_c3]
+    [r1_c3]-down.[r1_c4]
+    [r1_c4]-down.[tag1]
+}
+
+rectangle r2 {
+    component "  free_area[0]->free_list[MIGRATE_UNMOVABLE]  " as r2_c1 #LightYellow
+    component "\t0\t" as r2_c2 #LightGrey
+    component "\t1\t" as r2_c3 #LightGrey
+    component "\t4\t" as r2_c4
+    component "\t8\t" as r2_c5
+
+    [r2_c1]-down.[r2_c2]
+    [r2_c2]-down.[r2_c3]
+    [r2_c3]-down.[r2_c4]
+    [r2_c4]-down.[r2_c5]
+}
+
+r1-left[hidden]-r2
+
+@enduml

@@ -1,0 +1,21 @@
+@startuml
+
+scale 1/5
+skinparam Component {
+    FontSize 200
+    BorderThickness 10
+    BackgroundColor transparent
+    Bordercolor black
+    Style rectangle
+}
+
+skinparam Rectangle {
+    BackgroundColor transparent
+    BorderThickness 0
+}
+
+component c1 [
+    z->managed_pages = spanned_pages - absent_pages - memmap_pages - dma_reserve
+]
+
+@enduml

@@ -1,0 +1,49 @@
+@startuml
+!$font_size = 200
+!$border_thick = 0
+
+scale 1/5
+skinparam ComponentStyle rectangle
+skinparam Component {
+    FontSize $font_size
+    BorderThickness $border_thick
+    BorderColor black
+    BackgroundColor AliceBlue
+}
+skinparam Rectangle {
+    FontSize 0
+    BorderThickness 0
+    BackgroundColor transparent
+}
+
+component c1 [
+
+    \t<color:Green>MIGRATE_MOVABLE</color>\t<color:Orange>==></color>\t<color:Green>MIGRATE_UNMOVABLE (O)</color>\t\t
+    \tfree_pages + in_use(!movable) >= page_block / 2 (50%)\t
+    \t<color:Red>MIGRATE_MOVABLE</color>\t<color:Orange>==></color>\t<color:Red>MIGRATE_UNMOVABLE (X)</color>\t
+    \tfree_pages + 0(can not decide) >= page_block / 2 (50%)\t
+
+]
+
+component c2 [
+
+    \t<color:Green>MIGRATE_UNMOVABLE</color>\t<color:Orange>==></color>\t<color:Green>MIGRATE_MOVABLE (O)</color>\t
+    \t<color:Green>MIGRATE_RECLAIMABLE</color>\t<color:Orange>==></color>\t<color:Green>MIGRATE_MOVABLE (O)</color>\t\t
+    \tfree_pages + in_use(movable) >= page_block / 2 (50%)\t
+
+]
+
+component c3 [
+
+    \t<color:Red>MIGRATE_UNMOVABLE</color>\t<color:Orange>==></color>\t<color:Red>MIGRATE_RECLAIMABLE (X)</color>\t
+    \tfree_pages + 0(can not decide) >= page_block / 2 (50%)\t
+    \t<color:Green>MIGRATE_MOVABLE</color>\t<color:Orange>==></color>\t<color:Green>MIGRATE_RECLAIMABLE (O)</color>\t
+    \tfree_pages + in_use(!movable) >= page_block / 2 (50%)\t
+
+]
+
+c1-down[hidden]-c2
+c2-down[hidden]-c3
+
+
+@enduml

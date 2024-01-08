@@ -1,0 +1,30 @@
+@startuml
+
+scale 1/5
+skinparam Component {
+    FontSize 200
+    BackgroundColor SkyBlue
+    BorderThickness 10
+    Style rectangle
+}
+
+skinparam Rectangle {
+    FontSize 200
+    BackgroundColor transparent
+    BorderThickness 0
+}
+
+skinparam Note {
+    FontSize 200
+    BackgroundColor transparent
+    BorderThickness 0
+}
+
+rectangle {
+    component "  Buddy System  " as c1 #LightGreen
+    component "  free_area[].free_list[] " as c2 #LightGrey
+
+    c1-right[hidden]-c2
+}
+
+@enduml

@@ -1,0 +1,48 @@
+@startuml
+
+scale 1/5
+skinparam Component {
+    FontSize 200
+    BackgroundColor LightGreen
+    BorderThickness 10
+    Style rectangle
+}
+
+skinparam Rectangle {
+    FontSize 200
+    BackgroundColor transparent
+    BorderThickness 0
+}
+
+skinparam Note {
+    FontSize 200
+    BackgroundColor transparent
+    BorderThickness 0
+}
+
+rectangle {
+    component "\n\tZONE_HIGHMEM\t\t\t\n\t(200M)\n\n" as c1 #LightGrey
+    component "\n\n\n\n\tZONE_NORMAL\t\t\t\n\t(744M)\n\n\n\n" as c2
+    component "\tZONE_DMA\t\t\t\t\t\n\t(16M)" as c3
+
+    note left of c1
+        classzone_idx ->
+    end note
+
+    note right of c1
+        zone_watermark_ok_safe()
+    end note
+
+    note right of c2
+        zone_watermark_ok_safe()
+    end note
+
+    note right of c3
+        zone_watermark_ok_safe()
+    end note
+
+    c1-down[hidden]-c2
+    c2-down[hidden]-c3
+}
+
+@enduml

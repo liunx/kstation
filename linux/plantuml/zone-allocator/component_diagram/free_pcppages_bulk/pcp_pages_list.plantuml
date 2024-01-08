@@ -1,0 +1,72 @@
+@startuml
+
+scale 2/1
+left to right direction
+skinparam ComponentStyle rectangle
+skinparam Component {
+    FontSize 20
+    BackgroundColor LightBlue
+    BorderThickness 1.5
+    BorderColor black
+}
+
+skinparam Rectangle {
+    FontSize 0
+    BackgroundColor transparent
+    BorderThickness 0
+}
+
+rectangle r1 $tag1 {
+    rectangle "blank" as c0
+    component "page" as c1 #LightGrey
+    component "page" as c2 #LightGrey
+    component "page" as c3 #LightGrey
+    component " 8 " as c4
+    component " 5 " as c5
+    component " 2 " as c6
+
+    [c0]-down.[c1]
+    [c1]-down.[c2]
+    [c2]-down.[c3]
+    [c3]-down.[c4]
+    [c4]-down.[c5]
+    [c5]-down.[c6]
+}
+
+rectangle r2 $tag2 {
+    rectangle "blank" as p0
+    component "10" as p1
+    component " 9 " as p2
+    component " 7 " as p3
+    component " 6 " as p4
+    component " 4 " as p5
+    component " 1 " as p6
+
+    [p0]-down.[p1]
+    [p1]-down.[p2]
+    [p2]-down.[p3]
+    [p3]-down.[p4]
+    [p4]-down.[p5]
+    [p5]-down.[p6]
+}
+
+rectangle r3 $tag3 {
+    rectangle "blank" as q0
+    component " 3 " as q1
+    rectangle " 9 " as q2
+
+    [q0]-down.[q1]
+    [q1]-down.....[q2]
+}
+
+rectangle r4 $tag4 {
+    rectangle "blank" as t0
+    rectangle " 3 " as t1
+
+    [t0]-down......[t1]
+}
+
+r1-left[hidden]-r2
+r2-left[hidden]-r3
+
+@enduml

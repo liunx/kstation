@@ -1,0 +1,47 @@
+@startuml
+
+scale 1/5
+skinparam Component {
+    FontSize 200
+    BackgroundColor SkyBlue
+    BorderThickness 10
+    Style rectangle
+}
+
+skinparam Rectangle {
+    FontSize 0
+    BackgroundColor transparent
+    BorderThickness 0
+}
+
+skinparam Note {
+    FontSize 200
+    BackgroundColor transparent
+    BorderThickness 0
+}
+
+rectangle r1 {
+    component "  LRU Pages\t\t\t" as r1_c1 #LightGreen
+    component "  lruvec_lists[]\t\t" as r1_c2 #LightGrey
+
+    r1_c1-right[hidden]-r1_c2
+}
+
+rectangle r2 {
+    component "  HugeTLBFS Pages\t" as r2_c1 #LightGreen
+    component "  b_dev_info\t\t" as r2_c2 #LightGrey
+
+    r2_c1-right[hidden]-r2_c2
+}
+
+rectangle r3 {
+    component "  Balloon Pages\t\t" as r3_c1 #LightGreen
+    component "  hstates[].pages\t" as r3_c2 #LightGrey
+
+    r3_c1-right[hidden]-r3_c2
+}
+
+r1-down[hidden]-r2
+r2-down[hidden]-r3
+
+@enduml

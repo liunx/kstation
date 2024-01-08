@@ -1,0 +1,12 @@
+@startuml
+scale 1/5
+
+skinparam Component {
+    Style rectangle
+    FontSize 200
+    BorderThickness 10
+    BackgroundColor Orange
+}
+
+[  isolate_freepages()  ]
+@enduml

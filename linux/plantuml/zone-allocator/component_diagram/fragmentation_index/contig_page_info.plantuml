@@ -1,0 +1,41 @@
+@startuml
+
+scale 2/1
+left to right direction
+skinparam Component {
+    FontSize 20
+    BackgroundColor transparent
+    BorderThickness 1.5
+    Style rectangle
+}
+
+skinparam Package {
+    FontSize 20
+    BorderThickness 0
+    BackgroundColor transparent
+    Style rectangle
+}
+
+skinparam Arrow {
+    Color Orange
+    Thickness 5
+}
+
+package "fragmentation_index(<color:blue>z, order</color>)" {
+    component c1 [
+    **contig_page_info**
+    ----
+    <color:green>free_pages
+    ----
+    <color:red>free_block_total
+    ----
+    free_blocks_suitable
+    ]
+}
+
+component c2 [
+   <math>1000 - ((text{free_pages} * 1000) / 2^text{order} + 1000) / text{free_block_total}</math>
+]
+
+c1-down..>c2
+@enduml

@@ -1,0 +1,36 @@
+@startuml
+
+scale 2/1
+left to right direction
+skinparam ComponentStyle rectangle
+skinparam Component {
+    FontSize 20
+    BackgroundColor LightBlue
+    BorderThickness 1.5
+    BorderColor black
+}
+
+skinparam Package {
+    FontSize 20
+    BackgroundColor transparent
+    BorderThickness 0
+}
+
+package "Buddy Core" as p1 {
+    component "  free_area[0]->free_list[MIGRATE_UNMOVABLE]  " as c1 #LightYellow
+    component " 1 " as c2
+    component " 2 " as c3
+    component " 3 " as c4
+    component "page" as c5 #Lightgrey
+    component "page" as c6 #Lightgrey
+    component "page" as c7 #Lightgrey
+
+    [c1]-down.[c2]
+    [c2]-down.[c3]
+    [c3]-down.[c4]
+    [c4]-down.[c5]
+    [c5]-down.[c6]
+    [c6]-down.[c7]
+}
+
+@enduml

@@ -1,0 +1,28 @@
+@startuml
+
+scale 1/5
+skinparam ComponentStyle rectangle
+skinparam Component {
+    FontSize 200
+    BackgroundColor LightGreen
+    BorderThickness 10
+    BorderColor black
+}
+
+skinparam Note {
+    FontSize 200
+    BackgroundColor transparent
+    BorderColor transparent
+}
+
+skinparam Package {
+    FontSize 200
+    BackgroundColor transparent
+    BorderColor transparent
+}
+
+package "alloc_mask" {
+    component "  __GFP_HARDWALL\t" as c1
+}
+
+@enduml

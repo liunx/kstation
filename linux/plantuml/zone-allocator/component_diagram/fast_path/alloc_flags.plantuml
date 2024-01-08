@@ -1,0 +1,35 @@
+@startuml
+
+scale 1/5
+skinparam ComponentStyle rectangle
+skinparam Component {
+    FontSize 200
+    BackgroundColor LightGreen
+    BorderThickness 10
+    BorderColor black
+}
+
+skinparam Note {
+    FontSize 200
+    BackgroundColor transparent
+    BorderColor transparent
+}
+
+skinparam Package {
+    FontSize 200
+    BackgroundColor transparent
+    BorderColor transparent
+}
+
+package "alloc_flags" {
+    component "  ALLOC_WMARK_LOW\t" as c1
+    component "  ALLOC_CPUSET\t\t" as c2
+    component "  ALLOC_CMA\t\t\t" as c3
+    component "  ALLOC_KSWAPD\t\t" as c4
+
+    c1-down[hidden]-c2
+    c2-down[hidden]-c3
+    c3-down[hidden]-c4
+}
+
+@enduml

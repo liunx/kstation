@@ -1,0 +1,35 @@
+@startuml
+!$b = "<color:transparent>O</color>"
+
+scale 2/1
+left to right direction
+skinparam ComponentStyle rectangle
+skinparam Component {
+    FontSize 20
+    BackgroundColor LightBlue
+    BorderThickness 1.5
+    BorderColor black
+}
+
+skinparam Rectangle {
+    FontSize 0
+    BackgroundColor transparent
+    BorderThickness 0
+}
+
+rectangle {
+    component " 10 " as p1
+    component " 09 " as p2
+    component " 07 " as p3
+    component " 06 " as p4
+    component " 04 " as p5
+    component " 01 " as p6
+
+    [p1]-down[hidden]-[p2]
+    [p2]-down[hidden]-[p3]
+    [p3]-down[hidden]-[p4]
+    [p4]-down[hidden]-[p5]
+    [p5]-down[hidden]-[p6]
+}
+
+@enduml

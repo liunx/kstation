@@ -1,0 +1,28 @@
+@startuml
+
+scale 1/5
+skinparam ComponentStyle rectangle
+skinparam Component {
+    FontSize 200
+    BackgroundColor transparent
+    BorderThickness 2
+    BorderColor black
+}
+
+skinparam Rectangle {
+    FontSize 200
+    BackgroundColor transparent
+    BorderThickness 0
+}
+
+rectangle #Ivory {
+    component "  Buddy Allocator\t\t\t\t" as c1 #LightGrey
+    rectangle "  **ZONE_NORMAL**" as c2
+    component "  Per-CPU page frame cache\t" as c3 #SkyBlue
+
+    c1-down[hidden]-c2
+    c2-down[hidden]-c3
+}
+
+
+@enduml

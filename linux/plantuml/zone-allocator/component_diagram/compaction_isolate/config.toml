@@ -1,0 +1,33 @@
+# This is a TOML document
+
+title = "Direct Compaction Flow"
+
+[functions]
+font_size = 200
+ratio = "1/5"
+border_thickness = 10
+
+[functions.bg_color]
+OrangeRed = [
+    "compact_zone",
+    "alloc_contig_range",
+    "do_migrate_range",
+]
+
+Orange = [
+    "isolate_migratepages",
+    "migrate_pages",
+    "unmap_and_move",
+    "compaction_alloc",
+    "isolate_migratepages_block",
+    "isolate_migratepages_range",
+    "__alloc_contig_migrate_range",
+    "isolate_freepages",
+    "__isolate_freepages",
+    "isolate_lru_page",
+    "isolate_movable_page",
+    "isolate_freepages_block",
+    "isolate_freepages_range",
+]
+
+[functions.relationship]

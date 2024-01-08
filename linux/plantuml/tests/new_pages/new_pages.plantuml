@@ -1,0 +1,14 @@
+@startuml
+skinparam Component {
+    Style rectangle
+    FontSize 200
+}
+
+
+[hello]
+newpage
+[world]
+newpage
+[world]
+
+@enduml

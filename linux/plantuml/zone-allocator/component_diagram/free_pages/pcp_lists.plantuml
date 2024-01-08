@@ -1,0 +1,30 @@
+@startuml
+!$font_size = 200
+!$border_thick = 2
+
+left to right direction
+scale 1/5
+skinparam ComponentStyle rectangle
+skinparam Component {
+    FontSize $font_size
+    BorderThickness $border_thick
+    BorderColor black
+}
+skinparam Rectangle {
+    FontSize 0
+    BorderThickness 0
+    BackgroundColor transparent
+}
+
+skinparam ArrowThickness 10
+
+rectangle free_list {
+    component "  lists[MIGRATE_RECLAIMABLE]" as c1 #Plum
+    component "  lists[MIGRATE_MOVABLE]\t\t" as c2 #LightGreen
+    component "  lists[MIGRATE_UNMOVABLE]\t" as c3 #SkyBlue
+
+    c1-left[hidden]-c2
+    c2-left[hidden]-c3
+}
+
+@enduml

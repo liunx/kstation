@@ -1,0 +1,42 @@
+@startuml
+!$font_size = 40
+skinparam Component {
+    FontSize $font_size
+    BorderThickness 1.2
+    Style rectangle
+}
+
+skinparam Rectangle {
+    FontSize 0
+    BorderThickness 0
+}
+
+skinparam Note {
+    FontSize $font_size
+    BorderThickness 0
+    BackgroundColor transparent
+}
+
+scale 2/1
+rectangle {
+    component "__rmqueue_smallest()\t\t" as c1
+    component "__rmqueue_cma_fallback()" as c2
+    component "__rmqueue_fallback()\t\t" as c3
+
+    [c1].down.[c2]
+    [c2].down.[c3]
+}
+
+note right of [c1]
+1) search from small order
+end note
+
+note right of [c2]
+2) search from cma area
+end note
+
+note right of [c3]
+3) steal other migrate types
+end note
+
+@enduml

@@ -1,0 +1,43 @@
+@startuml
+
+scale 1/5
+skinparam ComponentStyle rectangle
+skinparam Component {
+    FontSize 200
+    BackgroundColor LightGreen
+    BorderThickness 10
+    BorderColor black
+}
+
+skinparam Note {
+    FontSize 200
+    BackgroundColor transparent
+    BorderColor transparent
+}
+
+skinparam Package {
+    FontSize 200
+    BackgroundColor transparent
+    BorderColor transparent
+}
+
+package "alloc_context" {
+    component "  *zonelist\t\t\t\t" as c1
+    component "  *nodemask\t\t\t" as c2
+    component "  high_zoneidx\t\t\t" as c3
+    component "  *preferred_zoneref\t" as c4
+    component "  migratetype\t\t\t" as c5
+    component "  spread_dirty_pages\t" as c6
+
+    note right of c1
+    <= refered by preferred_zoneref
+    end note
+
+    c1-down[hidden]-c2
+    c2-down[hidden]-c3
+    c3-down[hidden]-c4
+    c4-down[hidden]-c5
+    c5-down[hidden]-c6
+}
+
+@enduml

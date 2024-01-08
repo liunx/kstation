@@ -1,0 +1,16 @@
+@startuml
+scale 2/1
+skinparam ComponentStyle rectangle
+skinparam Component {
+    FontSize 20
+    BackgroundColor tansparent
+    BorderThickness 1
+    BorderColor black
+}
+
+component "\n  NODE #0\t\n" as c1
+component "\n  NODE #1\t\n" as c2
+
+c1-down[hidden]---c2
+
+@enduml

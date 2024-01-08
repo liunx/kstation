@@ -4,16 +4,18 @@ scale 1/5
 skinparam ComponentStyle rectangle
 skinparam Component {
     FontSize 200
-    BackgroundColor LightGreen
-    BorderThickness 2
+    BackgroundColor transparent
+    BorderThickness 10
     BorderColor black
 }
 
 skinparam Rectangle {
+    FontSize 200
     BackgroundColor transparent
-    BorderColor transparent
+    BorderThickness 0
 }
 
-component "  pageset->pcp  " as fl1
+component "\n  **ZONE Allocator**  \n" as c2 #LightYellow
+
 
 @enduml

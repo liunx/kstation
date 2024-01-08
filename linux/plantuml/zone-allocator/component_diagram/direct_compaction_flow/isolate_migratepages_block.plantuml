@@ -1,0 +1,12 @@
+@startuml
+scale 1/2
+
+skinparam Component {
+    Style rectangle
+    FontSize 80
+    BorderThickness 3.2
+    BackgroundColor Orange
+}
+
+[isolate_migratepages_block()]
+@enduml

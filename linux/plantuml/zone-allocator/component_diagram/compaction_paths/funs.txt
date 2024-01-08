@@ -1,0 +1,10 @@
+__alloc_pages_slowpath
+__alloc_pages_direct_compact
+try_to_compact_pages
+compact_zone_order
+kcompactd_do_work
+sysfs_compact_node
+sysctl_compaction_handler
+compact_nodes
+compact_node
+compact_zone

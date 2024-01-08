@@ -8,7 +8,7 @@ scale 2/1
 :finalise_ac();
 note right:Drity balance enable
 :alloc_flags_nofragment();
-:get_page_frm_freelist();
+:get_page_from_freelist();
 note left:Fastpath
 if (SUCCESS ?) then (No)
     :Dirty balance disable;

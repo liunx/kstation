@@ -1,0 +1,25 @@
+@startuml
+
+scale 1/5
+skinparam Component {
+    FontSize 200
+    BorderThickness 10
+    BackgroundColor transparent
+    Bordercolor black
+    Style rectangle
+}
+
+skinparam Rectangle {
+    BackgroundColor transparent
+    BorderThickness 0
+}
+
+rectangle {
+    component "\n\tZONE_HIGHMEM\t\n\t(200M)\n" as c1 #LightGrey
+    component "\n\n\n\n\tZONE_NORMAL\t\n\t(744M)\n\n\n" as c2 #LightGreen
+    component "\n\tZONE_DMA\t\t\t\n\t(16M)" as c3 #LightYellow
+    c1-down[hidden]-c2
+    c2-down[hidden]-c3
+
+}
+@enduml

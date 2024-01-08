@@ -1,0 +1,32 @@
+@startuml
+scale 1/5
+skinparam ComponentStyle rectangle
+skinparam Component {
+    FontSize 200
+    BackgroundColor tansparent
+    BorderThickness 10
+    BorderColor black
+}
+
+skinparam Note {
+    FontSize 200
+    BackgroundColor transparent
+    BorderColor transparent
+}
+
+skinparam Card {
+    FontSize 200
+    BackgroundColor transparent
+    BorderColor transparent
+}
+
+rectangle {
+    component "\n  free pages\t\t\n" as c1
+    component "\n  dirty pages\t" as c2 #OrangeRed
+    component "\n  used pages\t" as c3 #LightGrey
+
+    c1-down[hidden]-c2
+    c2-down[hidden]-c3
+}
+
+@enduml

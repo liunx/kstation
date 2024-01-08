@@ -1,0 +1,31 @@
+@startuml
+
+scale 2/1
+skinparam ComponentStyle rectangle
+skinparam Component {
+    FontSize 20
+    BackgroundColor LightGreen
+    BorderThickness 1.2
+    BorderColor black
+}
+
+skinparam Rectangle {
+    FontSize 20
+    BackgroundColor transparent
+    BorderColor transparent
+}
+
+rectangle {
+    component "**__alloc_pages_nodemask()**" as c1
+    component "prepare_alloc_pages()" as c2
+    component "finalise_ac()" as c3
+    component "alloc_flags_nofragment()" as c4
+    rectangle "**get_page_from_freelist()**" as r5
+
+    c1-down.c2
+    c2-down.c3
+    c3-down.c4
+    c4-down[hidden]---r5
+}
+
+@enduml

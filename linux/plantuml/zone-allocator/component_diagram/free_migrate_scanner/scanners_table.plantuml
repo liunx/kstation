@@ -1,0 +1,30 @@
+@startuml
+
+scale 1/5
+skinparam Component {
+    FontSize 200
+    BackgroundColor SkyBlue
+    BorderThickness 10
+    Style rectangle
+}
+
+skinparam Rectangle {
+    FontSize 200
+    BackgroundColor transparent
+    BorderThickness 0
+}
+
+skinparam Note {
+    FontSize 200
+    BackgroundColor transparent
+    BorderThickness 0
+}
+
+rectangle {
+    component "  cc->free_pages\t\t" as c1
+    component "  cc->migrate_pages\t" as c2
+
+    c1-down[hidden]-c2
+}
+
+@enduml

@@ -1,0 +1,12 @@
+@startuml
+scale 2/1
+
+skinparam Component {
+    Style rectangle
+    FontSize 20
+    BorderThickness 1.2
+    BackgroundColor Orange
+}
+
+[compact_nodes()]
+@enduml

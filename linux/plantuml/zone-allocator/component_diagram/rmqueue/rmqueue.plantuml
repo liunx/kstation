@@ -1,0 +1,34 @@
+@startuml
+!$font_size = 40
+skinparam Component {
+    FontSize $font_size
+    BorderThickness 1.2
+    Style rectangle
+}
+
+skinparam Rectangle {
+    FontSize 0
+    BorderThickness 0
+}
+
+skinparam Note {
+    FontSize $font_size
+    BorderThickness 0
+    BackgroundColor transparent
+}
+
+scale 2/1
+rectangle r2 {
+    [rmqueue_pcplist()]
+    [__rmqueue_smallest()]
+    [__rmqueue()]
+
+    [rmqueue_pcplist()]-down[hidden]--[__rmqueue_smallest()]
+    [__rmqueue_smallest()].down.[__rmqueue()]
+}
+
+note right of [__rmqueue_smallest()]
+ALLOC_HARDER only
+end note
+
+@enduml
