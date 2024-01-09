@@ -2,13 +2,14 @@
 import sys
 import tomli as tomllib
 
-start_uml = "@startuml\n"
-end_uml = "@enduml\n"
+start_uml = """@startuml\n
+skinparam ComponentStyle rectangle
+"""
+end_uml = "\n@enduml\n"
 scale_ratio = "scale {ratio}\n"
 
 skinparam_component = """
 skinparam {type_name} {{
-    Style {style}
     FontSize {font_size}
     BorderThickness {border_thickness}
     BackgroundColor {background_color}
@@ -18,14 +19,12 @@ skinparam {type_name} {{
 
 def skinparam(
     type_name="Component",
-    style="rectangle",
     font_size=20,
     border_thickness=1.2,
     background_color="transparent",
 ):
     return skinparam_component.format(
         type_name=type_name,
-        style=style,
         font_size=font_size,
         border_thickness=border_thickness,
         background_color=background_color,
@@ -52,36 +51,46 @@ def process_functions(data):
             create_function_component(i, ratio=ratio, fsize=font_size, bg=k, bt=bt)
 
 
-def _create_1d_table(data):
+def _create_1d_table(data, color_map):
     s = ""
     compo_i = 0
-    s += "\t' component:\n"
+    s += "' component:\n"
     for dat in data:
+        color = "transparent"
+        if len(color_map) > 0:
+            color = color_map[compo_i]
         text = f"{dat}"
-        s += f"""\tcomponent "{text}" as c{compo_i}\n"""
+        if dat == "OMIT":
+            s += f"""rectangle "\\no\\no\\no\\n" as c{compo_i} #{color}\n"""
+        else:
+            s += f"""component "{text}" as c{compo_i} #{color}\n"""
         compo_i += 1
-    s += "\t' layout:\n"
+    s += "' layout:\n"
     i = 0
     while True:
         if i >= len(data) - 1:
             break
-        s += f"\tc{i}-down[hidden]-c{i+1}\n"
+        s += f"c{i}-down[hidden]-c{i+1}\n"
         i += 1
     return s
 
 
-def _create_2d_table(data):
+def _create_2d_table(data, color_map):
     s = ""
-    rect_i = 0
+    pack_i = 0
     for dat in data:
-        rect_name = f"r{rect_i}"
-        s += "rectangle {} {{\n".format(rect_name)
+        pack_name = f"p{pack_i}"
+        s += "package {} {{\n".format(pack_name)
         compo_i = 0
         # components
         s += "\t' components\n"
         for d in dat:
             text = f"{d}"
-            s += f"""\tcomponent "{text}" as {rect_name}_c{compo_i}\n"""
+            if len(color_map) > 0:
+                color = color_map[pack_i][compo_i]
+                s += f"""\tcomponent "{text}" as {pack_name}_c{compo_i} #{color}\n"""
+            else:
+                s += f"""\tcomponent "{text}" as {pack_name}_c{compo_i} #transparent\n"""
             compo_i += 1
         # layout
         s += "\t' layout\n"
@@ -90,17 +99,17 @@ def _create_2d_table(data):
             while True:
                 if i >= len(dat) - 1:
                     break
-                s += f"\t{rect_name}_c{i}-right[hidden]-{rect_name}_c{i+1}\n"
+                s += f"\t{pack_name}_c{i}-right[hidden]-{pack_name}_c{i+1}\n"
                 i += 1
         s += "}\n\n"
-        rect_i += 1
+        pack_i += 1
     # layout
     if len(data) > 1:
         i = 0
         while True:
             if i >= len(data) - 1:
                 break
-            s += f"r{i}-down[hidden]-r{i+1}\n"
+            s += f"p{i}-down[hidden]-p{i+1}\n"
             i += 1
 
     return s
@@ -112,19 +121,24 @@ def write_plantuml(name, s):
         f.write(s)
 
 
-def _create_table(data):
+def _create_table(data, color_map):
     if isinstance(data, list) and isinstance(data[0], list):
-        return _create_2d_table(data)
+        return _create_2d_table(data, color_map)
     else:
-        return _create_1d_table(data)
+        return _create_1d_table(data, color_map)
+
 
 def create_table(table):
     s = start_uml
     s += scale_ratio.format(ratio="1/5")
     s += skinparam(type_name="Component", font_size=200, border_thickness=10)
-    s += skinparam(type_name="Rectangle", font_size=0, border_thickness=0)
+    s += skinparam(type_name="Package", font_size=0, border_thickness=0)
+    s += skinparam(type_name="Rectangle", font_size=200, border_thickness=0)
+    color_map = []
+    if "color_map" in table:
+        color_map = table["color_map"]
     if "data" in table:
-        s += _create_table(table["data"])
+        s += _create_table(table["data"], color_map)
     s += end_uml
     return s
 
@@ -135,9 +149,27 @@ def process_tables(tables):
     align = "CENTER"
     if "data" in tables:
         for k, v in tables["data"].items():
-            # align_table(v)
             s = create_table(v)
             write_plantuml(k, s)
+
+
+def create_text(text):
+    s = start_uml
+    s += scale_ratio.format(ratio="1/5")
+    s += skinparam(type_name="Component", font_size=200, border_thickness=0)
+    s += f'''component "{text}" as cp\n'''
+    s += end_uml
+    return s
+
+
+def process_texts(texts):
+    if "data" in texts:
+        i = 0
+        for l in texts["data"]:
+            s = create_text(l)
+            fname = f"text{i}"
+            write_plantuml(fname, s)
+            i += 1
 
 
 def main(data):
@@ -145,6 +177,8 @@ def main(data):
         process_functions(data["functions"])
     if "tables" in data:
         process_tables(data["tables"])
+    if "texts" in data:
+        process_texts(data["texts"])
 
 
 if __name__ == "__main__":
