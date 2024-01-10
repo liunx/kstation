@@ -1,0 +1,32 @@
+title = "Isolate and Migrate"
+
+color_list = [
+    "transparent", # 0
+    "LightGrey",
+    "LightGreen",
+    "LightBlue",
+    "LightYellow",
+]
+
+[tables]
+
+[tables.data.address_space_operations]
+
+name = "address_space_operations"
+
+color_map = [[1, 0], [1, 0], [1, 0]]
+
+data = [
+    [
+        "  (*isolate_page)\\t",
+        "  zs_page_isolate()\\t\\t",
+    ],
+    [
+        "  (*migratepage)\\t",
+        "  zs_page_migrate()\\t",
+    ],
+    [
+        "  (*putback_page)\\t",
+        "  zs_page_putback()\\t",
+    ],
+]

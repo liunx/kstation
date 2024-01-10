@@ -1,0 +1,65 @@
+@startuml
+
+skinparam ComponentStyle rectangle
+scale 1/5
+
+skinparam Component {
+    FontSize 200
+    BorderThickness 10
+    BackgroundColor transparent
+}
+
+
+skinparam Package {
+    FontSize 0
+    BorderThickness 0
+    BackgroundColor transparent
+}
+
+
+skinparam Rectangle {
+    FontSize 200
+    BorderThickness 0
+    BackgroundColor transparent
+}
+
+package p0 {
+	' components
+	component "0" as p0_c0 #LightYellow
+	component "0" as p0_c1 #LightYellow
+	component "0" as p0_c2 #LightYellow
+	component "<color:black>0</color>" as p0_c3 #LightBlue
+	' layout
+	p0_c0-right[hidden]-p0_c1
+	p0_c1-right[hidden]-p0_c2
+	p0_c2-right[hidden]-p0_c3
+}
+
+package p1 {
+	' components
+	component "0" as p1_c0 #LightYellow
+	component "0" as p1_c1 #LightYellow
+	component "0" as p1_c2 #LightYellow
+	component "<color:red>1</color>" as p1_c3 #LightBlue
+	' layout
+	p1_c0-right[hidden]-p1_c1
+	p1_c1-right[hidden]-p1_c2
+	p1_c2-right[hidden]-p1_c3
+}
+
+package p2 {
+	' components
+	component "0" as p2_c0 #LightYellow
+	component "0" as p2_c1 #LightYellow
+	component "0" as p2_c2 #LightYellow
+	component "<color:black>0</color>" as p2_c3 #LightBlue
+	' layout
+	p2_c0-right[hidden]-p2_c1
+	p2_c1-right[hidden]-p2_c2
+	p2_c2-right[hidden]-p2_c3
+}
+
+p0-down[hidden]-p1
+p1-down[hidden]-p2
+
+@enduml

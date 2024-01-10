@@ -1,0 +1,25 @@
+@startuml
+
+skinparam ComponentStyle rectangle
+scale 2/1
+
+skinparam Component {
+    FontSize 20
+    FontColor black
+    BorderThickness 1.2
+    BackgroundColor transparent
+}
+
+' components:
+component "memcg\n(/)" as c0 #LightGrey
+component "memcg\n(/grp1)" as c1 #LightGrey
+component "memcg\n(grp2)" as c2 #LightYellow
+component "memcg\n(/grp1/a)" as c3 #LightGrey
+component "memcg\n(grp2/b)" as c4 #LightGrey
+' layout:
+c0-->c1
+c0-->c2
+c1-->c3
+c1-->c4
+
+@enduml

@@ -1,0 +1,11 @@
+title = "LRU list"
+
+color_list = ["Red", "Orange", "LightGrey"]
+
+[lists]
+
+[lists.data.lru_list]
+
+color_map = [0, 0, 1, 1, 2, 2]
+
+data = ["page", "page", "page", "page", "page", "page"]

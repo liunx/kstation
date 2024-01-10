@@ -1,0 +1,38 @@
+@startuml
+scale 2/1
+skinparam Activity {
+    FontSize 20
+    BorderThickness 1.2
+    BackgroundColor transparent
+}
+
+skinparam Note {
+    FontSize 16
+    BorderThickness 0
+    BackgroundColor transparent
+}
+
+if (lru movable ?) then (Yes)
+    :lru movable page;
+    note left
+    <color:blue>MIGRATE_MOVABLE</color>
+    end note
+    #LightGreen:migrate enabled;<<output>>
+    detach
+else (No)
+    note right
+    <color:blue>MIGRATE_UNMOVABLE</color>
+    end note
+endif
+if (dirver support\nmigrate ?) then (No)
+    :non-lru page;
+    #OrangeRed:migrate disabled;<<output>>
+    detach
+else (Yes)
+    :non-lru movable page;
+    note right:\n\n\n\n\n\n<color:blue>page->mapping |= PAGE_MAPPING_MOVABLE</color>
+    #LightGreen:migrate enabled;<<output>>
+    detach
+endif
+
+@enduml

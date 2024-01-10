@@ -1,0 +1,49 @@
+title = "memcg/node lruvecs"
+
+color_list = ["transparent", "LightGrey", "LightYellow", "LightBlue", "Red", "LightGreen"]
+
+[trees]
+
+rewrite = true
+
+[trees.data.memcg_tree]
+
+name = "sys/fs/cgroup/memory"
+
+data = [
+    "memcg\\n(/)",
+    "memcg\\n(/grp1)",
+    "memcg\\n(grp2)",
+    "memcg\\n(/grp1/a)",
+    "memcg\\n(grp2/b)",
+]
+
+color_map = [1, 1, 2, 1, 1]
+
+connect_list = [[0, 1, 2], [1, 3, 4]]
+
+[tables]
+
+[tables.data.lruvec_types]
+
+data = [
+    "  LRU_INACTIVE_ANON\\t",
+    "  LRU_ACTIVE_ANON\\t",
+    "  LRU_INACTIVE_FILE\\t",
+    "  LRU_ACTIVE_FILE\\t\\t",
+    "  LRU_INVICTABLE\\t\\t",
+]
+
+color_map = [3, 3, 4, 4, 1]
+
+[tables.data.node]
+
+data = ["  node #0\t", "OMIT", "  node #N\t"]
+
+color_map = [2, 0, 2]
+
+[texts]
+
+data = ["lruvec"]
+
+color_map = [5]

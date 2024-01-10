@@ -1,0 +1,44 @@
+title = "Mobility characteristics of Pageblock"
+
+[tables]
+
+[tables.data.pageblock_unmovable]
+
+color_map = ["LightGrey", "LightBlue", "transparent", "LightGrey", "LightBlue"]
+data = [
+    "  unmovable page\\t",
+    "  movable page\\t\\t",
+    "OMIT",
+    "  unmovable page\\t",
+    "  movable page\\t\\t",
+]
+
+[tables.data.pageblock_movable]
+
+color_map = ["LightBlue", "LightGreen", "transparent", "LightBlue", "LightGreen"]
+data = [
+    "  movable page\\t\\t",
+    "  movable page\\t\\t",
+    "OMIT",
+    "  reclaimable page\\t",
+    "  movable page\\t\\t",
+]
+
+[tables.data.pageblock_reclaimable]
+
+color_map = ["LightBlue", "LightBlue", "transparent", "LightGreen", "LightBlue"]
+data = [
+    "  movable page\\t\\t",
+    "  reclaimable page\\t",
+    "OMIT",
+    "  movable page\\t\\t",
+    "  reclaimable page\\t",
+]
+
+[texts]
+
+data = [
+    "<color:blue>unmovable</color> pageblock",
+    "<color:blue>movable</color> pageblock",
+    "<color:blue>reclaimable</color> pageblock",
+]

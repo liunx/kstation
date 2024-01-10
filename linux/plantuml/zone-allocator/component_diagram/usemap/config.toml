@@ -1,0 +1,23 @@
+title = "usermap skip bit"
+
+[tables]
+
+[tables.data.pageblock_flags]
+
+font_color = 'transparent'
+
+color_map = [
+    ["LightYellow", "LightYellow", "LightYellow", "LightBlue"],
+    ["LightYellow", "LightYellow", "LightYellow", "LightBlue"],
+    ["LightYellow", "LightYellow", "LightYellow", "LightBlue"],
+]
+
+data = [
+    ["0", "0", "0", "<color:black>0</color>"],
+    ["0", "0", "0", "<color:red>1</color>"],
+    ["0", "0", "0", "<color:black>0</color>"],
+]
+
+[texts]
+
+data = [ "mem_section[].pageblock_flags"]

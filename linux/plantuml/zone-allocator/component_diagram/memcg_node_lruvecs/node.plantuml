@@ -1,0 +1,45 @@
+@startuml
+
+skinparam ComponentStyle rectangle
+scale 1/5
+
+skinparam Component {
+    FontSize 200
+    FontColor black
+    BorderThickness 10
+    BackgroundColor transparent
+}
+
+
+skinparam Card {
+    FontSize 0
+    FontColor black
+    BorderThickness 0
+    BackgroundColor transparent
+}
+
+
+skinparam Package {
+    FontSize 200
+    FontColor black
+    BorderThickness 0
+    BackgroundColor transparent
+}
+
+
+skinparam Rectangle {
+    FontSize 200
+    FontColor black
+    BorderThickness 0
+    BackgroundColor transparent
+}
+
+' component:
+component "  node #0	" as c0 #LightYellow
+rectangle "\no\no\no\n" as c1 #transparent
+component "  node #N	" as c2 #LightYellow
+' layout:
+c0-down[hidden]-c1
+c1-down[hidden]-c2
+
+@enduml

@@ -1,0 +1,15 @@
+@startuml
+
+skinparam ComponentStyle rectangle
+scale 1/5
+
+skinparam Component {
+    FontSize 200
+    FontColor black
+    BorderThickness 0
+    BackgroundColor transparent
+}
+
+component "PG_reference = ?\nPTE_AF = 1" as cp #LightGrey
+
+@enduml

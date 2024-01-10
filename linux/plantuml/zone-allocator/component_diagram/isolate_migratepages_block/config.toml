@@ -1,0 +1,51 @@
+title = "isolate_migratepages_block()"
+
+[tables]
+
+[tables.data.pageblock]
+
+color_map = [
+    "transparent",
+    "LightYellow",
+    "LightYellow",
+    "LightBlue",
+    "LightYellow",
+    "LightYellow",
+    "LightYellow",
+    "LightBlue",
+    "LightBlue",
+    "LightBlue",
+    "LightBlue",
+    "transparent",
+]
+
+data = [
+    "  free page\t\t\t\t",
+    "  compound page\t\t",
+    "  kernel page\t\t\t",
+    "  non-lru movable page\t",
+    "  non-lru page\t\t\t",
+    "  anon(pinned) page\t",
+    "  anon(swapped) page\t",
+    "  anon page\t\t\t\t",
+    "  file page\t\t\t\t",
+    "  anon page\t\t\t\t",
+    "  unevictable page\t\t",
+    "OMIT",
+]
+
+[tables.data.compact_control]
+
+color_map = [
+    "LightYellow",
+    "LightGrey",
+]
+
+data = [
+    "  compact_control\t",
+    "  migratepages\t\t",
+]
+
+[texts]
+
+data = ["**isolate_migratepages_block()**"]

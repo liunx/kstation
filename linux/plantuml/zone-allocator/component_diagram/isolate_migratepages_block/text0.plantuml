@@ -1,0 +1,13 @@
+@startuml
+scale 1/5
+
+skinparam Component {
+    Style rectangle
+    FontSize 200
+    BorderThickness 0
+    BackgroundColor transparent
+}
+
+[**isolate_migratepages_block()**]
+
+@enduml

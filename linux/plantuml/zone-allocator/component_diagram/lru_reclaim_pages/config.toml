@@ -1,0 +1,35 @@
+title = "LRU lists for reclaiming pages"
+
+color_list = ["LightGrey", "LightGreen", "LightBlue", "LightYellow"]
+
+[tables]
+
+[tables.data.lru_anon_active]
+
+data = ["  lruvec.lists[LRU_ACTIVE_ANON]\\t\\t"]
+
+color_map = [1]
+
+[tables.data.lru_anon_inactive]
+
+data = ["  lruvec.lists[LRU_UNACTIVE_ANON]\\t"]
+
+color_map = [2]
+
+[tables.data.lru_file_active]
+
+data = ["  lruvec.lists[LRU_ACTIVE_FILE]\\t\\t"]
+
+color_map = [1]
+
+[tables.data.lru_file_inactive]
+
+data = ["  lruvec.lists[LRU_UNACTIVE_FILE]\\t\\t"]
+
+color_map = [2]
+
+[tables.data.lru_unevictable]
+
+data = ["  lruvec.lists[LRU_UNEVICTABLE]\\t\\t"]
+
+color_map = [0]

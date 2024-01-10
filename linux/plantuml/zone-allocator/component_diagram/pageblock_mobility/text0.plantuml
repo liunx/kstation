@@ -1,0 +1,14 @@
+@startuml
+
+skinparam ComponentStyle rectangle
+scale 1/5
+
+skinparam Component {
+    FontSize 200
+    BorderThickness 0
+    BackgroundColor transparent
+}
+
+component "<color:blue>unmovable</color> pageblock" as cp
+
+@enduml

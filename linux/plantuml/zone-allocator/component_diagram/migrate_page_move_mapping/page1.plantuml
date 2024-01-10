@@ -1,0 +1,66 @@
+@startuml
+
+skinparam ComponentStyle rectangle
+scale 1/5
+
+skinparam Component {
+    FontSize 200
+    FontColor black
+    BorderThickness 10
+    BackgroundColor transparent
+}
+
+
+skinparam Card {
+    FontSize 0
+    FontColor black
+    BorderThickness 0
+    BackgroundColor transparent
+}
+
+
+skinparam Package {
+    FontSize 200
+    FontColor black
+    BorderThickness 0
+    BackgroundColor transparent
+}
+
+
+skinparam Rectangle {
+    FontSize 200
+    FontColor transparent
+    BorderThickness 0
+    BackgroundColor transparent
+}
+
+package "page" as pack_name {
+card p0 {
+	' components
+	component "  index\t\t" as p0_c0 #LightGrey
+	rectangle "blank" as p0_c1 #transparent
+	' layout
+	p0_c0-right[hidden]-p0_c1
+}
+
+card p1 {
+	' components
+	component "  *mapping\t" as p1_c0 #LightGrey
+	component "  null\t\t\t\t" as p1_c1 #transparent
+	' layout
+	p1_c0-right[hidden]-p1_c1
+}
+
+card p2 {
+	' components
+	component "  flags\t\t" as p2_c0 #LightGrey
+	component "  PG_SwapBacked\t" as p2_c1 #Pink
+	' layout
+	p2_c0-right[hidden]-p2_c1
+}
+
+p0-down[hidden]-p1
+p1-down[hidden]-p2
+}
+
+@enduml

@@ -1,0 +1,39 @@
+@startuml
+scale 1/5
+
+skinparam Component {
+    Style rectangle
+    FontSize 200
+    BorderThickness 10
+    BackgroundColor transparent
+}
+
+
+skinparam Package {
+    Style rectangle
+    FontSize 0
+    BorderThickness 0
+    BackgroundColor transparent
+}
+
+
+skinparam Rectangle {
+    Style rectangle
+    FontSize 200
+    BorderThickness 0
+    BackgroundColor transparent
+}
+
+' component:
+component "  	page	  " as c0
+component "  	page	  " as c1
+rectangle "\no\no\no\n" as c2
+component "  	page	  " as c3
+component "  	page	  " as c4
+' layout:
+c0-down[hidden]-c1
+c1-down[hidden]-c2
+c2-down[hidden]-c3
+c3-down[hidden]-c4
+
+@enduml

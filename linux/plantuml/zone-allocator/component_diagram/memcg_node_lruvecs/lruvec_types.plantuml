@@ -1,0 +1,49 @@
+@startuml
+
+skinparam ComponentStyle rectangle
+scale 1/5
+
+skinparam Component {
+    FontSize 200
+    FontColor black
+    BorderThickness 10
+    BackgroundColor transparent
+}
+
+
+skinparam Card {
+    FontSize 0
+    FontColor black
+    BorderThickness 0
+    BackgroundColor transparent
+}
+
+
+skinparam Package {
+    FontSize 200
+    FontColor black
+    BorderThickness 0
+    BackgroundColor transparent
+}
+
+
+skinparam Rectangle {
+    FontSize 200
+    FontColor black
+    BorderThickness 0
+    BackgroundColor transparent
+}
+
+' component:
+component "  LRU_INACTIVE_ANON\t" as c0 #LightBlue
+component "  LRU_ACTIVE_ANON\t" as c1 #LightBlue
+component "  LRU_INACTIVE_FILE\t" as c2 #Red
+component "  LRU_ACTIVE_FILE\t\t" as c3 #Red
+component "  LRU_INVICTABLE\t\t" as c4 #LightGrey
+' layout:
+c0-down[hidden]-c1
+c1-down[hidden]-c2
+c2-down[hidden]-c3
+c3-down[hidden]-c4
+
+@enduml

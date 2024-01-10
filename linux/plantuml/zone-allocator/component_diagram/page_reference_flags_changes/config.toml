@@ -1,0 +1,32 @@
+#
+title = "LRU lists for reclaiming pages"
+
+color_list = ["LightGrey", "LightGreen", "LightBlue", "LightYellow"]
+
+[tables]
+
+[tables.data.lru_file_active]
+
+data = ["  lruvec.lists[LRU_ACTIVE_FILE]\\t\\t"]
+color_map = [1]
+
+[tables.data.lru_file_inactive]
+
+data = ["  lruvec.lists[LRU_UNACTIVE_FILE]\\t\\t"]
+color_map = [2]
+
+[texts]
+
+data = [
+    "PG_reference = 0\\nPTE_AF = 0",
+    "PG_reference = 0\\nPTE_AF = 1",
+    "PG_reference = 1\\nPTE_AF = 0",
+    "PG_reference = 1\\nPTE_AF = 1",
+    "PG_reference = ?\\nPTE_AF > 0",
+    "PG_reference = ?\\nPTE_AF > 1",
+    "PG_reference = ?\\nPTE_AF = 0",
+    "PG_reference = ?\\nPTE_AF = 1",
+]
+
+color_map = [0, 0, 0, 0, 0, 0, 0, 0]
+

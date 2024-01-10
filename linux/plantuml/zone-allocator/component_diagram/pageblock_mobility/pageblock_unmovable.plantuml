@@ -1,0 +1,38 @@
+@startuml
+
+skinparam ComponentStyle rectangle
+scale 1/5
+
+skinparam Component {
+    FontSize 200
+    BorderThickness 10
+    BackgroundColor transparent
+}
+
+
+skinparam Package {
+    FontSize 0
+    BorderThickness 0
+    BackgroundColor transparent
+}
+
+
+skinparam Rectangle {
+    FontSize 200
+    BorderThickness 0
+    BackgroundColor transparent
+}
+
+' component:
+component "  unmovable page\t" as c0 #LightGrey
+component "  movable page\t\t" as c1 #LightBlue
+rectangle "\no\no\no\n" as c2 #transparent
+component "  unmovable page\t" as c3 #LightGrey
+component "  movable page\t\t" as c4 #LightBlue
+' layout:
+c0-down[hidden]-c1
+c1-down[hidden]-c2
+c2-down[hidden]-c3
+c3-down[hidden]-c4
+
+@enduml

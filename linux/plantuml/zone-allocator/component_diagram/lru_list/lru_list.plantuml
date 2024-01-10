@@ -1,0 +1,28 @@
+@startuml
+
+skinparam ComponentStyle rectangle
+left to right direction
+scale 2/1
+
+skinparam Component {
+    FontSize 20
+    FontColor black
+    BorderThickness 1.2
+    BackgroundColor transparent
+}
+
+' components:
+component "page" as c0 #Red
+component "page" as c1 #Red
+component "page" as c2 #Orange
+component "page" as c3 #Orange
+component "page" as c4 #LightGrey
+component "page" as c5 #LightGrey
+' layout:
+c0-down.c1
+c1-down.c2
+c2-down.c3
+c3-down.c4
+c4-down.c5
+
+@enduml

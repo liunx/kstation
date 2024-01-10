@@ -1,0 +1,20 @@
+title = "Tables Create Tests"
+
+tables = [
+    [
+        "LRU Pages",
+        "lruvec.lists[]",
+    ],
+    [
+        "HugeTLBFS Pages",
+        "b_dev_info",
+    ],
+    [
+        "Balloon Pages",
+        "hstates[].pages",
+    ],
+    [
+        "Buddy System",
+        "free_area[].free_list[]",
+    ],
+]

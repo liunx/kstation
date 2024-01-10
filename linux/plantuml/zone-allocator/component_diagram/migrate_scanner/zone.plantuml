@@ -1,0 +1,37 @@
+@startuml
+scale 1/5
+
+skinparam Component {
+    Style rectangle
+    FontSize 200
+    BorderThickness 10
+    BackgroundColor transparent
+}
+
+
+skinparam Package {
+    Style rectangle
+    FontSize 0
+    BorderThickness 0
+    BackgroundColor transparent
+}
+
+
+skinparam Rectangle {
+    Style rectangle
+    FontSize 200
+    BorderThickness 0
+    BackgroundColor transparent
+}
+
+' component:
+component "  pageblock  " as c0
+rectangle "\no\no\no\n" as c1
+component "  pageblock  " as c2
+component "  pageblock  " as c3
+' layout:
+c0-down[hidden]-c1
+c1-down[hidden]-c2
+c2-down[hidden]-c3
+
+@enduml

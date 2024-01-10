@@ -1,0 +1,55 @@
+title = "migrate_page_move_mapping()"
+
+color_list = ["transparent", "LightGrey", "Pink"]
+
+[tables]
+
+[tables.data.page1]
+
+name = "page"
+
+color_map = [
+    [1, 0],
+    [1, 0],
+    [1, 2],
+]
+
+data = [
+    ["  index\\t\\t", "BLANK"],
+    ["  *mapping\\t", "  null\\t\\t\\t\\t"],
+    ["  flags\\t\\t", "  PG_SwapBacked\\t"],
+]
+
+[tables.data.page2]
+
+name = "page"
+
+color_map = [
+    [1, 0],
+    [1, 0],
+    [1, 2],
+]
+
+data = [
+    ["  index\\t\\t", "BLANK"],
+    ["  *mapping\\t", "  <address>\\t"],
+    ["  flags\\t\\t", "  PG_Dirty\\t"],
+]
+
+[tables.data.page3]
+
+name = "page"
+
+color_map = [
+    [1, 0],
+    [1, 0],
+    [1, 2],
+    [1, 0],
+]
+
+data = [
+    ["  index\\t\\t", "BLANK"],
+    ["  *mapping\\t", "  <address>\\t\\t\\t"],
+    ["\\n  flags\\t\\t\\n", "  PG_Dirty\\t\\n  PG_SwapBacked\\t\\n  PG_SwapCache\\t"],
+    ["  private\\t", "  <address>\\t\\t\\t"]
+]

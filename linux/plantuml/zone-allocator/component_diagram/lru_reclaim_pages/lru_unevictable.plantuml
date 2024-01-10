@@ -1,0 +1,41 @@
+@startuml
+
+skinparam ComponentStyle rectangle
+scale 1/5
+
+skinparam Component {
+    FontSize 200
+    FontColor black
+    BorderThickness 10
+    BackgroundColor transparent
+}
+
+
+skinparam Card {
+    FontSize 0
+    FontColor black
+    BorderThickness 0
+    BackgroundColor transparent
+}
+
+
+skinparam Package {
+    FontSize 200
+    FontColor black
+    BorderThickness 0
+    BackgroundColor transparent
+}
+
+
+skinparam Rectangle {
+    FontSize 200
+    FontColor black
+    BorderThickness 0
+    BackgroundColor transparent
+}
+
+' component:
+component "  lruvec.lists[LRU_UNEVICTABLE]\t\t" as c0 #LightGrey
+' layout:
+
+@enduml

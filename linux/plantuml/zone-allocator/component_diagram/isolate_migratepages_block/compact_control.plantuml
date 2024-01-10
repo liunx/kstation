@@ -1,0 +1,33 @@
+@startuml
+scale 1/5
+
+skinparam Component {
+    Style rectangle
+    FontSize 200
+    BorderThickness 10
+    BackgroundColor transparent
+}
+
+
+skinparam Package {
+    Style rectangle
+    FontSize 0
+    BorderThickness 0
+    BackgroundColor transparent
+}
+
+
+skinparam Rectangle {
+    Style rectangle
+    FontSize 200
+    BorderThickness 0
+    BackgroundColor transparent
+}
+
+' component:
+component "  compact_control	" as c0 #LightYellow
+component "  migratepages		" as c1 #LightGrey
+' layout:
+c0-down[hidden]-c1
+
+@enduml

@@ -1,0 +1,34 @@
+title = "Migrate Scanner"
+
+[tables]
+
+font_size = 200
+radio = '1/5'
+align = "CENTER"
+
+[tables.data.zone]
+
+color = "LightGrey"
+data = ["  pageblock  ", "OMIT", "  pageblock  ", "  pageblock  "]
+
+[tables.data.pageblock]
+
+color = "LightGrey"
+data = ["  \tpage\t  ", "  \tpage\t  ", "OMIT", "  \tpage\t  ", "  \tpage\t  "]
+
+[tables.data.migrate_control]
+
+color = "LightYellow"
+data = ["  migrate_control\t", "  migratepages\t\t"]
+
+[texts]
+
+font_size = 200
+radio = '1/5'
+
+data = [
+    "z->migrate_pfn",
+    "z->free_pfn",
+    "isolate_migratepages_block()",
+    "**isolate_migratepages(<color:blue>z, cc</color>)**",
+]
