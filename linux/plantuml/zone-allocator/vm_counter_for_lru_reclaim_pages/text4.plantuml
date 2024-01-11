@@ -1,0 +1,16 @@
+@startuml
+
+skinparam ComponentStyle rectangle
+hide stereotype
+scale 1/5
+
+skinparam Component {
+    FontSize 200
+    FontColor Blue
+    BorderThickness 0
+    BackgroundColor transparent
+}
+
+component "PGSCAN_DIRECT" as cp
+
+@enduml

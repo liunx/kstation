@@ -1,0 +1,47 @@
+#
+title = "LRU cache pagevecs"
+color_list = ["LightBlue", "LightGreen"]
+
+[tables]
+
+[tables.data.lru_list]
+data = ["  LRU list\\t\\t\\t\\t"]
+color_map = [1]
+
+[tables.data.inactive_file_lru_list]
+data = ["  inactivate file LRU list  "]
+color_map = [1]
+
+[tables.data.__lru_cache_add]
+name = "__lru_cache_add()"
+data = ["  lru_add_pvec  "]
+color_map = [0]
+
+[tables.data.rotate_reclaimable_page]
+name = "rotate_reclaimable_page()"
+data = ["  lru_rotate_pvecs  "]
+color_map = [0]
+
+[tables.data.deactivate_file_page]
+name = "deactivate_file_page()"
+data = ["  lru_deactivate_file_pvecs  "]
+color_map = [0]
+
+[tables.data.mark_page_lazyfree]
+name = "mark_page_lazyfree()"
+data = ["  lru_lazyfree_pvecs  "]
+color_map = [0]
+
+[tables.data.activate_page]
+name = "activate_page()"
+data = ["  activate_page_pvecs  "]
+color_map = [0]
+
+[texts]
+data = [
+    "lru_cache_add()\\nlru_cache_add_anon()\\nlru_cache_add_file()",
+    "end_page_writeback()",
+    "invalidate_mapping_pages()",
+    "madvise_free_pte_range()",
+    "unuse_mm()\\nunuse_pte()\\nmark_page_accessed()",
+]

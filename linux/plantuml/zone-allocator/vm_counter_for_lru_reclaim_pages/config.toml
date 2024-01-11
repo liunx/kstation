@@ -1,0 +1,38 @@
+title = "LRU lists for reclaiming pages"
+
+color_list = ["LightGrey", "LightGreen", "LightBlue", "LightYellow", "Blue"]
+
+[tables]
+
+[tables.data.lru_active_list]
+
+data = ["  LRU Active list\\t\\t"]
+color_map = [1]
+
+[tables.data.lru_inactive_list]
+
+data = ["  LRU Inactive list\\t"]
+color_map = [1]
+
+[tables.data.isolate]
+
+data = ["  isolate  "]
+color_map = [3]
+
+[texts]
+
+data = [
+    "PGACTIVATE",
+    "PGDEACTIVATE",
+    "PGREFILL",
+    "PGSCAN_KSWAPD",
+    "PGSCAN_DIRECT",
+    "PGSTEAL_KSWAPD",
+    "PGSTEAL_DIRECT",
+    "PGLAZYFREED",
+    "NR_ISOLATED_ANON",
+    "NR_ISOLATED_FILE",
+    "NR_VMSCAN_IMMEDIATE_RECLAIM",
+]
+font_color_map = [4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4]
+background_color_map = []

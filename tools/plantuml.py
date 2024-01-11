@@ -5,6 +5,7 @@ import tomli as tomllib
 
 start_uml = """@startuml\n
 skinparam ComponentStyle rectangle
+hide stereotype
 """
 end_uml = "\n@enduml\n"
 scale_ratio = "scale {ratio}\n"
@@ -182,27 +183,27 @@ def process_tables(tables):
             write_plantuml(k, s)
 
 
-def create_text(text, color):
+def create_text(text, font_color):
     s = start_uml
     s += scale_ratio.format(ratio="1/5")
-    s += skinparam(type_name="Component", font_size=200, border_thickness=0)
-    s += f"""component "{text}" as cp #{color}\n"""
+    s += skinparam(type_name="Component", font_size=200, font_color=font_color, border_thickness=0)
+    s += f"""component "{text}" as cp\n"""
     s += end_uml
     return s
 
 
 def process_texts(data):
     global color_list
-    color_map = []
-    color = 'transparent'
-    if "color_map" in data:
-        color_map = data['color_map']
+    font_color_map = []
+    font_color = 'black'
+    if "font_color_map" in data:
+        font_color_map = data['font_color_map']
     if "data" in data:
         i = 0
         for l in data["data"]:
-            if len(color_map) > 0:
-                color = color_list[color_map[i]]
-            s = create_text(l, color)
+            if len(font_color_map) > 0:
+                font_color = color_list[font_color_map[i]]
+            s = create_text(l, font_color)
             fname = f"text{i}"
             write_plantuml(fname, s)
             i += 1
