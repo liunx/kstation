@@ -38,24 +38,61 @@ def skinparam(
     )
 
 
-def create_function_component(name, ratio="2/1", fsize=20, bg="Orange", bt=1.2):
-    filename = "{}.plantuml".format(name)
-    with open(filename, "w+") as f:
-        s = start_uml
-        s += scale_ratio.format(ratio=ratio)
-        s += skinparam(font_size=fsize, background_color=bg, border_thickness=bt)
-        s += f"[  {name}()  ]\n"
-        s += end_uml
-        f.write(s)
+def check_file_exists(fname):
+    return os.path.exists(f"{fname}.plantuml")
+
+
+def create_functions(functions, color_map, interval, data):
+    global color_list
+    s = start_uml
+    s += scale_ratio.format(ratio="1/1")
+    s += skinparam(type_name="Component", font_size=40, border_thickness=1.5)
+    color = "transparent"
+    s += "' components:\n"
+    i = 0
+    for fun in functions:
+        if len(color_map) > 0:
+            color = color_list[color_map[fun]]
+            name = data[fun]
+            s += f"""component "{name}" as c{i} #{color}\n"""
+        else:
+            s += f"""component "{name}" as c{i} #{color}\n"""
+        i += 1
+    s += "' layout:\n"
+    i = 0
+    while True:
+        if i >= len(functions) - 1:
+            break
+        dots = '-' * interval
+        s += f"c{i}-down[hidden]{dots}c{i+1}\n"
+        i += 1
+    s += end_uml
+    return s
 
 
 def process_functions(data):
-    font_size = data["font_size"]
-    ratio = data["ratio"]
-    bt = data["border_thickness"]
-    for k, v in data["bg_color"].items():
-        for i in v:
-            create_function_component(i, ratio=ratio, fsize=font_size, bg=k, bt=bt)
+    _data = data.get("data", [])
+    if len(_data) == 0:
+        return
+    rewrite = data.get("rewrite", True)
+    interval = data.get("interval", 2)
+    groups = data.get("groups", [])
+    color_map = data.get("color_map", [])
+    i = 0
+    fname = "functions{}"
+    if len(groups) > 0:
+        for grp in groups:
+            if check_file_exists(fname.format(i)) and not rewrite:
+                continue
+            s = create_functions(grp, color_map, interval, _data)
+            write_plantuml(fname.format(i), s)
+            i += 1
+    else:
+        for i in range(len(_data)):
+            if check_file_exists(fname.format(i)) and not rewrite:
+                continue
+            s = create_functions([i], color_map, interval, _data)
+            write_plantuml(fname.format(i), s)
 
 
 def _create_1d_table(data, color_map):
@@ -186,8 +223,12 @@ def process_tables(tables):
 def create_text(text, font_color):
     s = start_uml
     s += scale_ratio.format(ratio="1/5")
-    s += skinparam(type_name="Component", font_size=200, font_color=font_color, border_thickness=0)
-    s += f"""component "{text}" as cp\n"""
+    s += skinparam(
+        type_name="Component", font_size=200, font_color=font_color, border_thickness=0
+    )
+    s += f"""component cp [\n"""
+    s += f"{text}\n"
+    s += "]"
     s += end_uml
     return s
 
@@ -195,29 +236,39 @@ def create_text(text, font_color):
 def process_texts(data):
     global color_list
     font_color_map = []
-    font_color = 'black'
+    rewrite = data.get("rewrite", True)
+    font_color = "black"
     if "font_color_map" in data:
-        font_color_map = data['font_color_map']
+        font_color_map = data["font_color_map"]
     if "data" in data:
         i = 0
         for l in data["data"]:
+            fname = f"text{i}"
+            if check_file_exists(fname) and not rewrite:
+                continue
             if len(font_color_map) > 0:
                 font_color = color_list[font_color_map[i]]
             s = create_text(l, font_color)
-            fname = f"text{i}"
             write_plantuml(fname, s)
             i += 1
 
 
-def create_list(_list, color_map):
+def create_list(_list, color_map, interval, hide_line):
     global color_list
     s = start_uml
     s += "left to right direction\n"
-    s += scale_ratio.format(ratio="2/1")
-    s += skinparam(type_name="Component", font_size=20, border_thickness=1.2)
+    s += scale_ratio.format(ratio="1/1")
+    s += skinparam(type_name="Component", font_size=40, border_thickness=2)
+    if hide_line is False:
+        s += skinparam(type_name="Interface", font_size=0, border_thickness=0)
+        s += "skinparam ArrowThickness 2\n"
+    else:
+        s += "skinparam ArrowThickness 0\n"
     i = 0
     color = "transparent"
     s += "' components:\n"
+    if hide_line is False:
+        s += f"""interface "o" as head\n"""
     for l in _list:
         if len(color_map) > 0:
             color = color_list[color_map[i]]
@@ -225,13 +276,20 @@ def create_list(_list, color_map):
         else:
             s += f"""component "{l}" as c{i} #{color}\n"""
         i += 1
+    if hide_line is False:
+        s += f"""interface "o" as tail\n"""
     s += "' layout:\n"
     i = 0
+    dots = "." * interval
+    if hide_line is False:
+        s += f"head-down{dots}c{i}\n"
     while True:
         if i >= len(_list) - 1:
             break
-        s += f"c{i}-down.c{i+1}\n"
+        s += f"c{i}-down{dots}c{i+1}\n"
         i += 1
+    if hide_line is False:
+        s += f"c{i}-down{dots}tail\n"
     s += end_uml
     return s
 
@@ -240,9 +298,15 @@ def process_lists(lists):
     if "data" in lists:
         for k, v in lists["data"].items():
             color_map = []
+            interval = 1
+            hide_line = False
             if "color_map" in v:
                 color_map = v["color_map"]
-            s = create_list(v["data"], color_map)
+            if "interval" in v:
+                interval = v["interval"]
+            if "hide_line" in v:
+                hide_line = v["hide_line"]
+            s = create_list(v["data"], color_map, interval, hide_line)
             write_plantuml(k, s)
 
 
@@ -291,6 +355,42 @@ def process_trees(data):
             write_file(fname, s)
 
 
+def _create_flow(data):
+    global color_list
+    _data = data.get("data", [])
+    color_map = data.get("color_map", [])
+    s = start_uml
+    s += scale_ratio.format(ratio="2/1")
+    s += skinparam(type_name="Activity", font_size=20, border_thickness=1.2)
+    s += skinparam(type_name="Note", font_size=16, border_thickness=0)
+    s += skinparam(type_name="Arrow", font_size=16, border_thickness=1.2)
+    s += "' start here\n"
+    i = 0
+    for d in _data:
+        if len(color_map) > 0:
+            color = color_list[color_map[i]]
+            s += f"#{color}:{d};\n"
+        else:
+            s += f":{d};\n"
+        i += 1
+    s += end_uml
+    return s
+
+
+def create_flow(data, i):
+    name = data.get("name", f"flow{i}")
+    rewrite = data.get("rewrite", True)
+    if check_file_exists(name) and not rewrite:
+        return
+    s = _create_flow(data)
+    write_plantuml(name, s)
+
+
+def process_flows(data):
+    for i in range(len(data)):
+        create_flow(data[i], i)
+
+
 def main(data):
     global color_list
     if "color_list" in data:
@@ -305,6 +405,8 @@ def main(data):
         process_lists(data["lists"])
     if "trees" in data:
         process_trees(data["trees"])
+    if "flows" in data:
+        process_flows(data["flows"])
 
 
 if __name__ == "__main__":
