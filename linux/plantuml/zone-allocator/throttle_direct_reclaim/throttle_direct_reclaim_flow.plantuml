@@ -1,0 +1,49 @@
+@startuml
+
+skinparam ComponentStyle rectangle
+hide stereotype
+scale 2/1
+
+skinparam Activity {
+    FontSize 20
+    FontColor black
+    BorderThickness 1.2
+    BackgroundColor transparent
+}
+
+
+skinparam Note {
+    FontSize 16
+    FontColor black
+    BorderThickness 0
+    BackgroundColor transparent
+}
+
+skinparam Arrow {
+    FontSize 20
+    Thickness 1.5
+}
+
+' start here
+start
+if (kernel thread ?) then (Yes)
+    :false;<<continuous>>
+    detach
+endif
+
+while (for loop zonelist\n(lowmem))
+    :get first usable node;
+    if (allow_direct_reclaim(pgdat)) then (Yes)
+        #Orange:false;<<ready>>
+        detach
+    endif
+endwhile
+
+if () then (no fs)
+    :wait for 1s;
+else (fs)
+    :wait until kswapd wake it up;
+endif
+#Orange:false;<<input>>
+
+@enduml

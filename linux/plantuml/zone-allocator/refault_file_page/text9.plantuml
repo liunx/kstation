@@ -1,0 +1,20 @@
+@startuml
+
+skinparam ComponentStyle rectangle
+hide stereotype
+scale 1/5
+
+skinparam Component {
+    FontSize 200
+    FontColor black
+    BorderThickness 0
+    BackgroundColor transparent
+}
+
+component cp [
+    <color:blue>refault distant</color> = (R - E)
+    **complete minimum access distant** = NR_inactive + (R - E)
+    *= NR_inactive + (R - E) <= NR_inactive + <color:red>NR_active</color>
+    *= (R - E) <= <color:red>NR_active</color>
+]
+@enduml

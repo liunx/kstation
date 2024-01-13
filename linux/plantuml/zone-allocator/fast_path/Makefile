@@ -1,7 +1,8 @@
 PUML = plantuml
 CONVERTER = rsvg-convert
-
-PNGS = $(subst .plantuml,.png,$(wildcard *.plantuml))
+DIRS = $(wildcard */)
+SRC = $(foreach dir, $(DIRS), $(wildcard $(dir)*.plantuml))
+PNGS = $(patsubst %.plantuml,%.png,$(SRC))
 
 all: $(PNGS)
 
@@ -12,4 +13,4 @@ all: $(PNGS)
 	$(PUML) -tsvg $<
 
 clean:
-	rm -rf *.png
+	rm -rf $(PNGS)

@@ -1,0 +1,36 @@
+@startuml
+
+skinparam ComponentStyle rectangle
+hide stereotype
+scale 1/5
+
+skinparam Component {
+    FontSize 200
+    FontColor black
+    BorderThickness 10
+    BackgroundColor transparent
+}
+
+
+skinparam Rectangle {
+    FontSize 0
+    FontColor black
+    BorderThickness 0
+    BackgroundColor transparent
+}
+
+
+skinparam Package {
+    FontSize 200
+    FontColor black
+    BorderThickness 0
+    BackgroundColor transparent
+}
+
+	component "\n  ZONE_NORMAL\t\n" as r0 #LightGreen
+	component "\n  ZONE_DMA32\t\t\n" as r1 #LightGreen
+	component "\n  ZONE_DMA\t\t\n" as r2 #LightGreen
+r0-down[hidden]-r1
+r1-down[hidden]-r2
+
+@enduml

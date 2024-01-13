@@ -1,0 +1,41 @@
+#
+title = "Refault file page"
+color_list = ["LightGreen", "LightBlue", "Red", "LightGrey"]
+
+[lists]
+
+[lists.data.active_list]
+
+data = ["PG", "PG", "PG", "PG", "PG", "PG"]
+color_map = [0, 0, 0, 0, 0, 0]
+
+[lists.data.inactive_list]
+
+data = ["PG", "PG", "PG", "PG", "PG"]
+color_map = [0, 0, 0, 0, 0]
+
+[lists.data.refault_distance]
+
+interval = 2
+hide_line = true
+data = ["PG", "PG"]
+color_map = [0, 0]
+
+[texts]
+
+data = [
+    "active list",
+    "<color:red>NR-active</color>",
+    "inactive list",
+    "NR-inactive",
+    "<color:blue>refault distance</color> <= <color:red>NR-active</color>",
+    "in-cache distance",
+    "out-of-cache distance",
+    "complete minimum access distance",
+    "<color:blue>refault distance</color>",
+    """
+    <color:blue>refault distant</color> = (R - E)
+    **complete minimum access distant** = NR_inactive + (R - E)
+    *= NR_inactive + (R - E) <= NR_inactive + <color:red>NR_active</color>
+    *= (R - E) <= <color:red>NR_active</color>""",
+]

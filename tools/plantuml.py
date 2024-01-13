@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import sys
 import os.path
+import pathlib
 import tomli as tomllib
 
 start_uml = """@startuml\n
@@ -38,8 +39,12 @@ def skinparam(
     )
 
 
-def check_file_exists(fname):
-    return os.path.exists(f"{fname}.plantuml")
+def check_file_exists(fname, dir_name='.'):
+    return os.path.exists(f"{dir_name}/{fname}.plantuml")
+
+
+def create_dir(dir_name):
+    pathlib.Path(dir_name).mkdir(parents=True, exist_ok=True)
 
 
 def create_functions(functions, color_map, interval, data):
@@ -63,7 +68,7 @@ def create_functions(functions, color_map, interval, data):
     while True:
         if i >= len(functions) - 1:
             break
-        dots = '-' * interval
+        dots = "-" * interval
         s += f"c{i}-down[hidden]{dots}c{i+1}\n"
         i += 1
     s += end_uml
@@ -167,8 +172,8 @@ def _create_2d_table(data, color_map):
     return s
 
 
-def write_plantuml(name, s):
-    filename = f"{name}.plantuml"
+def write_plantuml(name, s, dir_name='.'):
+    filename = f"{dir_name}/{name}.plantuml"
     with open(filename, "w+") as f:
         f.write(s)
 
@@ -355,24 +360,38 @@ def process_trees(data):
             write_file(fname, s)
 
 
-def _create_flow(data):
+def recursive_flow(flow, data, color_map, tab_count=0):
     global color_list
+    s = ''
+    _tab = '\t' * tab_count
+    for f in flow:
+        if isinstance(f, list):
+            color = color_list[color_map[f[0]]]
+            s += _tab + f'''group #{color} "{data[f[0]]}" {{\n'''
+            s += recursive_flow(f[1:], data, color_map, tab_count+1)
+            s += _tab + '}\n'
+        else:
+            color = color_list[color_map[f]]
+            s += _tab + f'#{color}:{data[f]};\n'
+    return s
+
+
+def _create_flow(data):
     _data = data.get("data", [])
-    color_map = data.get("color_map", [])
+    if len(_data) == 0:
+        return ''
+    flow = data.get("control_flow", [i for i in range(len(_data))])
+    color_map = data.get("color_map", [0] * len(_data))
     s = start_uml
     s += scale_ratio.format(ratio="2/1")
     s += skinparam(type_name="Activity", font_size=20, border_thickness=1.2)
+    s += "skinparam ActivityFontColor<<hide>> transparent\n"
+    s += "skinparam ActivityBorderThickness<<hide>> 0\n"
     s += skinparam(type_name="Note", font_size=16, border_thickness=0)
     s += skinparam(type_name="Arrow", font_size=16, border_thickness=1.2)
     s += "' start here\n"
-    i = 0
-    for d in _data:
-        if len(color_map) > 0:
-            color = color_list[color_map[i]]
-            s += f"#{color}:{d};\n"
-        else:
-            s += f":{d};\n"
-        i += 1
+    s += recursive_flow(flow, _data, color_map)
+    s += ":return;<<hide>>\n"
     s += end_uml
     return s
 
@@ -380,21 +399,120 @@ def _create_flow(data):
 def create_flow(data, i):
     name = data.get("name", f"flow{i}")
     rewrite = data.get("rewrite", True)
-    if check_file_exists(name) and not rewrite:
+    if check_file_exists(name, dir_name="flows") and not rewrite:
         return
     s = _create_flow(data)
-    write_plantuml(name, s)
+    if len(s) > 0:
+        write_plantuml(name, s, dir_name="flows")
 
 
 def process_flows(data):
+    create_dir("flows")
     for i in range(len(data)):
         create_flow(data[i], i)
 
 
+def _create_block(data):
+    global color_list
+    _data = data.get("data", [])
+    if len(_data) == 0:
+        return ""
+    color_map = data.get("color_map", [0] * len(_data))
+    layout = data.get("layout", [])
+    s = start_uml
+    s += scale_ratio.format(ratio="1/5")
+    s += skinparam(type_name="Component", font_size=200, border_thickness=10)
+    s += skinparam(type_name="Rectangle", font_size=0, border_thickness=0)
+    s += skinparam(type_name="Package", font_size=200, border_thickness=0)
+    i = 0
+    for l in layout:
+        if isinstance(l, list):
+            rname = f"r{i}"
+            s += f"rectangle {rname} {{\n"
+            j = 0
+            for _l in l:
+                text = _data[_l]
+                color = color_list[color_map[_l]]
+                s += f"""\tcomponent "{text}" as {rname}_c{j} #{color}\n"""
+                j += 1
+            # layout
+            j = 0
+            while True:
+                if j >= len(l) - 1:
+                    break
+                s += f"\t{rname}_c{j}-right[hidden]-{rname}_c{j+1}\n"
+                j += 1
+            s += "}\n"
+        else:
+            text = _data[l]
+            color = color_list[color_map[l]]
+            s += f"""\tcomponent "{text}" as r{i} #{color}\n"""
+        i += 1
+    # layout
+    i = 0
+    while True:
+        if i >= len(layout) - 1:
+            break
+        s += f"r{i}-down[hidden]-r{i+1}\n"
+        i += 1
+    s += end_uml
+    return s
+
+
+def create_block(data, i):
+    name = data.get("name", f"block{i}")
+    rewrite = data.get("rewrite", True)
+    if check_file_exists(name) and not rewrite:
+        return
+    s = _create_block(data)
+    if len(s) > 0:
+        write_plantuml(name, s)
+
+
+def process_blocks(data):
+    for i in range(len(data)):
+        create_block(data[i], i)
+
+
+def create_textbox(text, color):
+    s = start_uml
+    s += scale_ratio.format(ratio="1/5")
+    s += "skinparam RoundCorner 100\n"
+    s += skinparam(type_name="Component", font_size=200, border_thickness=10, background_color=color)
+    s += f"""component "{text}" as cp\n"""
+    s += end_uml
+
+    return s
+
+
+def create_textboxes(data, i):
+    global color_list
+    _data = data.get("data", [])
+    if len(_data) == 0:
+        return
+    color_map = data.get("color_map", [0] * len(_data))
+    name = data.get("name", "textbox")
+    rewrite = data.get("rewrite", True)
+    for i in range(len(_data)):
+        fname = f"{name}{i}"
+        color = color_list[color_map[i]]
+        if check_file_exists(fname, dir_name='textboxes') and not rewrite:
+            continue
+        s = create_textbox(_data[i], color)
+        if len(s) > 0:
+            write_plantuml(fname, s, dir_name='textboxes')
+
+
+def process_textboxes(data):
+    create_dir('textboxes')
+    for i in range(len(data)):
+        create_textboxes(data[i], i)
+
+
 def main(data):
     global color_list
-    if "color_list" in data:
-        color_list = data["color_list"]
+    default_colors = ["transparent"]
+    color_list = data.get("color_list", default_colors)
     if "functions" in data:
         process_functions(data["functions"])
     if "tables" in data:
@@ -407,6 +525,10 @@ def main(data):
         process_trees(data["trees"])
     if "flows" in data:
         process_flows(data["flows"])
+    if "blocks" in data:
+        process_blocks(data["blocks"])
+    if "textboxes" in data:
+        process_textboxes(data["textboxes"])
 
 
 if __name__ == "__main__":

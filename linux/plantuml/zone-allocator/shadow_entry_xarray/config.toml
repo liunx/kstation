@@ -1,0 +1,18 @@
+#
+title = "entry shadow xarray"
+color_list = ["LightBlue", "LightYellow", "LightGrey"]
+
+[tables]
+
+[tables.data.entry_shadow]
+
+data = [
+    [
+        "\\t\\tEviction\\t\\t",
+        "\\t\\tmemcgid\\t\\t",
+        "\\t\\tnid\\t\\t\\t",
+        "\\tWorkingset\\t\\t",
+        "  1 bit  ",
+    ],
+]
+color_map = [[0, 1, 1, 0, 2]]

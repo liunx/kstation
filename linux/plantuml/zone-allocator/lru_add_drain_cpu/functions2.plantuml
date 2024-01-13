@@ -1,0 +1,26 @@
+@startuml
+
+skinparam ComponentStyle rectangle
+hide stereotype
+scale 1/1
+
+skinparam Component {
+    FontSize 40
+    FontColor black
+    BorderThickness 1.5
+    BackgroundColor transparent
+}
+
+' components:
+component "__pagevec_lru_add()" as c0 #LightYellow
+component "pagevec_move_tail()" as c1 #LightYellow
+component "pagevec_lru_move_fn()" as c2 #LightYellow
+component "pagevec_lru_move_fn()" as c3 #LightYellow
+component "activate_page_drain()" as c4 #LightYellow
+' layout:
+c0-down[hidden]---c1
+c1-down[hidden]---c2
+c2-down[hidden]---c3
+c3-down[hidden]---c4
+
+@enduml

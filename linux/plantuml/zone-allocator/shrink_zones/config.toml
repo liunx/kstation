@@ -1,0 +1,131 @@
+#
+title = "shrink_zones()"
+color_list = ["LightYellow", "OrangeRed", "LightGrey", "LightBlue"]
+
+[[textboxes]]
+
+rewrite = false
+name = "shrink_zones"
+data = [
+    "  shrink_zones()  ",
+    "  shrink_node()  ",
+    "  shrink_node_memcg()  ",
+    "  get_scan_count()  ",
+    "  shrink_slab()  ",
+    "  do_shrink_slab()  ",
+    "  shrink_list()  ",
+    "  shrink_active_list()  ",
+    "  shrink_inactive_list()  ",
+    "  shrink_page_list()  ",
+]
+color_map = [1, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+
+[[textboxes]]
+
+rewrite = false
+name = "ANON"
+data = [
+    "  add_to_swap()  ",
+    "  get_swap_page()  ",
+    "  add_to_swap_cache()  ",
+    "  __add_to_swap_cache()  ",
+]
+color_map = [0, 0, 0, 0]
+
+[[textboxes]]
+
+rewrite = false
+name = "FILE"
+data = ["  pageout()  ", "  mapping->a_ops->writepage()  "]
+color_map = [0, 0]
+
+[[textboxes]]
+
+rewrite = false
+name = "others"
+data = [
+    "  rotate to active  ",
+    "  rotate to inactive  ",
+    "  move to unevictable  ",
+    "  move to inactive  ",
+]
+color_map = [2, 2, 2, 2]
+
+[[flows]]
+
+name = "shrink_zones"
+data = [
+    "shrink_zones()",
+    "zonelist loop:",
+    "mem_cgroup_soft_limit_reclaim()",
+    "shrink_node()",
+]
+color_map = [1, 3, 0, 0]
+control_flow = [0, [1, 2, 3]]
+
+[[flows]]
+
+name = "shrink_node"
+data = [
+    "shrink_node()",
+    "should_continue_reclaim() loop:",
+    "mem_cgroup_iter() loop:",
+    "shrink_node_memcg()",
+    "shrink_slab()",
+    "vmpressure()",
+]
+color_map = [1, 3, 3, 0, 0, 0]
+control_flow = [0, [1, [2, 3, 4], 4, 5]]
+
+[[flows]]
+
+name = "shrink_node_memcg"
+data = [
+    "shrink_node_memcg()",
+    "get_scan_count()",
+    "scan counter loop:",
+    "evictable lru loop:",
+    "shrink_list()",
+    "scan counter reset",
+    "shrink_active_list()",
+]
+color_map = [1, 0, 3, 3, 0, 2, 0]
+control_flow = [0, 1, [2, [3, 4], 5], 6]
+
+[[flows]]
+
+name = "shrink_active_list"
+data = [
+    "shrink_active_list()",
+    "isolate_lru_pages()",
+    "isolated page (l_hold) loop:",
+    "putback_lru_page()",
+    "active lru rotate",
+    "inactive lru move",
+    "free_hot_cold_page_list()",
+]
+color_map = [1, 0, 3, 0, 2, 2, 0]
+control_flow = [0, 1, [2, 3, 4, 5], 6]
+
+[[flows]]
+
+name = "shrink_inactive_list"
+data = [
+    "shrink_inactive_list()",
+    "lru_add_drain()",
+    "isolate_lru_pages()",
+    "shrink_page_list()",
+    "putback_inactive_pages()",
+    "free_hot_cold_page_list()",
+]
+color_map = [1, 0, 0, 0, 0, 0]
+
+[[flows]]
+
+name = "shrink_list"
+data = [
+    "shrink_list()",
+    "shrink_active_list()",
+    "shrink_inactive_list()",
+]
+color_map = [1, 0, 0]

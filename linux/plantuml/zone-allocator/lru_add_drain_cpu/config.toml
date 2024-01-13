@@ -1,0 +1,44 @@
+#
+title = "lru_add_drain_cpu()"
+color_list = ["OrangeRed", "LightYellow", "LightBlue", "LightGrey", "Blue"]
+
+[functions]
+
+rewrite = false
+interval = 3
+
+data = [
+    "lru_add_drain_cpu()",
+    "__pagevec_lru_add()",
+    "pagevec_move_tail()",
+    "pagevec_lru_move_fn()",
+    "activate_page_drain()",
+    "__pagevec_lru_add_fn()",
+    "pagevec_move_tail_fn()",
+    "lru_deactivate_file_fn()",
+    "lru_lazyfree_fn()",
+    "__activate_page()",
+]
+color_map = [0, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+
+groups = [[0], [3], [1, 2, 3, 3, 4], [5, 6, 7, 8, 9]]
+
+[texts]
+
+rewrite = false
+
+data = [
+    "1) lru_add_pvec",
+    "2) lru_rotate_pvecs",
+    "3) lru_deactivate_file_pvecs",
+    "4) lru_lazyfree_pvecs",
+    "5) activate_page_pvecs",
+]
+font_color_map = [4, 4, 4, 4, 4]
+
+[[flows]]
+
+rewrite = false
+name = "pagevec_lru_move_fn"
+
+data = []

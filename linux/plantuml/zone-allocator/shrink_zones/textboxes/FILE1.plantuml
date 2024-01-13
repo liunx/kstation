@@ -1,0 +1,17 @@
+@startuml
+
+skinparam ComponentStyle rectangle
+hide stereotype
+scale 1/5
+skinparam RoundCorner 100
+
+skinparam Component {
+    FontSize 200
+    FontColor black
+    BorderThickness 10
+    BackgroundColor LightYellow
+}
+
+component "  mapping->a_ops->writepage()  " as cp
+
+@enduml

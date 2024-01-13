@@ -1,0 +1,18 @@
+@startuml
+
+skinparam ComponentStyle rectangle
+hide stereotype
+scale 1/1
+
+skinparam Component {
+    FontSize 40
+    FontColor black
+    BorderThickness 1.5
+    BackgroundColor transparent
+}
+
+' components:
+component "shrink_node()" as c0 #LightYellow
+' layout:
+
+@enduml

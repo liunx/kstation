@@ -1,0 +1,53 @@
+#
+title = "Direct reclaim page"
+color_list = ["Orange", "LightYellow", "LightBlue", "LightGrey", "Blue"]
+
+[functions]
+
+rewrite = false
+interval = 3
+
+data = [
+    "__alloc_pages_direct_reclaim()",
+    "__perform_reclaim()",
+    "get_page_from_freelist()",
+    "try_to_free_pages()",
+    "throttle_direct_reclaim()",
+    "do_try_free_pages()",
+    "shrink_node()",
+]
+color_map = [0, 1, 1, 1, 1, 1, 1, 1]
+
+[texts]
+
+rewrite = true
+
+data = [
+    "add PF_MEMALLOC",
+    "unreverse highatomic pageblock\ndrain pages out of pcp lists",
+    "throttle user reuqested pages",
+    "sc->memcg_low_skipped cancelled the limit of memcg",
+]
+font_color_map = [4, 4, 4, 4]
+
+[[flows]]
+
+name = "do_try_free_pages_flow"
+rewrite = false
+
+data = [
+    "vmpressure_prio()",
+    "shrink_zones()",
+]
+color_map = [1, 1]
+
+[[flows]]
+
+name = "shrink_node_flow"
+rewrite = false
+
+data = [
+    "shrink_node_memcg()",
+    "shrink_slab()",
+]
+color_map = [1, 1]

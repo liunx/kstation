@@ -1,0 +1,28 @@
+#
+title = "allow_direct_reclaim()"
+color_list = ["LightGreen", "LightYellow", "LightBlue"]
+
+[[blocks]]
+
+name = "lowmem_zones"
+data = [
+    "\\n  ZONE_NORMAL\\t\\n",
+    "\\n  ZONE_DMA32\\t\\t\\n",
+    "\\n  ZONE_DMA\\t\\t\\n",
+]
+color_map = [0, 0, 0]
+layout = [0, 1, 2]
+
+[[blocks]]
+
+name = "free_pages"
+data = [ "\\n\\n\\n  free pages  \\n\\n\\n"]
+color_map = [1]
+layout = [0]
+
+[texts]
+
+data = [
+    "**allow_direct_reclaim(pgdat)**",
+    "<color:blue>lowmem_zones</color>",
+]

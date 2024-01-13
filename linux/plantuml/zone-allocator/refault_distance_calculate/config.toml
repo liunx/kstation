@@ -1,0 +1,34 @@
+#
+title = "Refault distance calculate"
+color_list = ["LightGreen", "LightBlue", "Red", "LightGrey"]
+
+[lists]
+
+[lists.data.pages5]
+
+data = ["PG", "PG", "PG", "PG", "PG"]
+color_map = []
+
+[lists.data.pages6]
+
+data = ["PG", "PG", "PG", "PG", "PG", "PG"]
+color_map = []
+
+[lists.data.pages7]
+
+data = ["PG", "PG", "PG", "PG", "PG", "PG", "PG"]
+color_map = []
+
+[texts]
+
+data = [
+    "active list",
+    "NR-active",
+    "inactive list",
+    "NR-inactive",
+    "<color:red>workingset_size</color>",
+    "in-cache distance",
+    "out-of-cache distance",
+    "<color:blue>refault distance</color>",
+    "<color:red>workingset_size</color> >= <color:blue>refault distance</color>",
+]

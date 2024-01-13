@@ -1,0 +1,53 @@
+@startuml
+
+skinparam ComponentStyle rectangle
+hide stereotype
+scale 1/5
+
+skinparam Component {
+    FontSize 200
+    FontColor black
+    BorderThickness 10
+    BackgroundColor transparent
+}
+
+
+skinparam Card {
+    FontSize 0
+    FontColor black
+    BorderThickness 0
+    BackgroundColor transparent
+}
+
+
+skinparam Package {
+    FontSize 200
+    FontColor black
+    BorderThickness 0
+    BackgroundColor transparent
+}
+
+
+skinparam Rectangle {
+    FontSize 200
+    FontColor black
+    BorderThickness 0
+    BackgroundColor transparent
+}
+
+card p0 {
+	' components
+	component "\t\tEviction\t\t" as p0_c0 #LightBlue
+	component "\t\tmemcgid\t\t" as p0_c1 #LightYellow
+	component "\t\tnid\t\t\t" as p0_c2 #LightYellow
+	component "\tWorkingset\t\t" as p0_c3 #LightBlue
+	component "  1 bit  " as p0_c4 #LightGrey
+	' layout
+	p0_c0-right[hidden]-p0_c1
+	p0_c1-right[hidden]-p0_c2
+	p0_c2-right[hidden]-p0_c3
+	p0_c3-right[hidden]-p0_c4
+}
+
+
+@enduml

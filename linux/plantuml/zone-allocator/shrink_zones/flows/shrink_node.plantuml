@@ -1,0 +1,44 @@
+@startuml
+
+skinparam ComponentStyle rectangle
+hide stereotype
+scale 2/1
+
+skinparam Activity {
+    FontSize 20
+    FontColor black
+    BorderThickness 1.2
+    BackgroundColor transparent
+}
+
+skinparam ActivityFontColor<<hide>> transparent
+skinparam ActivityBorderThickness<<hide>> 0
+
+skinparam Note {
+    FontSize 16
+    FontColor black
+    BorderThickness 0
+    BackgroundColor transparent
+}
+
+
+skinparam Arrow {
+    FontSize 16
+    FontColor black
+    BorderThickness 1.2
+    BackgroundColor transparent
+}
+
+' start here
+#OrangeRed:shrink_node();
+group #LightBlue "should_continue_reclaim() loop:" {
+	group #LightBlue "mem_cgroup_iter() loop:" {
+		#LightYellow:shrink_node_memcg();
+		#LightYellow:shrink_slab();
+	}
+	#LightYellow:shrink_slab();
+	#LightYellow:vmpressure();
+}
+:return;<<hide>>
+
+@enduml
