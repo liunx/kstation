@@ -1,7 +1,0 @@
-@startuml
-skinparam ComponentStyle rectangle
-skinparam Shadowing true
-
-title Shrinking a list of LRU vectors
-
-@enduml
