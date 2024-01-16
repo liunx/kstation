@@ -1,0 +1,49 @@
+@startuml
+
+skinparam ComponentStyle rectangle
+hide stereotype
+scale 1/5
+
+skinparam Component {
+    FontSize 200
+    FontColor black
+    RoundCorner 100
+    BorderThickness 10
+    BackgroundColor transparent
+}
+
+
+skinparam Rectangle {
+    FontSize 0
+    FontColor black
+    RoundCorner 10
+    BorderThickness 0
+    BackgroundColor transparent
+}
+
+
+skinparam Package {
+    FontSize 200
+    FontColor black
+    RoundCorner 10
+    BorderThickness 0
+    BackgroundColor transparent
+}
+
+rectangle r0 {
+	component "  unevictable page\t\t" as r0_c0 #LightGrey
+	component "  non-user page\t" as r0_c1 #Pink
+	r0_c0-right[hidden]-r0_c1
+}
+rectangle r1 {
+	component "  exec referred page\t" as r1_c0 #LightGreen
+	component "  other page\t" as r1_c1 #White
+	r1_c0-right[hidden]-r1_c1
+}
+rectangle r2 {
+	component "  other referred page\t" as r2_c0 #Gold
+}
+r0-down[hidden]-r1
+r1-down[hidden]-r2
+
+@enduml

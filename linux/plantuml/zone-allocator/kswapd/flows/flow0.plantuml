@@ -1,0 +1,62 @@
+@startuml
+
+skinparam ComponentStyle rectangle
+hide stereotype
+scale 2/1
+
+skinparam Activity {
+    FontSize 20
+    FontColor black
+    RoundCorner 10
+    BorderThickness 1.2
+    BackgroundColor transparent
+    BorderThickness<<text>> 0
+    BackgroundColor<<text>> transparent
+    FontColor<<box>> transparent
+}
+
+skinparam ActivityFontColor<<hide>> transparent
+skinparam ActivityBorderThickness<<hide>> 0
+
+skinparam Note {
+    FontSize 16
+    FontColor black
+    RoundCorner 10
+    BorderThickness 0
+    BackgroundColor transparent
+    BorderThickness<<text>> 0
+    BackgroundColor<<text>> transparent
+    FontColor<<box>> transparent
+}
+
+
+skinparam Arrow {
+    FontSize 16
+    FontColor black
+    RoundCorner 10
+    BorderThickness 1.2
+    BackgroundColor transparent
+    BorderThickness<<text>> 0
+    BackgroundColor<<text>> transparent
+    FontColor<<box>> transparent
+}
+
+' start here
+#Gold:kswapd();
+#LightGrey:get current task;
+#LightGrey:set cpu_mask;
+#LightGrey:tsk->flags |= PF_MEMALLOC | PF_SWAPWRITE | PF_KSWAPD;
+group #LightBlue "infinity loop:" {
+	#LightGrey:Read the order and classzone_idx;
+	#Gold:kswapd_try_to_sleep();
+	#LightYellow:\nwait (sleep)\n;
+	#LightGrey:Read the new order and classzone_idx;
+	#Gold:try_to_freeze();
+	#LightGreen:kthread_should_stop;
+	#Gold:balance_pgdat();
+	#LightGreen:reclaim_order < alloc_order;
+}
+#LightGrey:tsk->flags &= ~(PF_MEMALLOC | PF_SWAPWRITE | PF_KSWAPD);
+#Gold:return 0;
+
+@enduml

@@ -1,0 +1,48 @@
+@startuml
+
+skinparam ComponentStyle rectangle
+hide stereotype
+left to right direction
+scale 1/1
+
+skinparam Component {
+    FontSize 40
+    FontColor black
+    RoundCorner 10
+    BorderThickness 2
+    BackgroundColor transparent
+    BorderThickness<<text>> 0
+    BackgroundColor<<text>> transparent
+    FontColor<<box>> transparent
+}
+
+
+skinparam Interface {
+    FontSize 0
+    FontColor black
+    RoundCorner 10
+    BorderThickness 0
+    BackgroundColor transparent
+    BorderThickness<<text>> 0
+    BackgroundColor<<text>> transparent
+    FontColor<<box>> transparent
+}
+
+skinparam ArrowThickness 2
+' components:
+interface "o" as head
+component "P\nG" as c0 #LightGreen
+component "P\nG" as c1 #Pink
+component "P\nG" as c2 #LightGreen
+component "P\nG" as c3 #LightGreen
+component "P\nG" as c4 #Pink
+interface "o" as tail
+' layout:
+head-down.c0
+c0-down.c1
+c1-down.c2
+c2-down.c3
+c3-down.c4
+c4-down.tail
+
+@enduml

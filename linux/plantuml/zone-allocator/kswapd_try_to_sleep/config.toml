@@ -1,0 +1,51 @@
+#
+title = "kswapd_try_to_sleep()"
+color_list = [
+    "transparent", #0
+    "Black",       #1
+    "Blue",        #2
+    "Gold",        #3
+    "LightBlue",   #4
+    "LightGreen",  #5
+    "LightGrey",   #6
+    "LightYellow", #7
+]
+
+[[flows]]
+
+data = [
+    "kswapd_try_to_sleep()",
+    "prepare_to_wait()",
+    "prepare_kswapd_sleep()",
+    "reset_isolation_suitable()",
+    "wakeup_kcompactd()",
+    "schedule_timeout(HZ/10)",
+    "finish_wait()",
+    "prepare_to_wait()",
+    #
+    "prepare_kswapd_sleep()",
+    "set normal_threshold",
+    "\\nlong sleep\\n",
+    "set pressure_threshold",
+    "finish_wait()",
+]
+color_map = [3, 7, 5, 6, 7, 4, 7, 7, 5, 6, 4, 6, 7]
+controls = [2, 8]
+
+[[texts]]
+
+data = [
+    "__alloc_pages_slowpath()",
+    "wakeup",
+    "KSWAPD_LOW_WMARK_HIT_QUICKLY",
+    "KSWAPD_HIGH_WMARK_HIT_QUICKLY",
+]
+color_map = [1, 2, 2, 2]
+
+[[textboxes]]
+
+data = [
+    "  <b>pgdat->kswapd_wait  ",
+    "  kswapd  ",
+]
+color_map = [0, 7]

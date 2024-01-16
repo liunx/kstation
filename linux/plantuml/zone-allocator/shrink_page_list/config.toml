@@ -1,0 +1,69 @@
+#
+title = "shrink_page_list()"
+color_list = [
+    "transparent", #0
+    "Gold",        #1
+    "Pink",        #2
+    "White",       #3
+    "LightBlue",   #4
+    "LightGrey",   #5
+    "LightGreen",  #6
+    "LightYellow", #7
+]
+
+[[flows]]
+
+data = [
+    "shrink_page_list()",
+    #
+    "page_list loop:",
+    "!trylock_page()",
+    "!page_evictable()",
+    "!may_unmap && page_mapped()",
+    "page_check_dirty_writeback()",
+    ##
+    "writeback cases:",
+    "1) kswapd is under reclaiming",
+    "2) global or new memcg reclaim",
+    "3) wait_on_page_writeback()",
+    ##
+    "handle references:",
+    "page_check_references()",
+    ##
+    "handle anon swap pages:",
+    "without IO",
+    "split_huge_page_to_list()",
+    "add_to_swap()",
+]
+color_map = [1, 4, 5, 5, 5, 7, 4, 5, 5, 7, 4, 7, 4, 5, 7, 7]
+layout = [0, [1, 2, 3, 4, 5, [6, 7, 8, 9], [10, 11], [12, 13, 14, 15]]]
+
+[[flows]]
+
+tail = false
+data = [
+    #
+    "page_list loop:",
+    ##
+    "handle mapped pages:",
+    "try_to_unmap()",
+    ##
+    "handle dirty pages:",
+    """page_is_file_cache()
+&& (!current_is_kswapd()
+|| !PageReclaim()
+|| !test_bit(PGDAT_DIRTY))""",
+    "PAGEREF_RECLAIM_CLEAN",
+    "!may_enter_fs) \nor !sc->may_writepage",
+    "page_out()",
+    ##
+    "handle private pages",
+    "try_to_release_page()",
+    "unmapped page",
+    "page is still mapping",
+    "remove_mapping()",
+
+    "return",
+]
+color_map = [4, 4, 7, 4, 5, 5, 5, 7, 4, 7, 5, 4, 7, 7]
+layout = [[0, [1, 2], [3, 4, 5, 6, 7], [8, 9, 10], [11, 12]], 13]

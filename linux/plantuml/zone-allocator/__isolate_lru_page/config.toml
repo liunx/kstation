@@ -1,0 +1,63 @@
+#
+title = "shrink_inactive_list()"
+color_list = [
+    "Black",      # 0
+    "Blue",       # 1
+    "Gold",       # 2
+    "Pink",       # 3
+    "Red",        # 4
+    "White",      # 5
+    "LightGreen", # 6
+    "LightGrey",  # 7
+    "LightBlue",  # 8
+]
+
+[[colors]]
+
+name = "case1"
+data = [
+    "unevictable\t",
+    "writeback\t\t",
+    "dirty & migrate",
+    "pt mapping\t",
+]
+color_map = [7, 2, 8, 3]
+layout = [[0], [1], [2], [3]]
+
+[[colors]]
+
+name = "case2"
+data = [
+    "unevictable\t",
+    "writeback\t\t",
+    "dirty & migrate",
+    "pt mapping\t",
+    "others\t\t",
+]
+color_map = [7, 2, 8, 3, 6]
+layout = [[0], [1], [2], [3], [4]]
+
+[[lists]]
+
+name = "isolation"
+data = ["P\\nG", "P\\nG"]
+color_map = [6, 3]
+layout = [0, 1, 0, 0, 1]
+
+[[lists]]
+
+name = "lru_list"
+data = ["P\\nG", "P\\nG", "P\\nG", "P\\nG", "P\\nG"]
+color_map = [6, 3, 5, 2, 7]
+layout = [0, 0, 1, 2, 0, 3, 0, 4, 0, 0]
+
+
+[[texts]]
+
+name = "text"
+data = [
+    "<b>isolate_lru_pages()",
+    "nr_scanned",
+    "PGSCAN_SKIP++",
+]
+color_map = [0, 4, 1]

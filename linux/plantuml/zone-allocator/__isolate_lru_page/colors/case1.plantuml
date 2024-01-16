@@ -1,0 +1,63 @@
+@startuml
+
+skinparam ComponentStyle rectangle
+hide stereotype
+top to bottom direction
+scale 1/5
+
+skinparam Component {
+    FontSize 200
+    FontColor black
+    RoundCorner 100
+    BorderThickness 10
+    BackgroundColor transparent
+    BorderThickness<<text>> 0
+    BackgroundColor<<text>> transparent
+    FontColor<<box>> transparent
+}
+
+
+skinparam Rectangle {
+    FontSize 0
+    FontColor black
+    RoundCorner 10
+    BorderThickness 0
+    BackgroundColor transparent
+    BorderThickness<<text>> 0
+    BackgroundColor<<text>> transparent
+    FontColor<<box>> transparent
+}
+
+rectangle r0 {
+	rectangle r0_r0 {
+		component "P\nG" as r0_r0_pg<<box>> #LightGrey
+		component "unevictable	" as r0_r0_tx<<text>>
+		r0_r0_pg-right[hidden]-r0_r0_tx
+	}
+}
+rectangle r1 {
+	rectangle r1_r0 {
+		component "P\nG" as r1_r0_pg<<box>> #Gold
+		component "writeback		" as r1_r0_tx<<text>>
+		r1_r0_pg-right[hidden]-r1_r0_tx
+	}
+}
+rectangle r2 {
+	rectangle r2_r0 {
+		component "P\nG" as r2_r0_pg<<box>> #LightBlue
+		component "dirty & migrate" as r2_r0_tx<<text>>
+		r2_r0_pg-right[hidden]-r2_r0_tx
+	}
+}
+rectangle r3 {
+	rectangle r3_r0 {
+		component "P\nG" as r3_r0_pg<<box>> #Pink
+		component "pt mapping	" as r3_r0_tx<<text>>
+		r3_r0_pg-right[hidden]-r3_r0_tx
+	}
+}
+r0-down[hidden]-r1
+r1-down[hidden]-r2
+r2-down[hidden]-r3
+
+@enduml

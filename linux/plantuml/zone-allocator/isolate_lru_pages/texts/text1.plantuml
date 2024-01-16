@@ -1,0 +1,18 @@
+@startuml
+
+skinparam ComponentStyle rectangle
+hide stereotype
+scale 1/5
+
+skinparam Component {
+    FontSize 200
+    FontColor Red
+    RoundCorner 10
+    BorderThickness 0
+    BackgroundColor transparent
+}
+
+component cp [
+nr_scanned
+]
+@enduml

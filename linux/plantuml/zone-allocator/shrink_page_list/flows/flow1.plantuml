@@ -1,0 +1,69 @@
+@startuml
+
+skinparam ComponentStyle rectangle
+hide stereotype
+scale 2/1
+
+skinparam Activity {
+    FontSize 20
+    FontColor black
+    RoundCorner 10
+    BorderThickness 1.2
+    BackgroundColor transparent
+    BorderThickness<<text>> 0
+    BackgroundColor<<text>> transparent
+    FontColor<<box>> transparent
+}
+
+skinparam ActivityFontColor<<hide>> transparent
+skinparam ActivityBorderThickness<<hide>> 0
+
+skinparam Note {
+    FontSize 16
+    FontColor black
+    RoundCorner 10
+    BorderThickness 0
+    BackgroundColor transparent
+    BorderThickness<<text>> 0
+    BackgroundColor<<text>> transparent
+    FontColor<<box>> transparent
+}
+
+
+skinparam Arrow {
+    FontSize 16
+    FontColor black
+    RoundCorner 10
+    BorderThickness 1.2
+    BackgroundColor transparent
+    BorderThickness<<text>> 0
+    BackgroundColor<<text>> transparent
+    FontColor<<box>> transparent
+}
+
+' start here
+group #LightBlue "page_list loop:" {
+	group #LightBlue "handle mapped pages:" {
+		#LightYellow:try_to_unmap();
+	}
+	group #LightBlue "handle dirty pages:" {
+		#LightGrey:page_is_file_cache()
+&& (!current_is_kswapd()
+|| !PageReclaim()
+|| !test_bit(PGDAT_DIRTY));
+		#LightGrey:PAGEREF_RECLAIM_CLEAN;
+		#LightGrey:!may_enter_fs) 
+or !sc->may_writepage;
+		#LightYellow:page_out();
+	}
+	group #LightBlue "handle private pages" {
+		#LightYellow:try_to_release_page();
+		#LightGrey:unmapped page;
+	}
+	group #LightBlue "page is still mapping" {
+		#LightYellow:remove_mapping();
+	}
+}
+#LightYellow:return;
+
+@enduml

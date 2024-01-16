@@ -1,0 +1,47 @@
+@startuml
+
+skinparam ComponentStyle rectangle
+hide stereotype
+top to bottom direction
+scale 1/5
+
+skinparam Component {
+    FontSize 200
+    FontColor black
+    RoundCorner 10
+    BorderThickness 10
+    BackgroundColor transparent
+    BorderThickness<<text>> 0
+    BackgroundColor<<text>> transparent
+    FontColor<<box>> transparent
+}
+
+
+skinparam Rectangle {
+    FontSize 0
+    FontColor black
+    RoundCorner 10
+    BorderThickness 0
+    BackgroundColor transparent
+    BorderThickness<<text>> 0
+    BackgroundColor<<text>> transparent
+    FontColor<<box>> transparent
+}
+
+rectangle r0 {
+	component "  node #0  " as r0_0 #LightGrey
+	component "  0b11  " as r0_1 #White
+	r0_0-right[hidden]-r0_1
+}
+rectangle r1 {
+	component "\to\n\to\n\to" as r1_0<<text>> #transparent
+}
+rectangle r2 {
+	component "  node #N  " as r2_0 #LightGrey
+	component "  0b00  " as r2_1 #White
+	r2_0-right[hidden]-r2_1
+}
+r0-down[hidden]-r1
+r1-down[hidden]-r2
+
+@enduml

@@ -1,0 +1,56 @@
+#
+title = "shrink_inactive_list()"
+color_list = [
+    "Black",      # 0
+    "Blue",       # 1
+    "Gold",       # 2
+    "Pink",       # 3
+    "White",      # 4
+    "LightGreen", # 5
+    "LightGrey",  # 6
+    "LightBlue",  # 7
+]
+
+[[lists]]
+
+rewrite = false
+name = "active_lru"
+data = ["PG", "PG"]
+color_map = [5, 3]
+layout = [0, 0, 1, 0, 0, 1, 0, 0]
+
+[[lists]]
+
+rewrite = false
+name = "isolation"
+data = ["PG", "PG", "PG", "PG"]
+color_map = [5, 3, 6, 4]
+layout = [0, 1, 1, 2, 3]
+
+[[lists]]
+
+rewrite = false
+name = "inactive_lru"
+data = ["PG", "PG", "PG"]
+color_map = [3, 4, 5]
+layout = [0, 0, 1, 0, 2, 0, 1, 0]
+
+[[lists]]
+
+rewrite = false
+name = "lru_unevictable"
+data = ["PG"]
+color_map = [6]
+layout = [0, 0, 0]
+
+[[texts]]
+
+rewrite = false
+name = "lru"
+data = [
+    "<b>shrink_inactive_list()",
+    "<b>(anon/file) active lru",
+    "<b>(anon/file) inactive lru",
+    "<b>lru unevictable",
+]
+color_map = [0, 0, 0, 0]

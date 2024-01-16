@@ -1,0 +1,20 @@
+#
+title = "Scan balance modes"
+color_list = [
+    "Blue",        #0
+    "Red",         #1
+    "LightGrey",   #2
+    "LightGreen",  #3
+    "LightYellow", #4
+    "transparent", #5
+]
+
+[[blocks]]
+
+data = ["\\n\\n\\n\\n  file_prio\\t\\t\\n\\n\\n", "\\n  anon_prio\\t\\t\\n"]
+color_map = [2, 3]
+
+[[blocks]]
+
+data = ["\\n  swappiness\\t\\n"]
+color_map = [3]

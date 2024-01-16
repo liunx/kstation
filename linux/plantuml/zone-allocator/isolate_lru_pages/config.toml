@@ -1,0 +1,41 @@
+#
+title = "shrink_inactive_list()"
+color_list = [
+    "Black",      # 0
+    "Blue",       # 1
+    "Gold",       # 2
+    "Pink",       # 3
+    "Red",        # 4
+    "White",      # 5
+    "LightGreen", # 6
+    "LightGrey",  # 7
+    "LightBlue",  # 8
+]
+
+[[lists]]
+
+rewrite = false
+name = "isolation"
+data = ["PG", "PG"]
+color_map = [6, 3]
+layout = [0, 1, 0, 0, 1]
+
+[[lists]]
+
+rewrite = false
+name = "lru_list"
+data = ["PG", "PG", "PG", "PG", "PG"]
+color_map = [6, 3, 5, 2, 7]
+layout = [0, 0, 1, 2, 0, 3, 0, 4, 0, 0]
+
+
+[[texts]]
+
+rewrite = false
+name = "text"
+data = [
+    "<b>isolate_lru_pages()",
+    "nr_scanned",
+    "PGSCAN_SKIP++",
+]
+color_map = [0, 4, 1]

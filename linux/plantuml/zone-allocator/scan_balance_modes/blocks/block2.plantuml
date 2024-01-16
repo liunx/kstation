@@ -1,0 +1,46 @@
+@startuml
+
+skinparam ComponentStyle rectangle
+hide stereotype
+scale 1/5
+
+skinparam Component {
+    FontSize 200
+    FontColor black
+    RoundCorner 10
+    BorderThickness 10
+    BackgroundColor transparent
+    BorderThickness<<text>> 0
+    BackgroundColor<<text>> transparent
+    FontColor<<box>> transparent
+}
+
+
+skinparam Rectangle {
+    FontSize 0
+    FontColor black
+    RoundCorner 10
+    BorderThickness 0
+    BackgroundColor transparent
+    BorderThickness<<text>> 0
+    BackgroundColor<<text>> transparent
+    FontColor<<box>> transparent
+}
+
+
+skinparam Package {
+    FontSize 200
+    FontColor black
+    RoundCorner 10
+    BorderThickness 0
+    BackgroundColor transparent
+    BorderThickness<<text>> 0
+    BackgroundColor<<text>> transparent
+    FontColor<<box>> transparent
+}
+
+	component "\n\n\n  file_prio\t\t\n\n" as r0 #LightYellow
+	component "\n  anon_prio\t\t\n" as r1 #LightGreen
+r0-down[hidden]-r1
+
+@enduml

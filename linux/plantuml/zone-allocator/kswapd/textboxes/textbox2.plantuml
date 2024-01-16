@@ -1,0 +1,21 @@
+@startuml
+
+skinparam ComponentStyle rectangle
+hide stereotype
+scale 1/5
+skinparam RoundCorner 100
+
+skinparam Component {
+    FontSize 200
+    FontColor black
+    RoundCorner 10
+    BorderThickness 10
+    BackgroundColor Gold
+    BorderThickness<<text>> 0
+    BackgroundColor<<text>> transparent
+    FontColor<<box>> transparent
+}
+
+component "  __alloc_pages_slowpath()  " as cp
+
+@enduml

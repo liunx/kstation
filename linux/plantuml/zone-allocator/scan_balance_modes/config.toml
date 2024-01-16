@@ -1,0 +1,47 @@
+#
+title = "Scan balance modes"
+color_list = [
+    "Blue",        #0
+    "Red",         #1
+    "LightGrey",   #2
+    "LightGreen",  #3
+    "LightYellow", #4
+    "transparent", #5
+]
+
+[[blocks]]
+
+data = ["\\n\\n\\n  file_prio\\t\\t\\n\\n", "\\n  anon_prio\\t\\t\\n"]
+color_map = [2, 3]
+
+[[blocks]]
+
+data = ["\\n\\n\\n  file_prio\\t\\t\\n\\n", "\\n  anon_prio\\t\\t\\n"]
+color_map = [4, 2]
+
+[[blocks]]
+
+data = ["\\n\\n\\n  file_prio\\t\\t\\n\\n", "\\n  anon_prio\\t\\t\\n"]
+color_map = [4, 3]
+
+[[texts]]
+
+name = "modes"
+data = ["SCAN_ANON", "SCAN_FILE", "SCAN_EQUAL", "SCAN_FRACT"]
+color_map = [1, 1, 1, 1]
+
+[[blocks]]
+
+data = [
+    "  LRU_ACTIVE_ANON\\t",
+    "  LRU_INACTIVE_ANON\\t",
+]
+color_map = [5, 5]
+
+[[blocks]]
+
+data = [
+    "  LRU_ACTIVE_FILE\\t\\t",
+    "  LRU_INACTIVE_FILE\\t",
+]
+color_map = [5, 5]

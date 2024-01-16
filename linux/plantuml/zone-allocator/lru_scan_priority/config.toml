@@ -1,0 +1,51 @@
+#
+title = "Scan LRU with priority"
+color_list = [
+    "Black",       #0
+    "Blue",        #1
+    "Red",         #2
+    "LightGrey",   #3
+    "LightGreen",  #4
+    "LightYellow", #5
+    "LightBlue",   #6
+    "transparent", #7
+]
+
+[[textboxes]]
+
+data = [
+    "  LRU_ACTIVE_ANON\\t",
+    "  LRU_INACTIVE_ANON\\t",
+    "  LRU_ACTIVE_FILE\\t\\t",
+    "  LRU_INACTIVE_FILE\\t",
+]
+color_map = [7, 7, 7, 7]
+
+[[lists]]
+
+data = ["PG", "PG", "PG"]
+color_map = [6, 6, 6]
+
+[[lists]]
+
+data = ["PG", "PG"]
+color_map = [6, 6]
+
+[[lists]]
+
+data = ["PG", "PG", "PG", "PG"]
+color_map = [6, 6, 6, 6]
+
+[[lists]]
+
+data = ["PG", "PG", "PG", "PG", "PG"]
+color_map = [6, 6, 6, 6, 6]
+
+[[texts]]
+
+data = ["scan count = lru size >> sc->priority", """
+    scan0 = inactive anon lru
+    scan1 = active anon lru
+    scan2 = inactive file lru
+    scan3 = active file lru"""]
+color_map = [0, 0]

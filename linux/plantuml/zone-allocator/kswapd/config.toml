@@ -1,0 +1,46 @@
+#
+title = "kswapd()"
+color_list = [
+    "transparent", #0
+    "Blue",        #1
+    "Gold",        #2
+    "LightBlue",   #3
+    "LightGreen",  #4
+    "LightGrey",   #5
+    "LightYellow", #6
+]
+
+[[flows]]
+
+tail = false
+data = [
+    "kswapd()",
+    "get current task",
+    "set cpu_mask",
+    "tsk->flags |= PF_MEMALLOC | PF_SWAPWRITE | PF_KSWAPD",
+    "infinity loop:",
+    "Read the order and classzone_idx",
+    "kswapd_try_to_sleep()",
+    "\\nwait (sleep)\\n",
+    "Read the new order and classzone_idx",
+    "try_to_freeze()",
+    "kthread_should_stop",
+    "balance_pgdat()",
+    "reclaim_order < alloc_order",
+    "tsk->flags &= ~(PF_MEMALLOC | PF_SWAPWRITE | PF_KSWAPD)",
+    "return 0",
+]
+color_map = [2, 5, 5, 5, 3, 5, 2, 6, 5, 2, 4, 2, 4, 5, 2]
+layout = [0, 1, 2, 3, [4, 5, 6, 7, 8, 9, 10, 11, 12], 13, 14]
+
+[[textboxes]]
+
+data = [
+    "  task A  ",
+    "  kswapd  ",
+    "  __alloc_pages_slowpath()  ",
+    "  pgdat->kswapd_wait  ",
+    "  set external request:\\n  (pgdat->kswapd_classzone_idx,\\n  pddat->kswapd_order)",
+]
+color_map = [6, 6, 2, 5, 5]
+

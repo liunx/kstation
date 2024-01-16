@@ -1,0 +1,56 @@
+#
+title = "shrinker"
+color_list = [
+    "Blue",        #0
+    "Gold",        #1
+    "White",       #2
+    "LightBlue",   #3
+    "LightGrey",   #4
+    "LightYellow", #5
+    "transparent", #6
+]
+
+[[trees]]
+
+data = [
+    "memcg\\n/",
+    "memcg\\n/grp1",
+    "memcg\\n/grp2",
+    "memcg\\n/grp1/a",
+    "memcg\\n/grp1/b",
+]
+color_map = [4, 4, 5, 4, 4]
+layout = [[0, 1, 2], [1, 3, 4]]
+
+[[lists]]
+
+data = ["PG"]
+color_map = [3]
+layout = [0, 0, 0, 0, 0]
+
+[[blocks]]
+
+data = [
+    "  node #0  ",
+    "  node #N  ",
+    "\\to\\n\\to\\n\\to",
+    "  0b11  ",
+    "  0b00  ",
+]
+color_map = [4, 4, 6, 2, 2]
+layout = [[0, 3], [2], [1, 4]]
+text_only = [2]
+box_only = []
+
+[[tables]]
+
+name = "shrinker"
+data = [
+    "  (*count_objects)\\t",
+    "  (*scan_objects)\\t",
+    "  flags\\t\\t\\t\\t",
+    "  list\\t\\t\\t\\t",
+    "  id = 1\\t\\t\\t\\t",
+    "  *nr_deferred\\t\\t",
+]
+color_map = [4, 4, 4, 4, 4, 4]
