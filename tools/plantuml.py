@@ -44,179 +44,8 @@ def skinparam(
     )
 
 
-def check_file_exists(fname, dir_name="."):
-    return os.path.exists(f"{dir_name}/{fname}.plantuml")
-
-
 def create_dir(dir_name):
     pathlib.Path(dir_name).mkdir(parents=True, exist_ok=True)
-
-
-def write_plantuml(name, s, dir_name="."):
-    filename = f"{dir_name}/{name}.plantuml"
-    with open(filename, "w+") as f:
-        f.write(s)
-
-
-def write_file(filename, s):
-    with open(filename, "w+") as f:
-        f.write(s)
-
-
-def _create_text(text, color):
-    s = start_uml
-    s += scale_ratio.format(ratio="1/5")
-    s += skinparam(
-        type_name="Component",
-        font_size=200,
-        font_color=color,
-        border_thickness=0,
-    )
-    s += f"""component cp [\n"""
-    s += f"{text}\n"
-    s += "]"
-    s += end_uml
-    return s
-
-
-def create_texts(data):
-    global color_list
-    _data = data.get("data", [])
-    if len(_data) == 0:
-        return
-    name = data.get("name", "text")
-    rewrite = data.get("rewrite", True)
-    color_map = data.get("color_map", [0] * len(_data))
-    for i in range(len(_data)):
-        fname = f"{name}{i}"
-        color = color_list[color_map[i]]
-        if check_file_exists(fname, dir_name="texts") and not rewrite:
-            return
-        s = _create_text(_data[i], color)
-        if len(s) > 0:
-            write_plantuml(fname, s, dir_name="texts")
-
-
-def process_texts(data):
-    create_dir("texts")
-    for d in data:
-        create_texts(d)
-
-
-def recursive_flow(flow, data, color_map, tab_count=0):
-    global color_list
-    s = ""
-    _tab = "\t" * tab_count
-    for f in flow:
-        if isinstance(f, list):
-            color = color_list[color_map[f[0]]]
-            s += _tab + f"""group #{color} "{data[f[0]]}" {{\n"""
-            s += recursive_flow(f[1:], data, color_map, tab_count + 1)
-            s += _tab + "}\n"
-        else:
-            color = color_list[color_map[f]]
-            s += _tab + f"#{color}:{data[f]};\n"
-    return s
-
-
-def create_textbox(text, color):
-    s = start_uml
-    s += scale_ratio.format(ratio="1/5")
-    s += "skinparam RoundCorner 100\n"
-    s += skinparam(
-        type_name="Component",
-        font_size=200,
-        border_thickness=10,
-        background_color=color,
-    )
-    s += f"""component "{text}" as cp\n"""
-    s += end_uml
-
-    return s
-
-
-def create_textboxes(data, i):
-    global color_list
-    _data = data.get("data", [])
-    if len(_data) == 0:
-        return
-    color_map = data.get("color_map", [0] * len(_data))
-    name = data.get("name", "textbox")
-    rewrite = data.get("rewrite", True)
-    for i in range(len(_data)):
-        fname = f"{name}{i}"
-        color = color_list[color_map[i]]
-        if check_file_exists(fname, dir_name="textboxes") and not rewrite:
-            continue
-        s = create_textbox(_data[i], color)
-        if len(s) > 0:
-            write_plantuml(fname, s, dir_name="textboxes")
-
-
-def process_textboxes(data):
-    create_dir("textboxes")
-    for i in range(len(data)):
-        create_textboxes(data[i], i)
-
-
-def _create_list(data):
-    global color_list
-    _data = data.get("data", [])
-    if len(_data) == 0:
-        return ""
-    color_map = data.get("color_map", [0] * len(_data))
-    interval = data.get("interval", 1)
-    hide_line = data.get("hide_line", False)
-    layout = data.get("layout", [i for i in range(len(_data))])
-    s = start_uml
-    s += "left to right direction\n"
-    s += scale_ratio.format(ratio="1/1")
-    s += skinparam(type_name="Component", font_size=40, border_thickness=2)
-    if hide_line is False:
-        s += skinparam(type_name="Interface", font_size=0, border_thickness=0)
-        s += "skinparam ArrowThickness 2\n"
-    else:
-        s += "skinparam ArrowThickness 0\n"
-    i = 0
-    s += "' components:\n"
-    if hide_line is False:
-        s += f"""interface "o" as head\n"""
-    for l in layout:
-        color = color_list[color_map[l]]
-        s += f"""component "{_data[l]}" as c{i} #{color}\n"""
-        i += 1
-    if hide_line is False:
-        s += f"""interface "o" as tail\n"""
-    s += "' layout:\n"
-    i = 0
-    dots = "." * interval
-    if hide_line is False:
-        s += f"head-down{dots}c{i}\n"
-    while True:
-        if i >= len(layout) - 1:
-            break
-        s += f"c{i}-down{dots}c{i+1}\n"
-        i += 1
-    if hide_line is False:
-        s += f"c{i}-down{dots}tail\n"
-    s += end_uml
-    return s
-
-
-def create_list(data, i):
-    name = data.get("name", f"list{i}")
-    rewrite = data.get("rewrite", True)
-    if check_file_exists(name, dir_name="lists") and not rewrite:
-        return
-    s = _create_list(data)
-    if len(s) > 0:
-        write_plantuml(name, s, dir_name="lists")
-
-
-def process_lists(data):
-    create_dir("lists")
-    for i in range(len(data)):
-        create_list(data[i], i)
 
 
 class Mode(Enum):
@@ -229,6 +58,13 @@ class Base:
     name = "base"
     vertical = True  # or horizontal
     mode = Mode.SMALL
+    skin_params = [
+        "font_size",
+        "font_color",
+        "bg_color",
+        "border_color",
+        "border_thickness",
+    ]
 
     def __init__(self, data, index, color_list) -> None:
         self.data = data
@@ -241,17 +77,31 @@ class Base:
         elif self.mode == Mode.LARGE:
             self.scale = "1/5"
 
-    def create(self, data) -> str:
+    def create(self, data, layout) -> str:
         raise NotImplementedError
 
-    def component(self):
+    def skinparam(self):
+        pass
+
+    def component(self, font_color="Black"):
         if self.mode == Mode.SMALL:
-            return skinparam(type_name="Component", font_size=20, border_thickness=1.5)
+            return skinparam(
+                type_name="Component",
+                font_color=font_color,
+                font_size=20,
+                border_thickness=1.5,
+            )
         elif self.mode == Mode.MIDDLE:
-            return skinparam(type_name="Component", font_size=40, border_thickness=2)
+            return skinparam(
+                type_name="Component",
+                font_color=font_color,
+                font_size=40,
+                border_thickness=2,
+            )
         elif self.mode == Mode.LARGE:
             return skinparam(
                 type_name="Component",
+                font_color=font_color,
                 font_size=200,
                 border_thickness=10,
             )
@@ -316,12 +166,12 @@ class Base:
         else:
             raise TypeError
 
-    def __create(self, data) -> str:
+    def __create(self, data, layout) -> str:
         s = start_uml
         if not self.vertical:
             s += "left to right direction\n"
         s += scale_ratio.format(ratio=self.scale)
-        s += self.create(data)
+        s += self.create(data, layout)
         s += end_uml
         return s
 
@@ -390,14 +240,14 @@ class Base:
             i += 1
         return s
 
-    def recursive_flow(self, data, tab_count=0):
+    def recursive_flow(self, flow, data, tab_count=0):
         s = ""
         _tab = "\t" * tab_count
-        for f in self.layout:
+        for f in flow:
             if isinstance(f, list):
                 color = self.get_color(f[0])
                 s += _tab + f"""group #{color} "{data[f[0]]}" {{\n"""
-                s += recursive_flow(f[1:], data, tab_count + 1)
+                s += self.recursive_flow(f[1:], data, tab_count + 1)
                 s += _tab + "}\n"
             else:
                 color = self.get_color(f)
@@ -414,8 +264,9 @@ class Base:
         _data = self.data.get("data", [])
         if len(_data) == 0:
             return
+        _layout = self.data.get("layout", [i for i in range(len(_data))])
+
         self.color_map = self.data.get("color_map", [0] * len(_data))
-        self.layout = self.data.get("layout", [i for i in range(len(_data))])
         self.text_only = self.data.get("text_only", [])
         self.box_only = self.data.get("box_only", [])
         self.trans_only = self.data.get("trans_only", [])
@@ -431,15 +282,15 @@ class Base:
         if not multi:
             if self.check_file_exists(name) and not rewrite:
                 return
-            s = self.__create(_data)
+            s = self.__create(_data, _layout)
             if len(s) > 0:
                 self.write(name, s)
         else:
-            for i in range(len(_data)):
+            for i in range(len(_layout)):
                 _name = f"{name}{i}"
                 if self.check_file_exists(_name) and not rewrite:
                     continue
-                s = self.__create(_data[i])
+                s = self.__create(_data, _layout[i])
                 if len(s) > 0:
                     self.write(_name, s)
 
@@ -529,9 +380,9 @@ class Trees(Base):
             s += f"""component "{d}" as c{i} #{color}\n"""
             i += 1
         s += "' layout:\n"
-        dot = '-'
+        dot = "-"
         if self.dashed:
-            dot = '.'
+            dot = "."
         # connect
         for conn in self.layout:
             _from = conn[0]
@@ -579,12 +430,19 @@ class Blocks(Base):
         s = ""
         tab = "\t" * tab_count
         # title:[1,2,3,...]
-        if len(layout) == 2 and isinstance(layout[0], int) and isinstance(layout[1], list):
+        if (
+            len(layout) == 2
+            and isinstance(layout[0], int)
+            and isinstance(layout[1], list)
+        ):
             color = self.get_color(layout[0])
             _style = self.get_style(layout[0])
-            s += tab + f'''component "{data[layout[0]]}" as cp{self.recursive_i} {_style} #{color} {{\n'''
+            s += (
+                tab
+                + f"""component "{data[layout[0]]}" as cp{self.recursive_i} {_style} #{color} {{\n"""
+            )
             self.recursive_i += 1
-            s += self.recursive_layout(layout[1], data, tab_count+1, vertical)
+            s += self.recursive_layout(layout[1], data, tab_count + 1, vertical)
             s += tab + "}\n"
         else:
             names = []
@@ -593,8 +451,10 @@ class Blocks(Base):
                     name = f"rect{self.recursive_i}"
                     self.recursive_i += 1
                     names.append(name)
-                    s += tab + f'''rectangle {name} {{\n'''
-                    s += self.recursive_layout(_layout, data, tab_count+1, (not vertical))
+                    s += tab + f"""rectangle {name} {{\n"""
+                    s += self.recursive_layout(
+                        _layout, data, tab_count + 1, (not vertical)
+                    )
                     s += tab + "}\n"
                 elif isinstance(_layout, int):
                     color = self.get_color(_layout)
@@ -602,7 +462,10 @@ class Blocks(Base):
                     self.recursive_i += 1
                     names.append(name)
                     _style = self.get_style(_layout)
-                    s += tab + f'''component "{data[_layout]}" as {name} {_style} #{color}\n'''
+                    s += (
+                        tab
+                        + f"""component "{data[_layout]}" as {name} {_style} #{color}\n"""
+                    )
                 else:
                     raise TypeError
             # layout
@@ -623,7 +486,7 @@ class Blocks(Base):
         s = ""
         s += self.component()
         s += self.rectangle()
-        #s += self.create_layout(data)
+        # s += self.create_layout(data)
         self.recursive_i = 0
         s += self.recursive_layout(self.layout, data)
         return s
@@ -638,7 +501,7 @@ class Tables(Base):
         s += self.component()
         s += self.package()
         if self.label:
-            s += f'''component "{self.label}" as pk <<text>> {{\n'''
+            s += f"""component "{self.label}" as pk <<text>> {{\n"""
             s += "\tcomponent cp [\n"
             s += data + "\n"
             s += "\t]\n"
@@ -662,9 +525,84 @@ class Flows(Base):
         s += skinparam(type_name="Note", font_size=16, border_thickness=0)
         s += skinparam(type_name="Arrow", font_size=16, border_thickness=1.2)
         s += "' start here\n"
-        s += self.recursive_flow(data)
+        s += self.recursive_flow(self.layout, data)
         if self.tail:
             s += ":return;<<hide>>\n"
+        return s
+
+
+class Lists(Base):
+    name = "lists"
+    mode = Mode.MIDDLE
+    vertical = False
+
+    def register_vars(self, data):
+        self.vertical = False
+        self.interval = data.get("interval", 1)
+        self.hide_line = data.get("hide_line", False)
+
+    def create(self, data, layout) -> str:
+        s = ""
+        s += self.component()
+        if self.hide_line:
+            s += "skinparam ArrowThickness 0\n"
+        else:
+            s += skinparam(type_name="Interface", font_size=0, border_thickness=0)
+            s += self.arrow()
+        i = 0
+        s += "' components:\n"
+        dots = []
+        for l in layout:
+            if l < 0:
+                s += f"interface c{i}\n"
+                dots.append(abs(l) * self.interval)
+                i += 1
+                continue
+            color = self.get_color(l)
+            dots.append(self.interval)
+            _type = ""
+            if l in self.box_only:
+                _type = "<<box>>"
+            s += f"""component "{data[l]}" as c{i} {_type} #{color}\n"""
+            i += 1
+        s += "' layout:\n"
+        i = 0
+        dot = "."
+        while True:
+            if i >= len(layout) - 1:
+                break
+            s += f"c{i}-down{dot * dots[i+1]}c{i+1}\n"
+            i += 1
+        return s
+
+
+class TextBoxes(Base):
+    name = "textboxes"
+    mode = Mode.LARGE
+
+    def register_vars(self, data):
+        pass
+
+    def create(self, data, layout) -> str:
+        s = ""
+        s += "skinparam RoundCorner 100\n"
+        s += self.component()
+        text = data[layout]
+        color = self.get_color(layout)
+        s += f"""component "  {text}  " as cp #{color}\n"""
+        return s
+
+
+class Texts(Base):
+    name = "texts"
+    mode = Mode.LARGE
+
+    def create(self, data, layout) -> str:
+        s = ""
+        color = self.get_color(layout)
+        s += self.component(font_color=color)
+        text = data[layout]
+        s += f"""component "{text}" as cp <<text>>\n"""
         return s
 
 
@@ -674,18 +612,14 @@ default_colors = ["transparent"]
 def main(data):
     global color_list
     color_list = data.get("color_list", default_colors)
-    if "texts" in data:
-        process_texts(data["texts"])
-    if "lists" in data:
-        process_lists(data["lists"])
-    if "textboxes" in data:
-        process_textboxes(data["textboxes"])
-
     Colors.process(data)
     Trees.process(data)
     Blocks.process(data)
     Tables.process(data)
     Flows.process(data)
+    Lists.process(data, multi=True)
+    TextBoxes.process(data, multi=True)
+    Texts.process(data, multi=True)
 
 
 if __name__ == "__main__":
