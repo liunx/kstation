@@ -1,0 +1,60 @@
+title = "poison slab"
+color_list = [
+    "transparent", #0
+    "Black",       #1
+    "White",       #2
+    "LightYellow", #3
+    "LightGrey",   #4
+]
+
+[[blocks]]
+
+data = [
+    "  8 bytes\\t\\t",
+    "  20 bytes\\t\\t\\t",
+    "  2 bytes\\t",
+    "  8 bytes\\t",
+    "  392 bytes\\t\\t",
+    "  40 bytes\\t\\t",
+    "  red_left_pad\\t",
+    "  object_size\\t\\t",
+    "  red zone\\t",
+    "  FP\\t\\t\\t",
+    "  owner track\\t",
+    "  align padding\\t",
+]
+color_map = [0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0]
+layout = [
+    [0, 1, 2, 3, 4, 5],
+    [6, 7, 8, 9, 10, 11],
+]
+text_only = [0, 1, 2, 3, 4, 5]
+
+[[textboxes]]
+
+data = [
+    "  6b 6b 6b 6b ... <color:red>a5\\t",
+    "  00 00 00 00 ...\\t\\t",
+    "  5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a ...\\t",
+]
+color_map = [3, 0, 4]
+
+[[blocks]]
+
+data = [
+    "  POISON_FREE\\t\\t0x6b\\t",
+    "  POISON_END\\t\\t<color:red>0xa5\\t",
+    "  POISON_INUSE\\t0x5a\\t",
+]
+color_map = [3, 3, 4]
+layout = [[0], [1], [2]]
+
+[[texts]]
+
+data = [
+    "<b>1) init",
+    "<b>2) after alloc",
+    "<b>3) after memset",
+    "<b>4) after free",
+]
+color_map = [1, 1, 1, 1]

@@ -1,0 +1,70 @@
+#
+title = "kmem_cache_init()"
+color_list = [
+    "transparent", #0
+    "Black",       #1
+    "Blue",        #2
+    "Gold",        #3
+    "LightBlue",   #4
+    "LightGreen",  #5
+    "LightYellow", #6
+]
+
+# *kmem_cache
+[[trees]]
+
+vertical = false
+dashed = true
+name = "kmem_cache_node"
+data = [
+    "<b>kmem_cache\\n  *kmem_cache_node",
+    "<b>kmem_cache",
+    "cpu_slab\\t",
+    "node[]\\t\\t",
+    "freelist\\t",
+    "page\\t\\t",
+    "partial\\t\\t",
+    "alloc page\\t",
+]
+color_map = [6, 4, 6, 6, 6, 6, 6, 5]
+layout = [[0, 1], [1, 2, 3], [2, 4, 5], [3, 6], [5, 7]]
+# from,to,interval
+interval = [[5, 6, 2]]
+
+[[tables]]
+
+rewrite = false
+data = """
+    |<#LightYellow> .freelist | |
+    |<#LightYellow> .inuse | 32 |
+    |<#LightYellow> .objects | 32 |
+    |<#LightYellow> .frozen | 1 |"""
+
+# *kmem_cache
+[[trees]]
+
+rewrite = false
+vertical = false
+dashed = true
+name = "kmem_cache"
+data = [
+    "<b>kmem_cache\\n  *kmem_cache  ",
+    "<b>kmem_cache\\n  boot_kmem_cache  ",
+    "cpu_slab\\t",
+    "node[]\\t\\t",
+    "freelist\\t",
+    "page\\t\\t",
+    "partial\\t\\t",
+]
+color_map = [6, 4, 6, 6, 6, 6, 6]
+layout = [[0, 1], [1, 2, 3], [2, 4, 5], [3, 6]]
+
+[[texts]]
+
+data = [
+    "<b>kmem_cache_init() - 2. create_boot_cache(kmem_cache)",
+    "<b>kmem_cache_alloc_node()",
+    "alloc_kmem_cache_cpus()",
+    "slab_sate = PARTIAL",
+]
+color_map = [1, 2, 1, 1]

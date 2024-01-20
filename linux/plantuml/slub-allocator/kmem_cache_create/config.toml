@@ -1,0 +1,35 @@
+#
+title = "kmem_cache_create()"
+color_list = [
+    "transparent", #0
+    "Black",       #1
+    "Blue",        #2
+    "Gold",        #3
+    "LightGreen",  #4
+    "LightYellow", #5
+]
+
+[[textboxes]]
+
+data = [
+    "kmem_cache_create()",
+    "kmem_cache_create_usercopy()",
+    "__kmem_cache_alias()",
+    "find_mergable()",
+    "aliasregistered?",
+    "ret",
+    "cache_create()",
+    "kmem_cache_zalloc",
+    "kmem_cache_alloc()",
+    "__kmem_cache_create()",
+    "kmem_cache_open()",
+    "sysfs_slab_add()",
+    "calculate_sizes()",
+    "init_kmem_cache_nodes()",
+    "alloc_kmem_cache_cpus()",
+    "init_kmem_cache_cpus()",
+    "kmem_cache_alloc_node()",
+    "slab_alloc_node()",
+    "init_kmem_cache_node()",
+]
+color_map = [3, 5, 5, 5, 4, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5]

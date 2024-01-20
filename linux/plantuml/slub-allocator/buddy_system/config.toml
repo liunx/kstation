@@ -1,0 +1,35 @@
+#
+title = "Buddy system"
+
+color_list = [
+    "transparent", #0
+    "Black",       #1
+    "LightBlue",   #2
+    "LightGrey",   #3
+    "LightYellow", #4
+]
+
+[[blocks]]
+
+name = "page_order"
+data = [
+    "  page+2^N-1\\t",
+    "o\\no\\no",       # OMIT
+    "  page+1\\t\\t",
+    "  page+0\\t\\t",
+]
+color_map = [2, 0, 2, 2]
+text_only = [1]
+
+[[blocks]]
+
+name = "slab_page"
+data = ["\\n\\n\\n  Slab Page\\t\\n\\n\\n"]
+color_map = [3]
+
+[[blocks]]
+
+name = "free_slab_objects"
+data = ["  free slab object  "]
+color_map = [4]
+layout = [[0], [0], [0], [0], [0], [0], [0], [0]]

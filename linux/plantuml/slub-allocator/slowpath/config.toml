@@ -1,0 +1,66 @@
+#
+title = "slow pathes"
+color_list = [
+    "Black",       #0
+    "Blue",        #1
+    "White",       #2
+    "LightBlue",   #3
+    "LightGreen",  #4
+    "LightYellow", #5
+]
+
+[[trees]]
+
+vertical = false
+dashed = true
+data = [
+    "kmem_cache",
+    "cpu_slab\\t",
+    "freelist\\t",
+    "page\\t\\t",
+    "partial\\t\\t",
+    "node[]\\t\\t",
+    "partial\\t\\t",
+]
+color_map = [3, 5, 5, 5, 5, 5, 5]
+layout = [
+    [0, 1, 5],
+    [1, 2, 3, 4],
+    [5, 6]
+]
+interval = [
+    [1, 5, 4],
+    [2, 3, 0],
+    [3, 4, 0],
+    [4, 6, 1],
+]
+
+[[textboxes]]
+
+data = [
+    "  <color:red>slub(frozen)  ",
+    "  slub(<color:blue>frozen</color>)  ",
+    "  slub(frozen)  ",
+    "  slub  ",
+]
+color_map = [4, 4, 4, 4]
+
+[[lists]]
+
+data = ["PG"]
+color_map = [2]
+box_only = [0]
+layout = [0, 0, 0, 0]
+
+[[texts]]
+
+data = [
+    "<b>slowpath-1",
+    "<b>slowpath-2",
+    "<b>slowpath-3",
+    "<b>slowpath-4",
+    "<b>fastpath",
+    "<b>kmem_cache_cpu",
+    "<b>kmem_cache_node",
+]
+color_map = [0, 0, 0, 0, 0, 0, 0]

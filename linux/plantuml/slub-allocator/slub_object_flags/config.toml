@@ -1,0 +1,46 @@
+#
+title = "Slub object flags"
+color_list = [
+    "transparent", #0
+    "Black",       #1
+    "Gold",        #2
+    "LightBlue",   #3
+    "Green",       #4
+    "LightGrey",   #5
+    "Yellow",      #6
+]
+
+[[texts]]
+
+data = [
+    "SLAB_FLAGS_PERMITTED",
+    "DEBUG_DEFAULT_FALGS",
+    "CACHE_CREATE_MASK",
+    "SLAB_CACHE_FLAGS",
+    "SLAB_DEBUG_FLAGS",
+    "SLAB_CORE_FLAGS",
+    "SLAB_MERGE_SAME",
+    "SLAB_NEVER_MERGE",
+]
+color_map = [1, 1, 1, 1, 1, 1, 4, 2]
+
+[[tables]]
+
+data = """
+|<#LightGrey> SLAB_RED_ZONE | Z |<#Gold> O | | | O | | O | O | O |
+|<#LightGrey> SLAB_POISON | P |<#Gold> O | | | O | | O | O | O |
+|<#LightGrey> SLAB_STORE_USER | U |<#Gold> O | | | O | | O | O | O |
+|<#LightGrey> SLAB_TRACE | T |<#Gold> O | | | O | | O | | O |
+|<#LightGrey> SLAB_TYPESAFE_BY_RCU | |<#Gold> O | | O | | | O | | O |
+|<#LightGrey> SLAB_NOLEAKTRACE | |<#Gold> O | | | | O | O | | O |
+|<#LightGrey> SLAB_FAILSLAB | |<#Gold> O |
+|<#LightGrey> SLAB_KASAN | |<#Gold> O |
+|<#LightGrey> SLAB_RECLAIM_ACCOUNT | a | |<#LightGreen> O | | | O | O | | O |
+|<#LightGrey> SLAB_CACHE_DMA | d | |<#LightGreen> O | O | | | O | | O |
+|<#LightGrey> SLAB_ACCOUNT | | |<#LightGreen> O | | | O | O | | O |
+|<#LightGrey> SLAB_HWCACHE_ALIGN | A | | | O | | | O | | O |
+|<#LightGrey> SLAB_PANIC | | | | O | | | O | | O |
+|<#LightGrey> SLAB_DEBUG_OBJECTS | | | | O | | | O | | O |
+|<#LightGrey> SLAB_TEMPORARY | | | | | | O | O | | O |
+|<#LightGrey> SLAB_MEM_SPREAD | | | | | | | | | O |
+|<#LightGrey> SLAB_CONSISTENCY_CHECKS | F | | | | O | | O | O | O |"""

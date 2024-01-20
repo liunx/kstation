@@ -1,0 +1,43 @@
+#
+title = "calculate_order()"
+color_list = [
+    "transparent", #0
+    "Black",       #1
+    "Blue",        #2
+    "Gold",        #3
+    "LightBlue",   #4
+    "LightGreen",  #5
+    "LightGrey",   #6
+    "LightYellow", #7
+]
+
+[[flows]]
+
+data = [
+    "calculate_order()",
+    "min_objects loop: 16 ~ 2",
+    "fraction loop: 16, 8, 4",
+    "order = slab_order()",
+    "order Ok ?",
+    "Fail",
+]
+color_map = [3, 4, 4, 6, 5, 7]
+layout = [0, [1, [2, 3, 4], 3, 4, 3, 4], 5]
+controls = [4]
+
+[[textboxes]]
+
+data = [
+    "  return  "
+]
+color_map = [7]
+
+[[tables]]
+
+data = """
+|=nr_cpu_ids |=min_objects |
+|<#LightYellow> 1 | 8 |
+|<#LightYellow> 2~3 | 12 |
+|<#LightYellow> 4~7 | <color:blue>16 |
+|<#LightYellow> 8~15 | 20 |
+|<#LightYellow> 16~31 | 24 |"""

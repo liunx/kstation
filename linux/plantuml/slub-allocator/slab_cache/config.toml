@@ -1,0 +1,90 @@
+#
+title = "Buddy system"
+
+color_list = [
+    "transparent", #0
+    "Black",       #1
+    "LightBlue",   #2
+    "LightGrey",   #3
+    "LightYellow", #4
+]
+
+[[blocks]]
+
+data = ["slab cache", "slab page", "P", "\\t\\t\\to\\n\\t\\t\\to\\n\\t\\t\\to"]
+color_map = [2, 3, 4, 0]
+box_only = [2]
+text_only = [3]
+layout = [0, [
+    [[1, [2, 2, 2, 2]], [1, [2, 2, 2, 2]]],
+    [[1, [2, 2, 2, 2]], [1, [2, 2, 2, 2]]],
+    [[1, [2, 2, 2, 2]], [1, [2, 2, 2, 2]]],
+    ]
+]
+
+[[blocks]]
+
+data = ["slab cache", "slab page", "P", "\\t\\t\\to\\n\\t\\t\\to\\n\\t\\t\\to"]
+color_map = [2, 3, 4, 0]
+box_only = [0, 2]
+text_only = [3]
+layout = [0, [
+    [[1, [2, 2, 2, 2]], [1, [2, 2, 2, 2]]],
+    [[1, [2, 2, 2, 2]], [1, [2, 2, 2, 2]]],
+    [[1, [2, 2, 2, 2]], [1, [2, 2, 2, 2]]],
+    [3]
+    ]
+]
+
+[[blocks]]
+
+data = ["slab page", "P"]
+color_map = [3, 4]
+box_only = [1]
+layout = [
+    [[0, [1, 1, 1, 1]],
+    [0, [1, 1, 1, 1]],
+    [0, [1, 1, 1, 1]]]
+]
+
+[[blocks]]
+
+data = ["slab page", "P"]
+color_map = [3, 4]
+box_only = [1]
+layout = [
+    [0, [1, 1, 1, 1]],
+]
+
+[[textboxes]]
+
+data = [
+    "  node[]  ",
+    "  cpu_slab  ",
+    "  partial  ",
+    "  page  ",
+    "\\n  slab cache  \\n",
+]
+color_map = [4, 4, 4, 4, 2]
+
+[[blocks]]
+
+data = [
+    "  node #0  ",
+    "\\to\\n\\to\\n\\to",
+    "  node #N  ",
+]
+color_map = [3, 0, 3]
+text_only = [1]
+layout = [[0], [1], [2]]
+
+[[blocks]]
+
+data = [
+    "  cpu #0  ",
+    "\\to\\n\\to\\n\\to",
+    "  cpu #n  ",
+]
+color_map = [3, 0, 3]
+text_only = [1]
+layout = [[0], [1], [2]]

@@ -1,0 +1,31 @@
+title = "kmem_cache_destroy()"
+color_list = [
+    "Blue",
+    "Gold",
+    "LightYellow",
+]
+
+[[textboxes]]
+
+data = [
+    "kmem_cache_destroy()",
+    "flush_memcg_workqueue()",
+    "shutdown_memcg_caches()",
+    "<b>shutdown_cache()",
+    "<b>__kmem_cache_shutdown()",
+    "memcg_unlink_cache()",
+    "sysfs_slab_unlink()",
+    "sysfs_slab_release()",
+    "<b>flush_all()",
+    "<b>free_partial()",
+    "sysfs_slab_remove()",
+    "sysfs_slab_remove_workfn()",
+]
+color_map = [1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2]
+
+[[texts]]
+
+data = [
+    "remove memcg cache",
+]
+color_map = [0]

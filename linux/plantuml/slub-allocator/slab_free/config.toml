@@ -1,0 +1,40 @@
+#
+title = "slab_free()"
+color_list = [
+    "Blue",
+    "Gold",
+    "LightYellow",
+]
+
+[[textboxes]]
+
+data = [
+    "kmem_cache_free()",
+    "kmem_cache_free_bulk()",
+    "slab_free()",
+    "do_slab_free()",
+    "__slab_free()",
+    "this_cpu_cmpxchg_double()",
+    "cmpxchg_double_slab()",
+    "put_cpu_partial()",
+    "add_partial()",
+    "discard_slab()",
+    "free_slab()",
+    "rcu_free_slab()",
+    "__free_slab()",
+    "__free_pages()",
+]
+color_map = [1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2]
+
+[[texts]]
+
+data = [
+    "fastpath",
+    "slowpath",
+    "c->freelist",
+    "c->page->freelist",
+    "c->partial",
+    "n->partial",
+    "buddy system",
+]
+color_map = [0, 0, 0, 0, 0, 0, 0]

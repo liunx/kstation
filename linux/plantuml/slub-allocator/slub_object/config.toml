@@ -1,0 +1,49 @@
+#
+title = "Buddy system"
+
+color_list = [
+    "transparent", #0
+    "Black",       #1
+    "Gold",        #2
+    "LightBlue",   #3
+    "LightGrey",   #4
+    "LightYellow", #5
+    "LightGreen",  #6
+]
+
+[[blocks]]
+
+data = ["  object_size  ", "  FP  ", "PADDING"]
+color_map = [5, 3, 0]
+trans_only = [2]
+layout = [[0, [1, 2]]]
+
+[[blocks]]
+
+data = ["  object_size  ", "  ???  ", "PADDING"]
+color_map = [5, 2, 0]
+trans_only = [2]
+layout = [[0, [1, 2]]]
+
+[[textboxes]]
+
+data = [
+    "  FP  ",
+    "  sort size  ",
+    "  align padding  ",
+    "  red_left_pad  ",
+    "  red zone  ",
+    "  owner track  ",
+]
+color_map = [3, 4, 4, 2, 2, 6]
+
+[[texts]]
+
+data = [
+    "<b>1) no-debug",
+    "<b>2) red-zone",
+    "<b>3) poison, rcu, ctor",
+    "<b>4) owner track",
+    "<b>5) red-zone + poison + owner track",
+]
+color_map = [1, 1, 1, 1, 1]

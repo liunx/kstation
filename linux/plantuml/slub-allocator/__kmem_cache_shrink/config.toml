@@ -1,0 +1,92 @@
+title = "__kmem_cache_shrink()"
+color_list = [
+    "Black",       #0
+    "White",       #1
+    "LightBlue",   #2
+    "LightCyan",   #3
+    "LightGreen",  #4
+    "LightYellow", #5
+]
+
+[[lists]]
+
+rewrite = false
+name = "slub_frozen"
+data = [
+    "slub(frozen)\\t",
+    " E ",
+]
+interval = 1
+color_map = [4, 1]
+layout = [
+    [1, 1, -3],
+    [0, 1, 1, -3],
+]
+box_only = [1]
+
+[[lists]]
+
+rewrite = false
+name = "slub"
+data = [
+    "slub\\t\\t\\t",
+    " E ",
+]
+interval = 1
+color_map = [4, 1]
+box_only = [1]
+layout = [
+    [0, 1, 1, 1, 1],
+    [0, 1, -5],
+    [0, 1, 1, 1, -1],
+]
+
+[[lists]]
+
+rewrite = false
+name = "slub_x"
+data = [
+    " E ",
+    " 1 ",
+    " 2 ",
+    " 3 ",
+    "slub 1\\t\\t\\t",
+    "slub 2\\t\\t\\t",
+    "slub 3\\t\\t\\t",
+    "slub 4\\t\\t\\t",
+    "slub 5\\t\\t\\t",
+    "slub 6\\t\\t\\t",
+    "slub 7\\t\\t\\t",
+]
+interval = 1
+color_map = [1, 1, 1, 1, 4, 4, 4, 4, 4, 4, 4]
+layout = [
+    [4, 2, 2, 2, -1],
+    [5, 0, 0, 0, -1],
+    [6, 2, 2, -3],
+    [7, 0, 0, 0, 0],
+    [8, 0, 0, 0, 0],
+    [9, 1, -5],
+    [10, 3, 3, 3, -1],
+]
+
+[[textboxes]]
+
+data = [
+    "  kmem_cache  ",
+    "  cpu_slab\\t",
+    "  node[]\\t",
+    "  freelist\\t",
+    "  page\\t\\t",
+    "  partial\\t",
+]
+color_map = [2, 5, 5, 5, 5, 5]
+
+[[texts]]
+
+data = [
+    "<b>__kmem_cache_shrink()",
+    "<b>kmem_cache_node",
+    "<b>discard_slab()",
+    "<b>flush_all()",
+]

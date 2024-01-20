@@ -1,0 +1,19 @@
+#
+title = "freelist"
+
+color_list = [
+    "transparent", #0
+    "Black",       #1
+    "LightBlue",   #2
+    "LightGrey",   #3
+    "LightYellow", #4
+]
+
+[[blocks]]
+
+data = [
+    "  free slab object\\t",
+    "  in-use object\\t\\t",
+]
+color_map = [4, 3]
+layout = [[0], [0], [0], [1], [0], [0], [0],[1], [1], [1]]

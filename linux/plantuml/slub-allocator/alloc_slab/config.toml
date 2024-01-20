@@ -1,0 +1,42 @@
+#
+title = "allocate_slab()"
+color_list = [
+    "Black",       #0
+    "LightYellow", #1
+]
+
+[[tables]]
+
+label = "kmem_cache"
+data = """
+|<#LightGrey> oo | 0x100a |
+|<#LightGrey> min | 5 |"""
+
+[[tables]]
+
+label = "page"
+data = """
+|<#LightGrey> flags | PG_slab |
+|<#LightGrey> *slab_cache |
+|<#LightGrey> **freelist |
+|<#LightGrey> objects | 10 |
+|<#LightGrey> inuse | 10 |
+|<#LightGrey> frozen | 1 |"""
+
+[[blocks]]
+
+data = [
+    "  free slab object  ",
+]
+color_map = [1]
+layout = [[0], [0], [0], [0], [0], [0], [0], [0], [0], [0]]
+
+[[texts]]
+
+data = [
+    "<b>allocate_slab(*s, flags, node)",
+    "order 1 compound head page",
+    "order=1, objects=10",
+    "4K page",
+]
+color_map = [0, 0, 0, 0]

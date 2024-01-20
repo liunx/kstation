@@ -1,0 +1,147 @@
+#
+title = "kmem_cache_init()"
+color_list = [
+    "Blue",        #0
+    "Gold",        #1
+    "LightYellow", #2
+    "LightBlue",   #3
+    "LightGreen",  #4
+    "Black",       #5
+]
+
+[[textboxes]]
+
+rewrite = false
+data = [
+    "  <b>kmem_cache_init()  ",
+    "  create_boot_cache()  ",
+    "  bootstrap()  ",
+    "  create_kmalloc_caches(0)  ",
+    "  __kmem_cache_create()  ",
+    "  kmem_cache_open()  ",
+    "  calculate_sizes()  ",
+    "  init_kmem_cache_nodes()  ",
+    "  alloc_kmem_cache_cpus()  ",
+    "  init_kmem_cache_cpus()  ",
+    "  early_kmem_cache_node_alloc()  ",
+    "  init_kmem_cache_node()  ",
+    "  new_slab()  ",
+    "  kmem_cache_alloc_node()  ",
+    "  slab_alloc_node()  ",
+]
+color_map = [1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2]
+
+[[tables]]
+
+rewrite = false
+label = "boot_kmem_cache_node"
+data = """
+    |<#LightYellow> .flags | 0x40002000 |
+    |<#LightYellow> .name | kmem_cache_node |
+    |<#LightYellow> .object_size | 64 |
+    |<#LightYellow> .size | 128 |
+    |<#LightYellow> .align | 128 |
+    |<#LightYellow> .red_left_pad | 0 |
+    |<#LightYellow> .refcount | -1 |
+    |<#LightYellow> .inuse | 64 |
+    |<#LightYellow> .offset | 0 |
+    |<#LightYellow> .oo | 0x20 |
+    |<#LightYellow> .min | 0x20 |
+    |<#LightYellow> .max | 0x20 |
+    |<#LightYellow> .allocflags | 0x0 |
+    |<#LightYellow> .min_partial | 5 |
+    |<#LightYellow> .cpu_partial | 30 |"""
+
+[[tables]]
+
+rewrite = false
+label = "boot_kmem_cache"
+data = """
+    |<#LightYellow> .flags | 0x40002000 |
+    |<#LightYellow> .name | kmem_cache |
+    |<#LightYellow> .object_size | 336 |
+    |<#LightYellow> .size | 384 |
+    |<#LightYellow> .align | 128 |
+    |<#LightYellow> .red_left_pad | 0 |
+    |<#LightYellow> .refcount | -1 |
+    |<#LightYellow> .inuse | 336 |
+    |<#LightYellow> .offset | 0 |
+    |<#LightYellow> .oo | 0x10015 |
+    |<#LightYellow> .min | 0xa |
+    |<#LightYellow> .max | 0x10015 |
+    |<#LightYellow> .allocflags | 0x4000 |
+    |<#LightYellow> .min_partial | 5 |
+    |<#LightYellow> .cpu_partial | 13 |"""
+
+# 1. create_boot_cache(kmem_cache_node)
+[[trees]]
+
+vertical = false
+dashed = true
+data = [
+    "<b>kmem_cache\\n  *kmem_cache_node",
+    "<b>kmem_cache\\n  boot_kmem_cache_node",
+    "cpu_slab\\t",
+    "node[]\\t\\t",
+    "freelist\\t",
+    "page\\t\\t",
+    "partial\\t\\t",
+    "alloc page\\t",
+]
+color_map = [2, 3, 2, 2, 2, 2, 2, 4]
+layout = [
+    [0, 1],
+    [1, 2, 3],
+    [2, 4, 5],
+    [3, 6],
+    [6, 7],
+]
+
+[[trees]]
+
+vertical = false
+dashed = true
+data = [
+    "<b>kmem_cache\\n  *kmem_cache  ",
+    "<b>kmem_cache\\n  boot_kmem_cache  ",
+    "cpu_slab\\t",
+    "node[]\\t\\t",
+    "freelist\\t",
+    "page\\t\\t",
+    "partial\\t\\t",
+    "alloc page\\t",
+]
+color_map = [2, 3, 2, 2, 2, 2, 2, 4]
+layout = [
+    [0, 1],
+    [1, 2, 3],
+    [2, 4, 5],
+    [3, 6],
+    [6, 7],
+]
+
+[[tables]]
+
+rewrite = false
+data = """
+    |<#LightYellow> .inuse | 1 |
+    |<#LightYellow> .objects | 32 |
+    |<#LightYellow> .frozen | 0 |"""
+
+[[tables]]
+
+rewrite = false
+data = """
+    |<#LightYellow> .freelist | |
+    |<#LightYellow> .inuse | 32 |
+    |<#LightYellow> .objects | 32 |
+    |<#LightYellow> .frozen | 1 |"""
+
+[[texts]]
+
+data = [
+    "<b>kmem_cache_init() - 1. create_boot_cache(kmem_cache_node)",
+    "<b>early_kmem_cache_node_alloc()",
+    "alloc_kmem_cache_cpus()",
+]
+color_map = [5, 0, 5]

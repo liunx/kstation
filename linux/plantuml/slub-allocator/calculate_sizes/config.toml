@@ -1,0 +1,72 @@
+#
+title = "calculate_sizes()"
+color_list = [
+    "Black",       #0
+    "Blue",        #1
+    "Red",         #2
+    "LightBlue",   #3
+    "LightGreen",  #4
+    "LightGrey",   #5
+    "LightYellow", #6
+    "transparent", #7
+]
+
+[[blocks]]
+
+data = [
+    "  unused\\t",
+    "  #2\\t\\t\\t",
+    "  #1\\t\\t\\t",
+    "  #0\\t\\t\\t",
+]
+color_map = [3, 6, 6, 6]
+layout = [[0], [1], [2], [3]]
+
+[[blocks]]
+
+data = [
+    "  unused\\t",
+    "  #6\\t\\t\\t",
+    "  #5\\t\\t\\t",
+    "  #4\\t\\t\\t",
+    "  #3\\t\\t\\t",
+    "  #2\\t\\t\\t",
+    "  #1\\t\\t\\t",
+    "  #0\\t\\t\\t",
+]
+color_map = [3, 4, 4, 4, 6, 6, 6, 6]
+layout = [[0], [1], [2], [3], [4], [5], [6], [7]]
+
+[[blocks]]
+
+data = [
+    "  unused\\t",
+    "  #14\\t\\t",
+    "  #5\\n\\n\\n",
+    "  #4\\t\\t\\t",
+    "  #3\\t\\t\\t",
+    "  #2\\t\\t\\t",
+    "  #1\\t\\t\\t",
+    "  #0\\t\\t\\t",
+]
+trans_only = [2]
+color_map = [3, 4, 7, 4, 6, 6, 6, 6]
+layout = [[0], [1], [2], [3], [4], [5], [6], [7]]
+
+[[texts]]
+
+data = [
+    "<b>calculate_sizes(s, <color:blue>forced_order</color>)",
+    "<b>s->flags",
+    "<b>s->object_size",
+    "order=0\nobjects=3",
+    "order=1\nobjects=7",
+    "order=2\nobjects=15",
+    "slab_size\n4KB",
+    "slab_size\n8KB",
+    "slab_size\n16KB",
+    "<b>s->max",
+    "<b>s->min",
+    "<b>s->oo",
+]
+color_map = [0, 1, 1, 0, 0, 0, 0, 0, 0, 2, 2, 2]
