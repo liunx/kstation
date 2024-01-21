@@ -54,10 +54,17 @@ class Mode(Enum):
     LARGE = 3
 
 
+class Align(Enum):
+    LEFT = 1
+    CENTER = 2
+    RIGHT = 3
+
+
 class Base:
     name = "base"
     vertical = True  # or horizontal
     mode = Mode.SMALL
+    align = Align.CENTER
     skin_params = [
         "font_size",
         "font_color",
@@ -166,10 +173,25 @@ class Base:
         else:
             raise TypeError
 
+    def get_style(self, data):
+        _style = ""
+        if data in self.box_only:
+            _style = "<<box>>"
+        elif data in self.text_only:
+            _style = "<<text>>"
+        elif data in self.trans_only:
+            _style = "<<trans>>"
+        return _style
+
     def __create(self, data, layout) -> str:
         s = start_uml
         if not self.vertical:
             s += "left to right direction\n"
+        _align = "left"
+        if self.align == Align.CENTER:
+            _align = "center"
+        s += f"skinparam DefaultTextAlignment {_align}\n"
+
         s += scale_ratio.format(ratio=self.scale)
         s += self.create(data, layout)
         s += end_uml
@@ -369,22 +391,23 @@ class Trees(Base):
     def register_vars(self, data):
         self.interval = data.get("interval", [])
 
-    def create(self, data) -> str:
+    def create(self, data, layout) -> str:
         s = ""
         s += self.component()
         s += self.arrow()
         s += "' components:\n"
         i = 0
         for d in data:
+            style = self.get_style(i)
             color = self.get_color(i)
-            s += f"""component "{d}" as c{i} #{color}\n"""
+            s += f"""component "{d}" as c{i} {style} #{color}\n"""
             i += 1
         s += "' layout:\n"
         dot = "-"
         if self.dashed:
             dot = "."
         # connect
-        for conn in self.layout:
+        for conn in layout:
             _from = conn[0]
             _to = conn[1:]
             for i in _to:
@@ -415,16 +438,6 @@ class Blocks(Base):
             if not isinstance(l, type_):
                 return False
         return True
-
-    def get_style(self, data):
-        _style = ""
-        if data in self.box_only:
-            _style = "<<box>>"
-        elif data in self.text_only:
-            _style = "<<text>>"
-        elif data in self.trans_only:
-            _style = "<<trans>>"
-        return _style
 
     def recursive_layout(self, layout, data, tab_count=0, vertical=True) -> str:
         s = ""
@@ -482,13 +495,12 @@ class Blocks(Base):
                 i += 1
         return s
 
-    def create(self, data) -> str:
+    def create(self, data, layout) -> str:
         s = ""
         s += self.component()
         s += self.rectangle()
-        # s += self.create_layout(data)
         self.recursive_i = 0
-        s += self.recursive_layout(self.layout, data)
+        s += self.recursive_layout(layout, data)
         return s
 
 
@@ -606,6 +618,68 @@ class Texts(Base):
         return s
 
 
+class Experiments(Base):
+    name = "experiments"
+    mode = Mode.LARGE
+
+    def component(self, **args) -> str:
+        s = "skinparam Component {\n"
+        # configs
+        s += f'''\tFontSize {args.get("font_size", 20)}\n'''
+        s += f'''\tFontColor {args.get("font_color", "black")}\n'''
+        s += f'''\tBackgroundColor {args.get("bg_color", "transparent")}\n'''
+        s += f'''\tBorderThickness {args.get("bd_thickness", 1.5)}\n'''
+        # trans_only
+        s += "\tFontColor<<trans>> transparent\n"
+        s += "\tBorderThickness<<trans>> 0\n"
+        # text_only
+        s += "\tBorderThickness<<text>> 0\n"
+        s += "\tBackgroundColor<<text>> transparent\n"
+        # box_only
+        s += "\tFontColor<<box>> transparent\n"
+        s += "}\n"
+        return s
+
+    def rectangle(self, **args):
+        s = "skinparam Rectangle {\n"
+        # configs
+        s += "\tFontSize 0\n"
+        s += "\tFontColor transparent\n"
+        s += "\tBorderThickness 1.5\n"
+        s += "\tBackgroundColor transparent\n"
+        # align
+        s += f'''\tFontSize<<align>> {args.get("font_size", 20)}\n'''
+        s += f'''\tBorderThickness<<align>> {args.get("bd_thickness", 1.5)}\n'''
+        s += "}\n"
+        return s
+
+    def get_align_size(self, data):
+        return "m" * max([len(i) for i in data]) * 8
+
+    def create(self, data, layout) -> str:
+        s = ""
+        s += self.component(font_size=20, bd_thickness=0)
+        s += self.rectangle(font_size=2, bd_thickness=1)
+        _align = self.get_align_size(data)
+        i = 0
+        for l in layout:
+            _text = data[l]
+            s += f'''rectangle "{_align}" as r{i} <<align>> {{\n'''
+            s += f'''\tcomponent c{i} [\n'''
+            s += f"\t\t{_text}\n"
+            s += "\t]\n"
+            s += "}\n"
+            i += 1
+            j = 0
+        i = 0
+        while True:
+            if i >= len(layout) - 1:
+                break
+            s += f"r{i}-down-->r{i+1}\n"
+            i += 1
+        return s
+
+
 default_colors = ["transparent"]
 
 
@@ -620,6 +694,7 @@ def main(data):
     Lists.process(data, multi=True)
     TextBoxes.process(data, multi=True)
     Texts.process(data, multi=True)
+    Experiments.process(data)
 
 
 if __name__ == "__main__":
