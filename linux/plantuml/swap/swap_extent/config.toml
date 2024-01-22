@@ -1,0 +1,63 @@
+title = "your title"
+color_list = [
+    "transparent", #0
+    "black",       #1
+    "blue",        #2
+    "gold",        #3
+    "green",       #4
+    "pink",        #5
+    "red",         #6
+    "white",       #7
+    "LightBlue",   #8
+    "LightGreen",  #9
+    "LightGrey",   #10
+    "LightYellow", #11
+]
+
+[[experiments]]
+
+data = [
+    "page#0~99999",
+    "10000~19999",
+    "20000~23999",
+]
+align_width = [15, 15, 12]
+color_map = [9, 9, 9]
+vertical = false
+
+[[experiments]]
+
+data = [
+    "o o o",
+    "block#10000~19999",
+    "30000~39999",
+    "60000~63999",
+]
+align_width = [10, 15, 15, 12]
+color_map = [10, 8, 8, 8]
+layout = [0, 1, 0, 2, 0, 3, 0]
+vertical = false
+
+[[tables]]
+
+label = "swap_extent"
+data = """
+|<#LightGrey> start_page | <color:blue>0 |
+|<#LightGrey> nr_pages | 10000 |
+|<#LightGrey> start_block | <color:red>10000 |"""
+
+[[tables]]
+
+label = "swap_extent"
+data = """
+|<#LightGrey> start_page | <color:blue>10000 |
+|<#LightGrey> nr_pages | 10000 |
+|<#LightGrey> start_block | <color:red>60000 |"""
+
+[[tables]]
+
+label = "swap_extent"
+data = """
+|<#LightGrey> start_page | <color:blue>20000 |
+|<#LightGrey> nr_pages | 4000 |
+|<#LightGrey> start_block | <color:red>30000 |"""

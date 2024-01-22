@@ -1,0 +1,17 @@
+title = "alignment tests"
+
+[[experiments]]
+
+data = [
+    "FRONTSWAP",
+    "ZSWAP",
+    "CRYPTO",
+    "ZPOOL",
+    "ZSMALLOC",
+    "ZBUD",
+    "Z3FOLD",
+    "CRYPTO_LZO",
+    "CRYPTO_TCO50",
+    "CRYPTO_TCO30",
+    "CRYPTO_TCO10",
+]

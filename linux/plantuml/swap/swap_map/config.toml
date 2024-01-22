@@ -1,0 +1,47 @@
+title = "your title"
+color_list = [
+    "transparent", #0
+    "black",       #1
+    "blue",        #2
+    "gold",        #3
+    "green",       #4
+    "pink",        #5
+    "red",         #6
+    "white",       #7
+    "LightBlue",   #8
+    "LightGreen",  #9
+    "LightGrey",   #10
+    "LightYellow", #11
+]
+
+[[experiments]]
+
+vertical = false
+data = [
+    "0x3F",
+    "0x00",
+    "0x01",
+]
+align_width = 4
+color_map = [5, 10, 8]
+layout = [0, 1, 1, 1, 2, 1, 1, 1, 1]
+
+[[experiments]]
+
+vertical = false
+data = [
+    "page",
+]
+align_width = 4
+color_map = [10]
+layout = [0, 0, 0, 0, 0, 0, 0, 0, 0]
+
+[[experiments]]
+
+vertical = false
+data = [
+    "|B|B|B|B|",
+]
+align_width = 4
+color_map = [10]
+layout = [0, 0, 0, 0, 0, 0, 0, 0, 0]

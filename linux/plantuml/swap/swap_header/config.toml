@@ -1,0 +1,53 @@
+title = "your title"
+color_list = [
+    "transparent", #0
+    "black",       #1
+    "blue",        #2
+    "gold",        #3
+    "green",       #4
+    "pink",        #5
+    "red",         #6
+    "white",       #7
+    "LightBlue",   #8
+    "LightGreen",  #9
+    "LightGrey",   #10
+    "LightYellow", #11
+]
+
+[[experiments]]
+
+vertical = false
+data = [
+    "swap_header",
+    "swap start",
+    "swap file / block",
+    "swap end",
+]
+align_width = [12, 10, 20, 10]
+color_map = [9, 10, 10, 10]
+
+[[texts]]
+
+data = [
+    "page 0x0",
+    "page 0x63ff",
+]
+color_map = [1, 1]
+
+[[tables]]
+
+label = "swap_header"
+data = """
+| info | bootbits[1024] | <0 fills> |
+| | version | 1 |
+| | last_page | 0x63ff |
+| | nr_badpages | 0 |
+| | sws_uuid | <UUID> |
+| | sws_volume | <Volume> |
+| | padding | <0 fills> |
+| | badpages[N] | <0 fills> |"""
+
+[[tables]]
+
+data = """
+| magic | magic | <color:green>"SWAPSPACE2" |"""

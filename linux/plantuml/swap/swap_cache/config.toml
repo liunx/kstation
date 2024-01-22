@@ -1,0 +1,57 @@
+title = "your title"
+color_list = [
+    "transparent", #0
+    "black",       #1
+    "blue",        #2
+    "gold",        #3
+    "green",       #4
+    "pink",        #5
+    "red",         #6
+    "white",       #7
+    "LightBlue",   #8
+    "LightGreen",  #9
+    "LightGrey",   #10
+    "LightYellow", #11
+]
+
+[[blocks]]
+
+data = [
+    "  *address_space[N]  ",
+    "o\\no\\no",
+    "  *address_space[0]  ",
+]
+color_map = [11, 0, 11]
+text_only = [1]
+layout = [0, 1, 2]
+
+[[blocks]]
+
+data = [
+    "  *address_space  ",
+    "o\\no\\no",
+    "  *address_space  ",
+]
+color_map = [11, 0, 11]
+text_only = [1]
+layout = [0, 1, 2]
+
+[[tables]]
+
+label = "<b>address_space"
+data = """
+|<#LightGrey> i_page | <xarray> |"""
+
+[[texts]]
+
+data = [
+    "o\\no\\no",
+]
+color_map = [1]
+
+[[textboxes]]
+
+data = [
+    "  &swapper_space[]  ",
+]
+color_map = [3]

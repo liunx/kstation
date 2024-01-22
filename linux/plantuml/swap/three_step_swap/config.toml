@@ -1,0 +1,56 @@
+title = "three-step swap"
+color_list = [
+    "transparent", #0
+    "Black",       #1
+    "Red",         #2
+    "LightBlue",   #3
+    "LightGrey",   #4
+    "LightYellow", #5
+]
+
+[[trees]]
+
+vertical = false
+data = [
+    "swap request",
+    "swap cache",
+    "<color:red>Front swap\\n(zswap)",
+    "<color:red>Swap area\\n(swap backing store)",
+]
+color_map = [0, 3, 3, 3]
+text_only = [0]
+layout = [[0, 1], [1, 2], [2, 3]]
+
+[[trees]]
+
+vertical = false
+data = [
+    "<color:red>FRONTSWAP",
+    "ZSWAP",
+    "CRYPTO\\t",
+    "ZPOOL\\t",
+    "ZSMALLOC\\t\\t",
+    "ZBUD\\t\\t\\t\\t",
+    "Z3FOLD\\t\\t\\t",
+    "CRYPTO_LZO\\t\\t",
+    "CRYPTO_TCO50\\t",
+    "CRYPTO_TCO30\\t",
+    "CRYPTO_TCO10\\t",
+]
+color_map = [0, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3]
+text_only = [0]
+layout = [[0, 1], [1, 2, 3], [3, 4, 5, 6], [2, 7, 8, 9, 10]]
+
+[[textboxes]]
+
+data = [
+    "  file page  ",
+    "\\n  Page Cache  \\n",
+    "  /dev/hdc2  ",
+    "  file  ",
+    "  <color:red>Clean cache  ",
+    "  tmem,  \\n  memory",
+    "  zcache  \\n  (v3.11 removed)  ",
+]
+color_map = [3, 5, 4, 4, 5, 4, 4]
+database = [2, 3, 5, 6]

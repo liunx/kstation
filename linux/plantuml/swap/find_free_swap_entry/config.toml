@@ -1,0 +1,23 @@
+title = "your title"
+color_list = [
+    "transparent", #0
+    "black",       #1
+    "blue",        #2
+    "gold",        #3
+    "green",       #4
+    "pink",        #5
+    "red",         #6
+    "white",       #7
+    "LightBlue",   #8
+    "LightGreen",  #9
+    "LightGrey",   #10
+    "LightYellow", #11
+]
+
+
+[[bitmaps]]
+
+name = "color_bitmaps"
+data = [[0, 31]]
+box_only = true
+color_map = [9]

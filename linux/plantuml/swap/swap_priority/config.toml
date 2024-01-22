@@ -1,0 +1,22 @@
+title = "Swap Priority"
+color_list = [
+    "transparent", #0
+    "Black",       #1
+    "LightBlue",   #2
+    "LightGreen",  #3
+    "LightGrey",   #4
+    "LightYellow", #5
+]
+
+[[experiments]]
+
+data = [
+    "1G",
+    "2G",
+    "1G",
+    "1G",
+]
+vertical = false
+color_map = [2, 3, 4, 5]
+layout = [0, 1, 2, 3]
+align_width = [5, 10, 5, 5]
