@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import sys
 import os.path
 import pathlib
 from enum import Enum
@@ -65,13 +66,6 @@ class Base:
     vertical = True  # or horizontal
     mode = Mode.SMALL
     align = Align.CENTER
-    skin_params = [
-        "font_size",
-        "font_color",
-        "bg_color",
-        "border_color",
-        "border_thickness",
-    ]
 
     def __init__(self, data, index, color_list) -> None:
         self.data = data
@@ -487,7 +481,7 @@ class Blocks(Base):
             if vertical:
                 direct = "down"
             if self.single_type_only(layout, int):
-                direct = "right"
+                direct = "down"
             while True:
                 if i >= len(names) - 1:
                     break
@@ -508,7 +502,7 @@ class Tables(Base):
     name = "tables"
     mode = Mode.LARGE
 
-    def create(self, data) -> str:
+    def create(self, data, layout) -> str:
         s = ""
         s += self.component()
         s += self.package()
@@ -522,6 +516,48 @@ class Tables(Base):
             s += "component cp [\n"
             s += data + "\n"
             s += "]\n"
+        return s
+
+
+class BitMaps(Base):
+    name = "bitmaps"
+    mode = Mode.LARGE
+
+    def register_vars(self, data):
+        self.box_only = data.get("box_only", False)
+
+    def __get_color(self, l):
+        if isinstance(l, list):
+            pass
+        elif isinstance(l, int):
+            pass
+        else:
+            raise TypeError
+
+    def create(self, data, layout) -> str:
+        s = ""
+        s += self.component()
+        _bits = data[layout]
+        _start = _bits[0]
+        _stop = _bits[1]
+        _text = "|"
+        color = self.get_color(layout)
+        for i in reversed(range(_start, _stop + 1)):
+            str_i = str(i)
+            _s = ""
+            for _c in str_i[0:-1]:
+                if self.box_only:
+                    _s += f" <color:transparent>{_c}</color> \\n"
+                else:
+                    _s += f" {_c} \\n"
+            if self.box_only:
+                _s += f" <color:transparent>{str_i[-1]}</color> "
+            else:
+                _s += f" {str_i[-1]} "
+            _text += f"{_s}|"
+        s += f"component cp #{color} [\n"
+        s += _text + "\n"
+        s += "]\n"
         return s
 
 
@@ -621,14 +657,16 @@ class Texts(Base):
 class Experiments(Base):
     name = "experiments"
     mode = Mode.LARGE
+    align = Align.CENTER
+    vertical = False
 
     def component(self, **args) -> str:
         s = "skinparam Component {\n"
         # configs
-        s += f'''\tFontSize {args.get("font_size", 20)}\n'''
-        s += f'''\tFontColor {args.get("font_color", "black")}\n'''
-        s += f'''\tBackgroundColor {args.get("bg_color", "transparent")}\n'''
-        s += f'''\tBorderThickness {args.get("bd_thickness", 1.5)}\n'''
+        s += f"""\tFontSize {args.get("font_size", 20)}\n"""
+        s += f"""\tFontColor {args.get("font_color", "black")}\n"""
+        s += f"""\tBackgroundColor {args.get("bg_color", "transparent")}\n"""
+        s += f"""\tBorderThickness {args.get("bd_thickness", 1.5)}\n"""
         # trans_only
         s += "\tFontColor<<trans>> transparent\n"
         s += "\tBorderThickness<<trans>> 0\n"
@@ -648,24 +686,30 @@ class Experiments(Base):
         s += "\tBorderThickness 1.5\n"
         s += "\tBackgroundColor transparent\n"
         # align
-        s += f'''\tFontSize<<align>> {args.get("font_size", 20)}\n'''
-        s += f'''\tBorderThickness<<align>> {args.get("bd_thickness", 1.5)}\n'''
+        s += f"""\tFontSize<<align>> {args.get("font_size", 20)}\n"""
+        s += f"""\tBorderThickness<<align>> {args.get("bd_thickness", 1.5)}\n"""
         s += "}\n"
         return s
 
-    def get_align_size(self, data):
-        return "m" * max([len(i) for i in data]) * 8
+    def register_vars(self, data):
+        self.align_width = data.get("align_width", [])
+
+    def get_align_width(self, l):
+        if len(self.align_width) > 0:
+            return "m" * self.align_width[l] * 8
+        return ""
 
     def create(self, data, layout) -> str:
         s = ""
-        s += self.component(font_size=20, bd_thickness=0)
-        s += self.rectangle(font_size=2, bd_thickness=1)
-        _align = self.get_align_size(data)
+        s += self.component(font_size=200, bd_thickness=0)
+        s += self.rectangle(font_size=20, bd_thickness=10)
         i = 0
         for l in layout:
             _text = data[l]
-            s += f'''rectangle "{_align}" as r{i} <<align>> {{\n'''
-            s += f'''\tcomponent c{i} [\n'''
+            _align = self.get_align_width(l)
+            color = self.get_color(l)
+            s += f"""rectangle "{_align}" as r{i} <<align>> #{color} {{\n"""
+            s += f"""\tcomponent c{i} #{color} [\n"""
             s += f"\t\t{_text}\n"
             s += "\t]\n"
             s += "}\n"
@@ -675,12 +719,35 @@ class Experiments(Base):
         while True:
             if i >= len(layout) - 1:
                 break
-            s += f"r{i}-down-->r{i+1}\n"
+            s += f"r{i}-down[hidden]-r{i+1}\n"
             i += 1
         return s
 
 
 default_colors = ["transparent"]
+
+
+default_config = """title = "your title"
+color_list = [
+    "transparent", #0
+    "black",       #1
+    "blue",        #2
+    "gold",        #3
+    "green",       #4
+    "pink",        #5
+    "red",         #6
+    "white",       #7
+    "LightBlue",   #8
+    "LightGreen",  #9
+    "LightGrey",   #10
+    "LightYellow", #11
+]
+"""
+
+
+def gen_config(filename):
+    with open(filename, "w+") as f:
+        f.write(default_config)
 
 
 def main(data):
@@ -694,10 +761,15 @@ def main(data):
     Lists.process(data, multi=True)
     TextBoxes.process(data, multi=True)
     Texts.process(data, multi=True)
+    BitMaps.process(data, multi=True)
     Experiments.process(data)
 
 
 if __name__ == "__main__":
-    with open("config.toml", "rb") as f:
+    config = "config.toml"
+    if not os.path.exists(config):
+        gen_config(config)
+        sys.exit(0)
+    with open(config, "rb") as f:
         data = tomllib.load(f)
         main(data)
