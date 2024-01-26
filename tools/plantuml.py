@@ -26,8 +26,6 @@ skinparam {type_name} {{
 }}\n
 """
 
-color_list = []
-
 
 def skinparam(
     type_name="Component",
@@ -336,10 +334,10 @@ class Colors(Base):
         s += _tab + "}\n"
         return s
 
-    def create_layout(self, _data):
+    def create_layout(self, _data, layout):
         s = ""
         i = 0
-        for l in self.layout:
+        for l in layout:
             rname = f"r{i}"
             if isinstance(l, list):
                 s += f"rectangle {rname} {{\n"
@@ -363,17 +361,17 @@ class Colors(Base):
         # layout
         i = 0
         while True:
-            if i >= len(self.layout) - 1:
+            if i >= len(layout) - 1:
                 break
             s += f"r{i}-down[hidden]-r{i+1}\n"
             i += 1
         return s
 
-    def create(self, data) -> str:
+    def create(self, data, layout) -> str:
         s = ""
         s += self.component()
         s += self.rectangle()
-        s += self.create_layout(data)
+        s += self.create_layout(data, layout)
 
         return s
 
@@ -423,6 +421,7 @@ class Trees(Base):
 class Blocks(Base):
     name = "blocks"
     mode = Mode.LARGE
+    align = Align.LEFT
 
     @staticmethod
     def single_type_only(list_, type_) -> bool:
@@ -501,6 +500,9 @@ class Blocks(Base):
 class Tables(Base):
     name = "tables"
     mode = Mode.LARGE
+
+    def register_vars(self, data):
+        pass
 
     def create(self, data, layout) -> str:
         s = ""
@@ -585,9 +587,9 @@ class Lists(Base):
     vertical = False
 
     def register_vars(self, data):
-        self.vertical = False
         self.interval = data.get("interval", 1)
         self.hide_line = data.get("hide_line", False)
+        self.vertical = data.get("vertical", False)
 
     def create(self, data, layout) -> str:
         s = ""
@@ -629,15 +631,19 @@ class TextBoxes(Base):
     mode = Mode.LARGE
 
     def register_vars(self, data):
-        pass
+        self.hexagon_list = data.get("hexagon", [])
 
     def create(self, data, layout) -> str:
         s = ""
         s += "skinparam RoundCorner 100\n"
         s += self.component()
+        s += self.hexagon()
         text = data[layout]
         color = self.get_color(layout)
-        s += f"""component "  {text}  " as cp #{color}\n"""
+        if layout in self.hexagon_list:
+            s += f"""hexagon "{text}" as cp #{color}\n"""
+        else:
+            s += f"""component "  {text}  " as cp #{color}\n"""
         return s
 
 
@@ -724,6 +730,24 @@ class Experiments(Base):
         return s
 
 
+class TextBoxes2(Experiments):
+    name = "textboxes2"
+
+    def create(self, data, layout) -> str:
+        s = ""
+        s += self.component(font_size=200, bd_thickness=0)
+        s += self.rectangle(font_size=20, bd_thickness=10)
+        _text = data[layout]
+        _align = self.get_align_width(layout)
+        color = self.get_color(layout)
+        s += f"""rectangle "{_align}" as rect <<align>> #{color} {{\n"""
+        s += f"""\tcomponent cp #{color} [\n"""
+        s += f"\t\t{_text}\n"
+        s += "\t]\n"
+        s += "}\n"
+        return s
+
+
 default_colors = ["transparent"]
 
 
@@ -751,8 +775,6 @@ def gen_config(filename):
 
 
 def main(data):
-    global color_list
-    color_list = data.get("color_list", default_colors)
     Colors.process(data)
     Trees.process(data)
     Blocks.process(data)
@@ -763,6 +785,7 @@ def main(data):
     Texts.process(data, multi=True)
     BitMaps.process(data, multi=True)
     Experiments.process(data)
+    TextBoxes2.process(data, multi=True)
 
 
 if __name__ == "__main__":
