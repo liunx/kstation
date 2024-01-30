@@ -56,7 +56,7 @@ class Base:
 
     @classmethod
     def process(cls, data, multi=False):
-        color_list = data.get("color_list", ["transparent"])
+        color_list = data.get("color_list", ["white"])
         if cls.name in data:
             create_dir(cls.name)
             _data = data.get(cls.name)
@@ -78,14 +78,68 @@ class Base:
     def get_color(self, i):
         return self.color_list[self.color_map[i]]
 
+    def expand_nest_list(self, list_, default=None):
+        if not bool(list_):
+            return default
+        data = []
+        for l in list_:
+            if isinstance(l, list):
+                data += [l[0]] * l[1]
+            elif isinstance(l, int):
+                data.append(l)
+            else:
+                raise TypeError
+        return data
+
+    def expand_data(self, data):
+        l = []
+        for _data in data:
+            if isinstance(_data, list):
+                _s = _data[0]
+                _from = _data[1]
+                _to = _data[2]
+                _range = range(_from, _to+1, 1)
+                if _from > _to:
+                    _range = range(_from, _to-1, -1)
+                for i in _range:
+                    l.append(_s.format(num=i))
+            elif isinstance(_data, str):
+                l.append(_data)
+            else:
+                raise TypeError
+        return l
+
+    def expand_layout(self, layout, default=None):
+        data = []
+        for l in layout:
+            if isinstance(l, list):
+                _data = []
+                for _l in l:
+                    if isinstance(_l, list):
+                        _data += [i+_l[0] for i in range(_l[1])]
+                    elif isinstance(_l, int):
+                        _data.append(_l)
+                    else:
+                        raise TypeError
+                if bool(_data):
+                    data.append(_data)
+            elif isinstance(l, int):
+                data.append(l)
+            else:
+                raise TypeError
+        return data
+
     def _create(self, multi=False):
         _data = self.data.get("data", [])
         if len(_data) == 0:
             return
+        _data = self.expand_data(_data)
         layout = self.data.get("layout", [i for i in range(len(_data))])
+        layout = self.expand_layout(layout)
         name = self.data.get("name", f"{self.name}{self.index}")
-        self.color_map = self.data.get("color_map", [0] * len(_data))
         rewrite = self.data.get("rewrite", True)
+        self.color_map = self.expand_nest_list(self.data.get("color_map"), [0] * len(_data))
+        self.height_map = self.expand_nest_list(self.data.get("height_map"), [1] * len(_data))
         self.register_vars(self.data)
         if not multi:
             if self.check_file_exists(name) and not rewrite:
@@ -107,7 +161,7 @@ class Blocks(Base):
     border_thickness = 1
 
     def register_vars(self, data):
-        self.height_map = data.get("height_map", [1] * len(data.get("data")))
+        pass
 
     def do_layout(self, data, layout):
         x = 0
